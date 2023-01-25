@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- CS1591  Missing XML comment... Reason: Command help is generated via other means.
+         MSB3270 Processor architecture mismatch. Reason: interop.searchapi.dll only has processor-specific flavors,
+                 but we only use it to embed the interop types, in which case architecture doesn't matter.
+    -->
+    <NoWarn>$(NoWarn);CS1591;MSB3270</NoWarn>
+    <PublishDirName>$(PSModuleName)</PublishDirName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>TODO All Package* things are handled by the PS module manifest</Description>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/mawosoft/WindowsSearchManager</RepositoryUrl>
+    <DebugType>embedded</DebugType>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <EnablePackageValidation>false</EnablePackageValidation>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PowerShellStandard.Library" PrivateAssets="All" />
+    <Reference Include="Interop.SearchAPI" HintPath="$(InteropSearchApiAssemblyPath)" EmbedInteropTypes="true" Private="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyName).Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(PSModuleName).psd1" >
+      <TargetPath>%(FileName)%(Extension)</TargetPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

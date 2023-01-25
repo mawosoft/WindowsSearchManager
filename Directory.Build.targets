@@ -1,0 +1,139 @@
+<Project>
+
+  <!--
+    ============================================================
+
+    EnableGitCommitCount          - Defaults to 'true' for regular builds
+    EnableGitCommitCountForwarder - Defaults to $(EnableGitCommitCount)
+
+    GitCommitCount - Sets $(GitCommitCount). Requires 'git' to be in PATH.
+    ============================================================
+  -->
+
+  <PropertyGroup>
+    <EnableGitCommitCount
+        Condition="'$(EnableGitCommitCount)' == '' and
+                   '$(DesignTimeBuild)' != 'true' and
+                   '$(BuildingForLiveUnitTesting)' != 'true'">true</EnableGitCommitCount>
+    <EnableGitCommitCountForwarder
+        Condition="'$(EnableGitCommitCountForwarder)' == '' or
+                   '$(EnableGitCommitCount)' != 'true'">$(EnableGitCommitCount)</EnableGitCommitCountForwarder>
+  </PropertyGroup>
+
+  <Target Name="GitCommitCount"
+          Condition="'$(GitCommitCount)' == '' and '$(EnableGitCommitCount)' == 'true'">
+    <Exec Command="git rev-list --count HEAD"
+          ConsoleToMSBuild="true"
+          IgnoreExitCode="false"
+          StandardErrorImportance="high"
+          StandardOutputImportance="low">
+      <Output TaskParameter="ExitCode" PropertyName="MSBuildLastExitCode" />
+      <Output Condition="'$(MSBuildLastExitCode)' == '0'"
+              TaskParameter="ConsoleOutput" PropertyName="GitCommitCount" />
+    </Exec>
+  </Target>
+
+  <!--
+    ============================================================
+
+    GitCommitCountForInnerBuild
+    GitCommitCountForRestoreGraph
+    GitCommitCountForProjectReference
+
+    Minimize git command execution by passing GitCommitCount to inner builds.
+    For repos with a large history, consider setting GitCommitCount as an environment variable
+    before building the project(s), e.g. in Powershell: $env:GitCommitCount = git rev-list −−count HEAD
+    ============================================================
+  -->
+
+  <Target Name="GitCommitCountForInnerBuild"
+          AfterTargets="_ComputeTargetFrameworkItems"
+          BeforeTargets="DispatchToInnerBuilds"
+          DependsOnTargets="GitCommitCount"
+          Condition="'$(EnableGitCommitCountForwarder)' == 'true'">
+    <ItemGroup Condition="'$(GitCommitCount)' != ''">
+      <_InnerBuildProjects
+          Update="*"
+          AdditionalProperties="%(_InnerBuildProjects.AdditionalProperties);GitCommitCount=$(GitCommitCount)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="GitCommitCountForRestoreGraph"
+          AfterTargets="_LoadRestoreGraphEntryPoints"
+          BeforeTargets="_FilterRestoreGraphProjectInputItems"
+          DependsOnTargets="GitCommitCount"
+          Condition="'$(EnableGitCommitCountForwarder)' == 'true'">
+    <ItemGroup Condition="'$(GitCommitCount)' != ''">
+      <RestoreGraphProjectInputItems
+          Update="*"
+          AdditionalProperties="%(RestoreGraphProjectInputItems.AdditionalProperties);GitCommitCount=$(GitCommitCount)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="GitCommitCountForProjectReference"
+          AfterTargets="AssignProjectConfiguration"
+          BeforeTargets="_SplitProjectReferencesByFileExistence"
+          DependsOnTargets="GitCommitCount"
+          Condition="'$(EnableGitCommitCountForwarder)' == 'true' and '$(BuildProjectReferences)' == 'true'">
+    <ItemGroup Condition="'$(GitCommitCount)' != ''">
+      <ProjectReferenceWithConfiguration
+          Update="*"
+          AdditionalProperties="%(ProjectReferenceWithConfiguration.AdditionalProperties);GitCommitCount=$(GitCommitCount)" />
+    </ItemGroup>
+  </Target>
+
+  <!--
+    ============================================================
+
+    UpdateVersion
+
+    Updates $(Version), $(PackageVersion), and $(FileVersion) with $(GitCommitCount)
+    for all major build targets (Restore, Build, Pack).
+
+    $(Version)        - If it contains any -/+ label, $(GitCommitCount) is appended.
+                        If it is only Major.Minor.Patch, it will remain unchanged
+                        and adding the SourceRevisionID to $(InformationalVersion)
+                        will be supressed.
+    $(PackageVersion) - If undefined or equal $(Version), set to updated $(Version).
+    $(FileVersion)    - If undefined, set to Major.Minor.Patch of $(Version).
+                        If less than four parts, $(GitCommitCount) is ALWAYS appended.
+    ============================================================
+  -->
+
+  <Target Name="UpdateVersion"
+          BeforeTargets="
+              _GenerateRestoreProjectSpec;
+              GetAssemblyVersion;
+              _GetOutputItemsFromPack;
+              _GetProjectVersion;
+              GenerateNuspec"
+          DependsOnTargets="GitCommitCount">
+
+    <PropertyGroup Condition="'$(GitCommitCount)' != ''">
+      <_SetPackageVersion>false</_SetPackageVersion>
+      <_SetPackageVersion
+          Condition="'$(PackageVersion)' == '' or
+                     '$(PackageVersion)' == '$(Version)'">true</_SetPackageVersion>
+      <_FirstPlus>$(Version.IndexOf("+"))</_FirstPlus>
+      <_FirstPlus Condition="$(_FirstPlus) &lt; 0">$(Version.Length)</_FirstPlus>
+      <_FirstHyphen>$(Version.IndexOf("-"))</_FirstHyphen>
+      <_FirstHyphen Condition="$(_FirstHyphen) &lt; 0">$(Version.Length)</_FirstHyphen>
+      <_VersionPrefix>$(Version.Substring(0,
+                          $([System.Math]::Min($(_FirstHyphen), $(_FirstPlus)))))</_VersionPrefix>
+      <!-- GitCommitCount is added to Version with pre-release and/or build labels .
+           Otherwise it is considered an official release (and SourceRevisionId will be supressed as well). -->
+      <Version Condition="'$(_VersionPrefix)' != '$(Version)'">$(Version).$(GitCommitCount)</Version>
+      <!-- PackageVersion has been set during eval and needs to be updated. -->
+      <PackageVersion Condition="$(_SetPackageVersion)">$(Version)</PackageVersion>
+      <FileVersion Condition="'$(FileVersion)' == ''">$(_VersionPrefix)</FileVersion>
+      <!-- GitCommitCount is always added to FileVersion if it has less than 4 parts. -->
+      <FileVersion
+          Condition="$(FileVersion.Split('.').Length) &lt; 4">$(FileVersion).$(GitCommitCount)</FileVersion>
+      <!-- InformationalVersion will be set in Target GetAssemblyVersion and
+           SourceRevisionID will be added in Target AddSourceRevisionToInformationalVersion afterwards. -->
+      <IncludeSourceRevisionInInformationalVersion
+          Condition="'$(_VersionPrefix)' == '$(Version)'">false</IncludeSourceRevisionInInformationalVersion>
+    </PropertyGroup>
+  </Target>
+
+</Project>

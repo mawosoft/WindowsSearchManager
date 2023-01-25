@@ -1,0 +1,38 @@
+<Project>
+
+  <PropertyGroup Condition="'$(CI)' == ''">
+    <CI>false</CI>
+    <!-- GitHub already defines CI -->
+    <CI Condition="'$(TF_BUILD)' == 'true' or '$(APPVEYOR)' != ''">true</CI>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NetFxTfm Condition="'$(NetFxTfm)' == ''">net48</NetFxTfm>
+    <NetFxTfm Condition="! $([MSBuild]::IsOSPlatform('windows'))"></NetFxTfm>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <!-- Pinning still has some kinks. See https://github.com/NuGet/Home/issues/11952 -->
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+    <ContinuousIntegrationBuild>$(CI)</ContinuousIntegrationBuild>
+    <Deterministic>$(CI)</Deterministic>
+    <TreatWarningsAsErrors>$(CI)</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>Matthias Wolf</Authors>
+    <Company>Mawosoft</Company>
+    <Product>Mawosoft.PowerShell.WindowsSearchManager</Product>
+    <Copyright>Copyright (c) 2023 Matthias Wolf, Mawosoft</Copyright>
+    <Version>0.1.0-dev</Version>
+    <PSModuleName>WindowsSearchManager</PSModuleName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>
