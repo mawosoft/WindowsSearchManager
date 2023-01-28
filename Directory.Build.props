@@ -23,9 +23,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Authors>Matthias Wolf</Authors>
-    <Company>Mawosoft</Company>
-    <Product>Mawosoft.PowerShell.WindowsSearchManager</Product>
+    <Authors>Matthias Wolf, Mawosoft</Authors>
+    <Company>$(Authors)</Company>
+    <Product>WindowsSearchManager</Product>
     <Copyright>Copyright (c) 2023 Matthias Wolf, Mawosoft</Copyright>
     <Version>0.1.0-dev</Version>
     <PSModuleName>WindowsSearchManager</PSModuleName>

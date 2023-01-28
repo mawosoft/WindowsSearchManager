@@ -30,12 +30,62 @@
     <InternalsVisibleTo Include="$(AssemblyName).Tests" />
   </ItemGroup>
 
+  <!--
+    ============================================================
+
+    Handle PowerShell-specific files, e.g. module manifest
+
+    Use the PSModuleManifest item to specify the module manifest template.
+    The template should contain the placeholders @ModuleVersion@ and @Prerelease@ to be
+    replaced with a PS-compatible variant of the $(Version) property. The resulting manifest
+    will be written to the $(IntermediateOutputPath)
+
+    Use the PSAdditionalFiles item to include any other files like type or format definitions
+    that should be part of the PS module.
+    ============================================================
+  -->
+
   <ItemGroup>
-    <None Include="$(PSModuleName).psd1" >
+    <PSModuleManifest Include="$(PSModuleName).psd1" />
+    <PSAdditionalFiles Include="*.ps1xml" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PSModuleManifest Update="@(PSModuleManifest)">
+      <SourceItemSpec>%(Identity)</SourceItemSpec>
+    </PSModuleManifest>
+    <PSAdditionalFiles Remove="@(PSModuleManifest)" />
+    <PSAdditionalFiles Include="@(PSModuleManifest->'$(IntermediateOutputPath)%(FileName)%(Extension)')">
       <TargetPath>%(FileName)%(Extension)</TargetPath>
+      <Link>%(SourceItemSpec) (generated)</Link>
+      <DependentUpon>%(SourceItemSpec)</DependentUpon>
+      <!-- Alternatively:
+      <Link>(hidden)</Link>
+      <Visible>false</Visible>
+      -->
+    </PSAdditionalFiles>
+    <PSAdditionalFiles Update="@(PSAdditionalFiles)">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </None>
+      <Pack>true</Pack>
+    </PSAdditionalFiles>
+    <None Remove="@(PSAdditionalFiles)" />
+    <None Include="@(PSAdditionalFiles)" />
   </ItemGroup>
+
+  <Target Name="UpdatePSModuleManifest"
+          Inputs="@(PSModuleManifest);@(TargetPathWithTargetPlatformMoniker)"
+          Outputs="$(IntermediateOutputPath)%(PSModuleManifest.FileName)%(PSModuleManifest.Extension)"
+          AfterTargets="Compile"
+          DependsOnTargets="Compile;GetTargetPath">
+    <Exec Command="pwsh -NonInteractive -ExecutionPolicy Bypass -Command &quot;&amp; '../../build/updatePSModuleManifestVersion.ps1' -Path '%(PSModuleManifest.FullPath)' -Destination '$(IntermediateOutputPath)' -Version '$(Version)' &quot;"
+          WorkingDirectory = "$(MSBuildProjectDirectory)"
+          StandardErrorImportance="high"
+          StandardOutputImportance="low" />
+    <ItemGroup>
+      <FileWrites Include="$(IntermediateOutputPath)%(PSModuleManifest.FileName)%(PSModuleManifest.Extension)" />
+    </ItemGroup>
+  </Target>
 
 </Project>

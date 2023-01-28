@@ -6,7 +6,7 @@
 RootModule = 'Mawosoft.PowerShell.WindowsSearchManager.dll'
 
 # Version number of this module.
-ModuleVersion = '0.1.0'
+ModuleVersion = '@ModuleVersion@'
 
 # Supported PSEditions
 CompatiblePSEditions = @('Desktop', 'Core')
@@ -24,7 +24,7 @@ CompanyName = 'mawosoft'
 Copyright = 'Copyright (c) 2023 Matthias Wolf, Mawosoft. All rights reserved.'
 
 # Description of the functionality provided by this module
-# Description = ''
+Description = 'Powershell module for managing Windows Search.'
 
 # Minimum version of the PowerShell engine required by this module
 PowerShellVersion = '5.1'
@@ -66,8 +66,24 @@ PowerShellVersion = '5.1'
 FunctionsToExport = @()
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-# TODO explicit names
-CmdletsToExport = @('*')
+CmdletsToExport = @(
+    'Get-SearchManager'
+    'Set-SearchManager'
+    'Get-SearchCatalog'
+    'Set-SearchCatalog'
+    'New-SearchCatalog'
+    'Remove-SearchCatalog'
+    'Reset-SearchCatalog'
+    'Update-SearchCatalog'
+    'Get-SearchRoot'
+    'Add-SearchRoot'
+    'Remove-SearchRoot'
+    'Get-SearchRule'
+    'Add-SearchRule'
+    'Remove-SearchRule'
+    'Reset-SearchRule'
+    'Test-SearchRule'
+)
 
 # Variables to export from this module
 VariablesToExport = @()
@@ -76,19 +92,13 @@ VariablesToExport = @()
 AliasesToExport = @()
 
 # DSC resources to export from this module
-# DscResourcesToExport = @()
+DscResourcesToExport = @()
 
 # List of all modules packaged with this module
 # ModuleList = @()
 
 # List of all files packaged with this module
-FileList = @(
-    'Mawosoft.PowerShell.WindowsSearchManager.deps.json',
-    'Mawosoft.PowerShell.WindowsSearchManager.dll',
-    # TODO *-help.xml
-    'Mawosoft.PowerShell.WindowsSearchManager.xml',
-    'WindowsSearchManager.psd1'
-)
+# FileList = @()
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{
@@ -99,10 +109,10 @@ PrivateData = @{
         Tags = @('PSEdition_Desktop', 'PSEdition_Core', 'Windows', 'WindowsSearchManager', 'SearchManager', 'Windows Search')
 
         # A URL to the license for this module.
-        # LicenseUri = ''
+        LicenseUri = 'https://github.com/mawosoft/WindowsSearchManager/blob/master/LICENSE'
 
         # A URL to the main website for this project.
-        # ProjectUri = ''
+        ProjectUri = 'https://github.com/mawosoft/WindowsSearchManager'
 
         # A URL to an icon representing this module.
         # IconUri = ''
@@ -111,10 +121,10 @@ PrivateData = @{
         # ReleaseNotes = ''
 
         # Prerelease string of this module
-        Prerelease = '-dev' # TODO This and version needs to be auto-generated
+        Prerelease = '@Prerelease@'
 
         # Flag to indicate whether the module requires explicit user acceptance for install/update/save
-        # RequireLicenseAcceptance = $false
+        RequireLicenseAcceptance = $false
 
         # External dependent modules of this module
         # ExternalModuleDependencies = @()
@@ -130,4 +140,3 @@ PrivateData = @{
 # DefaultCommandPrefix = ''
 
 }
-
