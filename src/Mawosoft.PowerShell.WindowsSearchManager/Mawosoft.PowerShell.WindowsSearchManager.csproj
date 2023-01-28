@@ -1,4 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project>
+
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -13,7 +15,14 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Description>TODO All Package* things are handled by the PS module manifest</Description>
+    <!-- This is used as the source for Pack via Publish-Module and therefore must match the module name. -->
+    <PublishDirName>$(PSModuleName)</PublishDirName>
+    <!-- Forwarded as switch parameter -->
+    <SkipAutomaticTags Condition="'$(SkipAutomaticTags)' != 'true'">false</SkipAutomaticTags>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>Powershell module for managing Windows Search.</Description>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/mawosoft/WindowsSearchManager</RepositoryUrl>
     <DebugType>embedded</DebugType>
@@ -86,6 +95,29 @@
     <ItemGroup>
       <FileWrites Include="$(IntermediateOutputPath)%(PSModuleManifest.FileName)%(PSModuleManifest.Extension)" />
     </ItemGroup>
+  </Target>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+  <!--
+    ============================================================
+
+    Pack
+
+    Overwritten to generate a PSGallery-compatible NuGet package.
+    TODO (Pack)
+    - Inputs/Outputs to avoid running this every time.
+    - Should $($SkipAutomaticTags) default to true?
+    - Should we exclude *.deps.json from Publish/Pack?
+    ============================================================
+  -->
+
+  <Target Name="Pack"
+          DependsOnTargets="Publish">
+    <Exec Command="pwsh -NonInteractive -ExecutionPolicy Bypass -Command &quot;&amp; '../../build/packPSModule.ps1' -Path '$(PublishDir)' -Destination '$(PackageOutputPath)' -SkipAutomaticTags:$$(SkipAutomaticTags) &quot;"
+          WorkingDirectory = "$(MSBuildProjectDirectory)"
+          StandardErrorImportance="high"
+          StandardOutputImportance="low" />
   </Target>
 
 </Project>
