@@ -1,0 +1,33 @@
+{
+    "build": {
+        "content": [
+            {
+                "files": [
+                    "reference/*.md",
+                    "reference/toc.yml",
+                    "reference/index.md",
+                    "toc.yml",
+                    "index.md"
+                ]
+            }
+        ],
+        "dest": "_site",
+        "globalMetadata": {
+            "_appTitle": "Windows Search Manager",
+            "_appFooter": "Copyright &copy; 2023 Matthias Wolf, Mawosoft",
+            "_enableSearch": true,
+            "_enableNewTab": true
+        },
+        "globalMetadataFiles": [],
+        "fileMetadataFiles": [],
+        "template": [
+            "default"
+        ],
+        "postProcessors": [],
+        "markdownEngineName": "dfm",
+        "noLangKeyword": false,
+        "keepFileLink": false,
+        "cleanupCacheHistory": true,
+        "disableGitFeatures": false
+    }
+}

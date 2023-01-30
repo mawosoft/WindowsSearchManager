@@ -1,0 +1,22 @@
+<Project>
+
+  <Import Project="Sdk.props" Sdk="Microsoft.Build.NoTargets" Version="3.3.0" />
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LogLevel>Info</LogLevel>
+    <DocParameters>--warningsAsErrors</DocParameters>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="docfx.console" VersionOverride="2.59.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.Build.NoTargets" />
+
+  <Target Name="GetCopyToOutputDirectoryItems" />
+
+</Project>
