@@ -44,7 +44,7 @@ if (-not (Test-Path $Path -PathType Container)) {
 if (-not $BaseUri) {
     switch ($Base) {
         'repo' { 
-            $BaseUri = 'https://github.com/mawosoft/WinSearchManager/blob/master/docs/help/'
+            $BaseUri = 'https://github.com/mawosoft/WindowsSearchManager/blob/master/docs/help/'
             $Extension = '.md'
             break  
         }

@@ -1,7 +1,7 @@
 ---
 external help file: Mawosoft.PowerShell.WindowsSearchManager.dll-Help.xml
 Module Name: WindowsSearchManager
-online version: https://github.com/mawosoft/WinSearchManager/blob/master/docs/help/Remove-SearchRoot.md
+online version: https://github.com/mawosoft/WindowsSearchManager/blob/master/docs/help/Remove-SearchRoot.md
 schema: 2.0.0
 ---
 
