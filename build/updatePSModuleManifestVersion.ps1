@@ -86,7 +86,7 @@ if ($plusminus -ge 0) {
 }
 $manifest = $manifest -replace $moduleversionPattern, $moduleversion
 $manifest = $manifest -replace $prereleasePattern, $prerelease
-if ($WriteAlways -or -not (Test-Path $Destination -PathType Leaf) -or 
+if ($WriteAlways -or -not (Test-Path $Destination -PathType Leaf) -or
     -not $manifest.Equals((Get-Content $Destination -Raw), [StringComparison]::Ordinal)) {
     $manifest | Set-Content -Path $Destination
 }

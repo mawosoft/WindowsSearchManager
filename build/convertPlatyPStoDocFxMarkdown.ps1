@@ -10,7 +10,7 @@
 
 .NOTES
     TODO the actual conversion.
-    Either read the markdown or use platyPS\New-YamlHelp as intermediate step.
+    Either read the markdown or use platyPS\New-YamlHelp or the MAML as intermediate step.
 #>
 
 #Requires -Version 7
@@ -47,7 +47,7 @@ Join-Path $Path '*.md' | Get-ChildItem | ForEach-Object {
     [string]$content = Get-Content -Path $_ -Raw
     # TODO convert
     [string]$destinationFile = Join-Path $Destination $_.Name
-    if ($WriteAlways -or -not (Test-Path $destinationFile -PathType Leaf) -or 
+    if ($WriteAlways -or -not (Test-Path $destinationFile -PathType Leaf) -or
         -not $content.Equals((Get-Content $destinationFile -Raw), [StringComparison]::Ordinal)) {
         $content | Set-Content -Path $destinationFile
     }
