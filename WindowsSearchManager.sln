@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mawosoft.PowerShell.Windows
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mawosoft.PowerShell.WindowsSearchManager.Tests", "tests\Mawosoft.PowerShell.WindowsSearchManager.Tests\Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj", "{AD6EE66F-35F7-4A96-8D3C-62BD4B2FA981}"
 EndProject
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "help", "docs\help\help.msbuildproj", "{2A3D25E2-955F-4AD7-B062-7F5BD6A62AA1}"
+EndProject
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "docs", "docs\docs.msbuildproj", "{81E307F2-FB2F-4D0E-8C45-3EFDCD9583E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{AD6EE66F-35F7-4A96-8D3C-62BD4B2FA981}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD6EE66F-35F7-4A96-8D3C-62BD4B2FA981}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD6EE66F-35F7-4A96-8D3C-62BD4B2FA981}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A3D25E2-955F-4AD7-B062-7F5BD6A62AA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A3D25E2-955F-4AD7-B062-7F5BD6A62AA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A3D25E2-955F-4AD7-B062-7F5BD6A62AA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A3D25E2-955F-4AD7-B062-7F5BD6A62AA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81E307F2-FB2F-4D0E-8C45-3EFDCD9583E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81E307F2-FB2F-4D0E-8C45-3EFDCD9583E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81E307F2-FB2F-4D0E-8C45-3EFDCD9583E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81E307F2-FB2F-4D0E-8C45-3EFDCD9583E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

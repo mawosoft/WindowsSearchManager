@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.Build.NoTargets">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <EnableGitCommitCount>false</EnableGitCommitCount>
+    <MamlHelpFileName>$(PSRootModuleName).dll-Help.xml</MamlHelpFileName>
+    <PlatyPSImportPath>$([MSBuild]::NormalizePath($(PkgplatyPS), 'platyPS.psd1'))</PlatyPSImportPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MarkdownHelp Include="*.md" />
+    <!-- None is not auto-populated for *.msbuildproj -->
+    <None Include="@(MarkdownHelp)" />
+    <!-- Static definition needed for VStudio. Otherwise we would define this in the target. -->
+    <None Include="$(BaseIntermediateOutputPath)$(MamlHelpFileName)">
+      <TargetPath>$(MamlHelpFileName)</TargetPath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Link>(hidden)</Link>
+      <Visible>false</Visible>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="platyPS" PrivateAssets="all" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <Target Name="GenerateMamlHelp"
+          Inputs="@(MarkdownHelp)"
+          Outputs="$(BaseIntermediateOutputPath)$(MamlHelpFileName)"
+          AfterTargets="Compile">
+    <Exec Command="pwsh -NonInteractive -ExecutionPolicy Bypass -Command &quot;&amp; '../../build/generateMamlHelp.ps1' -Path '$(MSBuildProjectDirectory)' -Destination '$(BaseIntermediateOutputPath)' -PlatyPSImportPath '$(PlatyPSImportPath)' &quot;"
+          WorkingDirectory = "$(MSBuildProjectDirectory)"
+          StandardErrorImportance="high"
+          StandardOutputImportance="low" />
+    <ItemGroup>
+      <FileWrites Include="$(BaseIntermediateOutputPath)$(MamlHelpFileName)" />
+    </ItemGroup>
+  </Target>
+
+</Project>

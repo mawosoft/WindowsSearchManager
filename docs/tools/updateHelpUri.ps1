@@ -26,6 +26,7 @@ param(
     [ValidateNotNullOrEmpty()]
     [string]$BaseUri,
 
+    # File extension for online help pages
     [Parameter(Mandatory = $true, ParameterSetName = 'BaseUriParameterSet')]
     [ValidateNotNullOrEmpty()]
     [string]$Extension,
@@ -43,13 +44,13 @@ if (-not (Test-Path $Path -PathType Container)) {
 
 if (-not $BaseUri) {
     switch ($Base) {
-        'repo' { 
+        'repo' {
             $BaseUri = 'https://github.com/mawosoft/WindowsSearchManager/blob/master/docs/help/'
             $Extension = '.md'
-            break  
+            break
         }
-        Default { 
-            $BaseUri = 'https://mawosoft.github.io/WindowsSearchManager/'
+        Default {
+            $BaseUri = 'https://mawosoft.github.io/WindowsSearchManager/reference/'
             $Extension = '.html'
             break
         }
@@ -67,15 +68,15 @@ Join-Path $Path '*.md' | Get-ChildItem | ForEach-Object -Process {
             if ($lines[$i].Trim() -ceq '---') { break }
             if ($lines[$i].StartsWith('online version:', [StringComparison]::OrdinalIgnoreCase)) {
                 [string]$link = 'online version: ' + $BaseUri + $_.BaseName + $Extension
-                if ($link -cne $lines[$i]) { 
+                if ($link -cne $lines[$i]) {
                     $lines[$i] = $link
-                    $dirty = $true 
+                    $dirty = $true
                 }
                 break
             }
         }
     }
     if ($WriteAlways -or $dirty) {
-        $lines | Set-Content -Path  $_
+        $lines | Set-Content -Path $_
     }
 }

@@ -1,29 +1,29 @@
 <Project>
 
   <PropertyGroup>
+    <!-- TODO Should we pin this to 10.0.19041.0 for deterministic builds? -->
     <InteropSearchApiAssemblyPath Condition="'$(InteropSearchApiAssemblyPath)' == ''">$(
       [MSBuild]::NormalizePath(
-        $([Microsoft.Build.Utilities.ToolLocationHelper]::GetPlatformSDKLocation('Windows', '10.0')), 
-        'bin', 
-        $([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0')), 
-        'x64', 
+        $([Microsoft.Build.Utilities.ToolLocationHelper]::GetPlatformSDKLocation('Windows', '10.0')),
+        'bin',
+        $([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0')),
+        'x64',
         'interop.searchapi.dll')
     )</InteropSearchApiAssemblyPath>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageVersion Include="coverlet.collector" Version="3.2.0" />
+    <PackageVersion Include="docfx" Version="2.61.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
-    <PackageVersion Include="xunit" Version="2.4.2" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.5" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageVersion Include="PowerShellStandard.Library" Version="5.1.1" />
     <PackageVersion Include="Microsoft.PowerShell.5.1.ReferenceAssemblies" Version="1.0.0" />
     <PackageVersion Include="Microsoft.PowerShell.SDK" Version="7.2.8" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
+    <PackageVersion Include="platyPS" Version="0.14.2" />
+    <PackageVersion Include="PowerShellStandard.Library" Version="5.1.1" />
     <PackageVersion Include="System.Management.Automation" Version="7.2.8" />
+    <PackageVersion Include="xunit" Version="2.4.2" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.5" />
   </ItemGroup>
 
   <ItemGroup>

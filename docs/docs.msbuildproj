@@ -1,0 +1,90 @@
+<Project Sdk="Microsoft.Build.NoTargets">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RestoreProjectStyle>DotnetToolReference</RestoreProjectStyle>
+    <EnableGitCommitCount>false</EnableGitCommitCount>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DocFxToolPath>$([MSBuild]::NormalizePath($(Pkgdocfx), 'tools/net7.0/any/docfx.dll'))</DocFxToolPath>
+    <DocFxConfigFile Condition="'$(DocFxConfigFile)' == ''">$(MSBuildProjectDirectory)/docfx.json</DocFxConfigFile>
+    <DocFxWarningsAsErrors Condition="'$(DocFxWarningsAsErrors)' == ''">$(CI)</DocFxWarningsAsErrors>
+    <!-- Additional DocFx options can be specified via $(DocFxOptions) property -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <MarkdownHelp Include="help\*.md" />
+    <MarkdownReference Include="@(MarkdownHelp->'reference\%(Filename)%(Extension)')" />
+    <DocFxInput Include="reference\*.*" />
+    <DocFxInput Include="$(DocFxConfigFile)" />
+    <DocFxInput Include="index.md;toc.yml" />
+    <!-- None is not auto-populated for *.msbuildproj -->
+    <None Include="@(MarkdownHelp)" />
+    <None Include="@(MarkdownReference)" />
+    <None Include="@(DocFxInput)" Exclude="@(MarkdownReference)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="docfx" PrivateAssets="all" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- PackageVersion/CPM is ignored for DotnetToolReference style -->
+    <PackageReference Update="@(PackageVersion)" Version="%(PackageVersion.Version)" />
+    <!-- Apply possible VersionOverride as well to mimic CPM -->
+    <PackageReference Update="@(PackageReference->HasMetadata('VersionOverride'))" Version="%(PackageReference.VersionOverride)" />
+  </ItemGroup>
+
+  <Target Name="ConvertPlatyPStoDocFxMarkdown"
+          Inputs="@(MarkdownHelp)"
+          Outputs="@(MarkdownReference)">
+    <Exec Command="pwsh -NonInteractive -ExecutionPolicy Bypass -Command &quot;&amp; '../build/convertPlatyPStoDocFxMarkdown.ps1' -Path './help' -Destination './reference' &quot;"
+          WorkingDirectory = "$(MSBuildProjectDirectory)"
+          StandardErrorImportance="high"
+          StandardOutputImportance="low" />
+    <ItemGroup>
+      <FileWrites Include="@(MarkdownReference)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="GenerateDocs"
+          Inputs="@(DocFxInput)"
+          Outputs="_site/manifest.json"
+          AfterTargets="Compile"
+          DependsOnTargets="ConvertPlatyPStoDocFxMarkdown">
+    <PropertyGroup>
+      <_DocFxOptions>$(DocFxOptions)</_DocFxOptions>
+      <_DocFxOptions Condition="'$(DocFxWarningsAsErrors)' == 'true'">$(_DocFxOptions) --warningsAsErrors</_DocFxOptions>
+    </PropertyGroup>
+    <Exec Command="dotnet &quot;$(DocFxToolPath)&quot; &quot;$(DocFxConfigFile)&quot; $(_DocFxOptions) "
+          WorkingDirectory = "$(MSBuildProjectDirectory)"
+          CustomWarningRegularExpression = "\s+[1-9]\d* warning\(s\)"
+          CustomErrorRegularExpression = "\s+[1-9]\d* error\(s\)"
+          StandardErrorImportance="high"
+          StandardOutputImportance="low" />
+    <ItemGroup>
+      <!-- TODO none of the recorded FileWrites are written to docs\obj\Debug\netstandard2.0\docs.msbuildproj.FileListAbsolute.txt -->
+      <FileWrites Include="_site/**" />
+      <FileWrites Include="$(BaseIntermediateOutputPath).cache/**" />
+    </ItemGroup>
+  </Target>
+
+  <!--
+    ============================================================
+
+    RestoreForVStudio
+
+    For some reason, VStudio is unable to restore projects with RestoreProjectStyle == DotnetToolReference.
+    This runs an explicit restore when building inside VStudio and project.assets.json doesn't exist.
+    TODO Changes to assets file are not recognized.
+    ============================================================
+  -->
+
+  <Target Name="RestoreForVStudio"
+          BeforeTargets="RunResolvePackageDependencies"
+          Condition="'$(BuildingInsideVisualStudio)' == 'true' And !Exists('$(ProjectAssetsFile)')">
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Restore" />
+  </Target>
+
+</Project>

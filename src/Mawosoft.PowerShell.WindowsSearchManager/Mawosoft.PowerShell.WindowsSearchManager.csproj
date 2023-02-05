@@ -6,19 +6,12 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <NeutralLanguage>en-US</NeutralLanguage>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
     <!-- CS1591  Missing XML comment... Reason: Command help is generated via other means.
          MSB3270 Processor architecture mismatch. Reason: interop.searchapi.dll only has processor-specific flavors,
                  but we only use it to embed the interop types, in which case architecture doesn't matter.
     -->
     <NoWarn>$(NoWarn);CS1591;MSB3270</NoWarn>
-    <PublishDirName>$(PSModuleName)</PublishDirName>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <!-- This is used as the source for Pack via Publish-Module and therefore must match the module name. -->
-    <PublishDirName>$(PSModuleName)</PublishDirName>
-    <!-- Forwarded as switch parameter -->
-    <SkipAutomaticTags Condition="'$(SkipAutomaticTags)' != 'true'">false</SkipAutomaticTags>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -31,6 +24,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../../docs/help/help.msbuildproj" ReferenceOutputAssembly="false" SkipGetTargetFrameworkProperties="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
     <PackageReference Include="PowerShellStandard.Library" PrivateAssets="All" />
     <Reference Include="Interop.SearchAPI" HintPath="$(InteropSearchApiAssemblyPath)" EmbedInteropTypes="true" Private="false" />
   </ItemGroup>
@@ -54,11 +52,17 @@
     ============================================================
   -->
 
+  <PropertyGroup>
+    <!-- This is used as the source for Pack via Publish-Module and therefore must match the module name. -->
+    <PublishDirName>$(PSModuleName)</PublishDirName>
+    <!-- Forwarded as switch parameter -->
+    <SkipAutomaticTags Condition="'$(SkipAutomaticTags)' != 'true'">false</SkipAutomaticTags>
+  </PropertyGroup>
+
   <ItemGroup>
     <PSModuleManifest Include="$(PSModuleName).psd1" />
     <PSAdditionalFiles Include="*.ps1xml" />
   </ItemGroup>
-
 
   <ItemGroup>
     <PSModuleManifest Update="@(PSModuleManifest)">
@@ -67,11 +71,11 @@
     <PSAdditionalFiles Remove="@(PSModuleManifest)" />
     <PSAdditionalFiles Include="@(PSModuleManifest->'$(IntermediateOutputPath)%(FileName)%(Extension)')">
       <TargetPath>%(FileName)%(Extension)</TargetPath>
-      <Link>%(SourceItemSpec) (generated)</Link>
-      <DependentUpon>%(SourceItemSpec)</DependentUpon>
-      <!-- Alternatively:
       <Link>(hidden)</Link>
       <Visible>false</Visible>
+      <!-- Alternatively:
+      <Link>%(SourceItemSpec) (generated)</Link>
+      <DependentUpon>%(SourceItemSpec)</DependentUpon>
       -->
     </PSAdditionalFiles>
     <PSAdditionalFiles Update="@(PSAdditionalFiles)">
@@ -84,10 +88,11 @@
   </ItemGroup>
 
   <Target Name="UpdatePSModuleManifest"
-          Inputs="@(PSModuleManifest);@(TargetPathWithTargetPlatformMoniker)"
+          Inputs="@(PSModuleManifest);@(IntermediateAssembly)"
           Outputs="$(IntermediateOutputPath)%(PSModuleManifest.FileName)%(PSModuleManifest.Extension)"
           AfterTargets="Compile"
-          DependsOnTargets="Compile;GetTargetPath">
+          DependsOnTargets="Compile"
+          Condition="Exists('@(IntermediateAssembly)')">
     <Exec Command="pwsh -NonInteractive -ExecutionPolicy Bypass -Command &quot;&amp; '../../build/updatePSModuleManifestVersion.ps1' -Path '%(PSModuleManifest.FullPath)' -Destination '$(IntermediateOutputPath)' -Version '$(Version)' &quot;"
           WorkingDirectory = "$(MSBuildProjectDirectory)"
           StandardErrorImportance="high"
@@ -108,7 +113,6 @@
     TODO (Pack)
     - Inputs/Outputs to avoid running this every time.
     - Should $($SkipAutomaticTags) default to true?
-    - Should we exclude *.deps.json from Publish/Pack?
     ============================================================
   -->
 
