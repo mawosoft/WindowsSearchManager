@@ -8,3 +8,4 @@ Param ()
 Get-ChildItem -Path $PSScriptRoot -Directory -Recurse -Include bin, obj, _site | Remove-Item -Recurse
 Get-ChildItem -Path $PSScriptRoot -File -Filter log.txt | Remove-Item
 Get-ChildItem -Path "$PSScriptRoot/reference/*" -File -Exclude 'index.*', 'toc.*' | Remove-Item
+Get-ChildItem -Path "$PSScriptRoot/reference/includes/index-*.md" -File | Remove-Item

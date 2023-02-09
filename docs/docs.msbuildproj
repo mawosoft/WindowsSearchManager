@@ -9,20 +9,22 @@
   <PropertyGroup>
     <DocFxToolPath>$([MSBuild]::NormalizePath($(Pkgdocfx), 'tools/net7.0/any/docfx.dll'))</DocFxToolPath>
     <DocFxConfigFile Condition="'$(DocFxConfigFile)' == ''">$(MSBuildProjectDirectory)/docfx.json</DocFxConfigFile>
-    <DocFxWarningsAsErrors Condition="'$(DocFxWarningsAsErrors)' == ''">$(CI)</DocFxWarningsAsErrors>
-    <!-- Additional DocFx options can be specified via $(DocFxOptions) property -->
+    <DocFxOptions Condition="'$(CI)' == 'true'">$(DocFxOptions) --warningsAsErrors</DocFxOptions>
   </PropertyGroup>
 
   <ItemGroup>
     <MarkdownHelp Include="help\*.md" />
     <MarkdownReference Include="@(MarkdownHelp->'reference\%(Filename)%(Extension)')" />
-    <DocFxInput Include="reference\*.*" />
-    <DocFxInput Include="$(DocFxConfigFile)" />
+    <!-- Anything else generated under reference/** that may not yet exist depends on the on the ones above.
+         Thus, it's safe here to use wildcards that only capture existing items. -->
+    <DocFxInput Include="reference\**\*" />
+    <DocFxInput Include="templates\**\*" />
     <DocFxInput Include="index.md;toc.yml" />
+    <DocFxInput Include="$(DocFxConfigFile)" />
     <!-- None is not auto-populated for *.msbuildproj -->
     <None Include="@(MarkdownHelp)" />
-    <None Include="@(MarkdownReference)" />
-    <None Include="@(DocFxInput)" Exclude="@(MarkdownReference)" />
+    <None Include="@(DocFxInput)" />
+    <DocFxInput Include="@(MarkdownReference)" Exclude="@(DocFxInput)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,9 +45,6 @@
           WorkingDirectory = "$(MSBuildProjectDirectory)"
           StandardErrorImportance="high"
           StandardOutputImportance="low" />
-    <ItemGroup>
-      <FileWrites Include="@(MarkdownReference)" />
-    </ItemGroup>
   </Target>
 
   <Target Name="GenerateDocs"
@@ -53,21 +52,32 @@
           Outputs="_site/manifest.json"
           AfterTargets="Compile"
           DependsOnTargets="ConvertPlatyPStoDocFxMarkdown">
-    <PropertyGroup>
-      <_DocFxOptions>$(DocFxOptions)</_DocFxOptions>
-      <_DocFxOptions Condition="'$(DocFxWarningsAsErrors)' == 'true'">$(_DocFxOptions) --warningsAsErrors</_DocFxOptions>
-    </PropertyGroup>
-    <Exec Command="dotnet &quot;$(DocFxToolPath)&quot; &quot;$(DocFxConfigFile)&quot; $(_DocFxOptions) "
+    <Exec Command="dotnet &quot;$(DocFxToolPath)&quot; &quot;$(DocFxConfigFile)&quot; $(DocFxOptions) "
           WorkingDirectory = "$(MSBuildProjectDirectory)"
           CustomWarningRegularExpression = "\s+[1-9]\d* warning\(s\)"
           CustomErrorRegularExpression = "\s+[1-9]\d* error\(s\)"
           StandardErrorImportance="high"
           StandardOutputImportance="low" />
-    <ItemGroup>
-      <!-- TODO none of the recorded FileWrites are written to docs\obj\Debug\netstandard2.0\docs.msbuildproj.FileListAbsolute.txt -->
-      <FileWrites Include="_site/**" />
-      <FileWrites Include="$(BaseIntermediateOutputPath).cache/**" />
-    </ItemGroup>
+  </Target>
+
+  <!--
+    ============================================================
+
+    CleanDocs
+
+    Cleaning via recorded @(FileWrites)/@(FileWritesShareable) only works for files under
+    $(IntermediateOutputPath) and $(OutDir). It's also not suitable for cleaning entire directories.
+    ============================================================
+  -->
+
+  <Target Name="CleanDocs" BeforeTargets="CoreClean">
+      <ItemGroup>
+        <Clean Include="@(MarkdownReference)" />
+        <Clean Include="reference/includes/index-*.md" />
+        <_CleanDir Include="_site" />
+        <_CleanDir Include="$(BaseIntermediateOutputPath).cache" />
+      </ItemGroup>
+      <RemoveDir Directories="@(_CleanDir)" />
   </Target>
 
   <!--

@@ -1,6 +1,4 @@
 - name: Home
-  href: ./
-  topicHref: index.md
+  href: ./index.md
 - name: Reference
-  href: reference/
-  topicHref: reference/index.md
+  href: reference/index.md
