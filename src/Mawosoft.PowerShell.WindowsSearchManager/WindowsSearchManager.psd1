@@ -106,7 +106,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = @('PSEdition_Desktop', 'PSEdition_Core', 'Windows', 'WindowsSearchManager', 'SearchManager', 'Windows Search')
+        Tags = @('PSEdition_Desktop', 'PSEdition_Core', 'Windows', 'Search', 'WindowsSearchManager', 'SearchManager')
 
         # A URL to the license for this module.
         LicenseUri = 'https://github.com/mawosoft/WindowsSearchManager/blob/master/LICENSE'

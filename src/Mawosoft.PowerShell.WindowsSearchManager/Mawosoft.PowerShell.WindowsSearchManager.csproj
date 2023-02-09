@@ -56,6 +56,7 @@
     <!-- This is used as the source for Pack via Publish-Module and therefore must match the module name. -->
     <PublishDirName>$(PSModuleName)</PublishDirName>
     <!-- Forwarded as switch parameter -->
+    <SkipAutomaticTags Condition="'$(SkipAutomaticTags)' == ''">true</SkipAutomaticTags>
     <SkipAutomaticTags Condition="'$(SkipAutomaticTags)' != 'true'">false</SkipAutomaticTags>
   </PropertyGroup>
 
@@ -112,7 +113,6 @@
     Overwritten to generate a PSGallery-compatible NuGet package.
     TODO (Pack)
     - Inputs/Outputs to avoid running this every time.
-    - Should $($SkipAutomaticTags) default to true?
     ============================================================
   -->
 
