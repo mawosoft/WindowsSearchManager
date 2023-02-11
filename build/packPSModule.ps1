@@ -37,8 +37,12 @@ param(
 Set-StrictMode -Version 3.0
 $ErrorActionPreference = 'Stop'
 
+if (-not (Test-Path $Path -PathType Container)) {
+    throw "Directory does not exist: $Path"
+}
 if (-not (Test-Path $Destination -PathType Container)) {
-    throw "Directory does not exist: $Destination"
+    # Destination may not exist if overwritten via cmdline option
+    $null = New-Item $Destination -ItemType 'Directory'
 }
 
 [string]$tempRepoName = [Path]::GetRandomFileName()

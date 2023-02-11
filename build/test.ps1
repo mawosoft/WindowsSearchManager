@@ -13,7 +13,7 @@ Param (
 
     [Parameter(Mandatory)]
     # Subset of Microsoft.NET.SupportedTargetFrameworks.props
-    [ValidateSet("net461", "net462", "net472", "net48", "netstandard2.0", "netcoreapp3.1", "net5.0", "net6.0")]
+    [ValidateSet("net461", "net462", "net472", "net48", "netstandard2.0", "netcoreapp3.1", "net5.0", "net6.0", "net7.0")]
     [Alias("f")]
     [string[]]$Frameworks,
 
