@@ -1,0 +1,28 @@
+codecov:
+  strict_yaml_branch: master
+  require_ci_to_pass: no
+
+coverage:
+  status:
+    project:
+      default: false
+      src:
+        paths:
+          - src
+        target: auto
+        threshold: 2%
+        informational: true
+        if_ci_failed: success
+    patch:
+      default:
+        target: auto
+        threshold: 5%
+        informational: true
+        if_ci_failed: success
+
+github_checks:
+  annotations: false
+
+comment:
+  layout: diff, files
+  behavior: default

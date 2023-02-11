@@ -1,0 +1,210 @@
+name: CI/CD
+
+on:
+  workflow_dispatch:
+    inputs:
+      os:
+        description: 'Matrix or single OS'
+        type: choice
+        default: 'matrix'
+        options:
+        - matrix
+        - windows-latest
+        - windows-2019
+      fail-fast:
+        description: 'Fail fast'
+        type: boolean
+      skip-tests:
+        description: 'Skip tests'
+        type: boolean
+      deploy:
+        description: 'Deploy packages'
+        type: boolean
+      release:
+        description: 'Create GitHub release'
+        type: boolean
+  push:
+    branches: master
+  pull_request:
+    branches: master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: pwsh
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  Prepare:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Prepare Build matrix
+      id: prep
+      run: |
+        $os = "[""windows-latest"", ""windows-2019""]"
+        if ($${{ github.event.inputs.os != 'matrix' && github.event.inputs.os != '' }}) {
+          $os = "[""${{ github.event.inputs.os }}""]"
+        }
+        echo "os=$os" >>$env:GITHUB_OUTPUT
+    outputs:
+      matrix_os: ${{ steps.prep.outputs.os }}
+
+  Build:
+    needs: Prepare
+    outputs:
+      deploy: ${{ steps.set_output.outputs.deploy }}
+      release: ${{ steps.set_output.outputs.release }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: ${{ fromJSON(needs.Prepare.outputs.matrix_os) }}
+      fail-fast: ${{ github.event.inputs.fail-fast == 'true' }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: DotNet Info
+      run: dotnet --info
+    - name: Build
+      env:
+        MSBuildDebugEngine: 1 # Auto-creates binlogs in ./MSBuild_Logs
+        # Fix incomplete binlogs in MSBuild <=17.3.x. See https://github.com/mawosoft/Mawosoft.Extensions.BenchmarkDotNet/issues/146
+        MSBUILDLOGTASKINPUTS: 1
+        MSBUILDTARGETOUTPUTLOGGING: true
+        MSBUILDLOGIMPORTS: 1
+        MSBUILDLOGALLENVIRONMENTVARIABLES: true
+      run: |
+        . ./build/startNativeExecution.ps1
+        Set-Alias exec Start-NativeExecution
+        exec { dotnet restore }
+        # Parallel builds causing trouble here
+        exec { dotnet build ./docs/help/help.msbuildproj --no-restore }
+        exec { dotnet build ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Debug --no-restore --no-dependencies }
+        exec { dotnet build ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Release --no-restore --no-dependencies }
+        exec { dotnet build ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug --no-restore --no-dependencies }
+        exec { dotnet build ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Release --no-restore --no-dependencies }
+        exec { dotnet build ./docs/docs.msbuildproj --no-restore }
+        exec { dotnet pack ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Release --no-build -o ./Packages }
+    - name: Upload Binlogs
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.os }}-Binlogs
+        path: '**/MSBuild_Logs/*'
+    - name: Upload Packages
+      if: ${{ matrix.os == 'windows-latest' || strategy.job-total == 1 }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: Packages
+        path: ./Packages/
+    - name: Upload Docs Website
+      if: ${{ matrix.os == 'windows-latest' || strategy.job-total == 1 }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: DocsWebsite
+        path: ./docs/_site/
+    - name: Set Deployment and Release Outputs
+      id: set_output
+      if: ${{ (matrix.os == 'windows-latest' || strategy.job-total == 1) && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') }}
+      run: |
+        [string] $semver = '^(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)(?:-(?<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
+        $docElement = (select-xml -Path ./Directory.Build.props -XPath "/*").Node
+        $version = (select-xml -Xml $docElement -XPath "//ns:Version" -Namespace @{ ns = $docElement.NamespaceURI }).Node.InnerText
+        if ($version -cnotmatch $semver)
+        {
+            throw "Invalid Version property."
+        }
+        # TODO We might allow tags starting with 'rc' or 'pre' to be published to Nuget.
+        if ($Matches.prerelease) {
+          $deploy = "Azure"
+          $release = ""
+        }
+        else {
+          $deploy = "Nuget"
+          $release = "v$version"
+        }
+        Write-Host "Version: $version, Deploy: $deploy, Release: $release"
+        echo "deploy=$deploy" >>$env:GITHUB_OUTPUT
+        echo "release=$release" >>$env:GITHUB_OUTPUT
+    - name: Test
+      id: test
+      if: ${{ github.event.inputs.skip-tests != 'true' }}
+      run: |
+        ./build/test.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug, Release -f net7.0, net6.0, net48 -v detailed -r ./TestResults -ff:$${{ strategy.fail-fast }}
+    - name: Upload Test results
+      if: ${{ always() && steps.test.outcome != 'skipped' }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.os }}-Testresults
+        path: ./TestResults/
+
+  Deploy:
+    needs: Build
+    if: ${{ needs.Build.outputs.deploy != '' && github.event.inputs.deploy != 'false' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download Packages
+      uses: actions/download-artifact@v3
+      with:
+        name: Packages
+        path: ./Packages/
+    - name: Install Azure Credential Provider
+      run: Invoke-Expression "& { $(Invoke-RestMethod https://aka.ms/install-artifacts-credprovider.ps1) }"
+    - name: Deploy to Azure
+      env:
+        VSS_NUGET_EXTERNAL_FEED_ENDPOINTS: '{"endpointCredentials": [{"endpoint":"https://pkgs.dev.azure.com/mawosoft-de/public/_packaging/public/nuget/v3/index.json", "password":"${{ secrets.AZURE_PACKAGE_PAT }}"}]}'
+      run: dotnet nuget push ./Packages/*.nupkg --skip-duplicate --source https://pkgs.dev.azure.com/mawosoft-de/public/_packaging/public/nuget/v3/index.json --api-key az
+
+  Publish:
+    needs: Build
+    if: ${{ needs.Build.outputs.deploy == 'Nuget' && github.event.inputs.deploy != 'false' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download Packages
+      uses: actions/download-artifact@v3
+      with:
+        name: Packages
+        path: ./Packages/
+    - name: Publish to Nuget
+      run: dotnet nuget push ./Packages/*.nupkg --skip-duplicate --source https://www.powershellgallery.com/api/v2/package/ --api-key ${{ secrets.PSGALLERY_API_KEY }}
+
+  gh-pages:
+    needs: Build
+    if: ${{ needs.Build.outputs.release != '' && github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download Docs Website
+      uses: actions/download-artifact@v3
+      with:
+        name: DocsWebsite
+        path: ./DocsWebsite/
+    - name: Publish to gh-pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./DocsWebsite/
+        force_orphan: true
+
+  Release:
+    needs: Build
+    if: ${{ needs.Build.outputs.release != '' && github.event.inputs.release != 'false' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 1
+    - name: Create GitHub release
+      # TODO release notes
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ needs.Build.outputs.release }}
+        generate_release_notes: false # false is default. Seems to draw from PRs only.

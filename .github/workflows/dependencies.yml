@@ -1,0 +1,34 @@
+name: Dependency Check
+
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: '0 5 * * *'
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  Dependencies:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 1
+    - name: dotnet Version
+      run: dotnet --version
+    - name: Restore
+      run: |
+        . ./build/startNativeExecution.ps1
+        Start-NativeExecution { dotnet restore }
+    - name: Check project dependencies
+      id: dependencies
+      run: ./build/checkDependencies.ps1 -Token (ConvertTo-SecureString ${{ secrets.GITHUB_TOKEN }} -AsPlainText)
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ steps.dependencies.outputs.ArtifactName }}
+        path: ${{ steps.dependencies.outputs.ArtifactPath }}
+        retention-days: 5

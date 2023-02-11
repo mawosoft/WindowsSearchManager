@@ -1,0 +1,74 @@
+name: $(date:yyyyMMdd)$(rev:.r)
+
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: master
+
+trigger:
+  batch: true
+  branches: { include: [master] }
+
+pr:
+  autoCancel: true
+  branches: { include: [master] }
+
+pool:
+  vmImage: windows-latest
+
+variables:
+  disable.coverage.autogenerate: true
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+steps:
+- checkout: self
+- pwsh: dotnet --info
+  displayName: DotNet Info
+- pwsh: |
+    . ./build/startNativeExecution.ps1
+    Set-Alias exec Start-NativeExecution
+    exec { dotnet restore }
+    exec { dotnet build ./docs/help/help.msbuildproj -c Debug --no-restore }
+    exec { dotnet build ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Debug --no-restore }
+    exec { dotnet build ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug --no-restore }
+  displayName: Build
+  env:
+    MSBuildDebugEngine: 1 # Auto-creates binlogs in ./MSBuild_Logs
+    # Fix incomplete binlogs in MSBuild <=17.3.x. See https://github.com/mawosoft/Mawosoft.Extensions.BenchmarkDotNet/issues/146
+    MSBUILDLOGTASKINPUTS: 1
+    MSBUILDTARGETOUTPUTLOGGING: true
+    MSBUILDLOGIMPORTS: 1
+    MSBUILDLOGALLENVIRONMENTVARIABLES: true
+- publish: ./MSBuild_Logs
+  condition: succeededOrFailed()
+  artifact: azp-Binlogs
+  displayName: Upload Binlogs
+- pwsh: ./build/test.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug -f net7.0, net6.0, net48 -v detailed -r ./TestResults -s ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/coverlet.runsettings
+  displayName: Test
+- task: reportgenerator@5
+  condition: succeededOrFailed()
+  inputs:
+    reports: ./TestResults/*/Debug/*/*.xml
+    targetdir: ./TestResults/report
+    reporttypes: Cobertura;HtmlInline_AzurePipelines
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testResultsFormat: VSTest
+    testResultsFiles: '*/Debug/*/*.trx'
+    searchFolder: ./TestResults
+    publishRunAttachments: false
+- task: PublishCodeCoverageResults@1
+  condition: succeededOrFailed()
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: ./TestResults/report/Cobertura.xml
+    reportDirectory: ./TestResults/report
+- pwsh: |
+    $null = Invoke-WebRequest -Uri https://uploader.codecov.io/latest/windows/codecov.exe -OutFile ./codecov.exe
+    ./codecov.exe -f ./TestResults/report/Cobertura.xml -t $(CODECOV_TOKEN)
+  condition: succeededOrFailed()
+  displayName: Upload to codecov.io
