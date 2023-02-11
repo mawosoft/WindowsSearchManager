@@ -3,6 +3,15 @@ name: Build and Publish Docs Website
 on:
   workflow_dispatch:
 
+defaults:
+  run:
+    shell: pwsh
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
 jobs:
   gh-pages:
     runs-on: ubuntu-latest
