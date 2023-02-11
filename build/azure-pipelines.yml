@@ -51,14 +51,14 @@ steps:
 - task: reportgenerator@5
   condition: succeededOrFailed()
   inputs:
-    reports: ./TestResults/*/Debug/*/*.xml
+    reports: ./TestResults/Debug/*/*.xml
     targetdir: ./TestResults/report
     reporttypes: Cobertura;HtmlInline_AzurePipelines
 - task: PublishTestResults@2
   condition: succeededOrFailed()
   inputs:
     testResultsFormat: VSTest
-    testResultsFiles: '*/Debug/*/*.trx'
+    testResultsFiles: 'Debug/*/*.trx'
     searchFolder: ./TestResults
     publishRunAttachments: false
 - task: PublishCodeCoverageResults@1
