@@ -1,0 +1,13 @@
+apiRules:
+- exclude:
+    uidRegex: ^System\.Object
+    type: member # Avoid list of inherited Object members for each type.
+- include:
+    uidRegex: ^Mawosoft\.PowerShell\.WindowsSearchManager\.[A-Za-z]+?Info$
+    type: type
+- include:
+    uidRegex: ^Mawosoft\.PowerShell\.WindowsSearchManager\.[A-Za-z]+?Info\..*
+    type: type
+- exclude:
+    uidRegex: ^Mawosoft\.PowerShell\.WindowsSearchManager
+    type: type

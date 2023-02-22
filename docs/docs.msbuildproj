@@ -17,9 +17,11 @@
     <MarkdownReference Include="@(MarkdownHelp->'reference\%(Filename)%(Extension)')" />
     <!-- Anything else generated under reference/** that may not yet exist depends on the on the ones above.
          Thus, it's safe here to use wildcards that only capture existing items. -->
+    <DocFxInput Include="api\index.md" />
     <DocFxInput Include="reference\**\*" />
     <DocFxInput Include="templates\**\*" />
-    <DocFxInput Include="index.md;toc.yml" />
+    <DocFxInput Include="*.yml" />
+    <DocFxInput Include="index.md" />
     <DocFxInput Include="$(DocFxConfigFile)" />
     <!-- None is not auto-populated for *.msbuildproj -->
     <None Include="@(MarkdownHelp)" />
@@ -74,6 +76,8 @@
       <ItemGroup>
         <Clean Include="@(MarkdownReference)" />
         <Clean Include="reference/includes/index-*.md" />
+        <Clean Include="api/*.yml" />
+        <Clean Include="api/.manifest" />
         <_CleanDir Include="_site" />
         <_CleanDir Include="$(BaseIntermediateOutputPath).cache" />
       </ItemGroup>

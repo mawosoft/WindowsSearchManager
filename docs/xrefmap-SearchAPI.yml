@@ -1,0 +1,34 @@
+### YamlMime:XRefMap
+baseUrl: https://learn.microsoft.com/en-us/windows/win32/api/searchapi/
+sorted: false # if true and not exactly sorted as DocFx expects, some xrefs will not resolve.
+references:
+- uid: SearchAPI._AUTH_TYPE
+  name: _AUTH_TYPE
+  href: ne-searchapi-auth_type
+  commentId: T:SearchAPI._AUTH_TYPE
+  fullName: SearchAPI._AUTH_TYPE
+  nameWithType: _AUTH_TYPE
+- uid: SearchAPI._CatalogPausedReason
+  name: _CatalogPausedReason
+  href: ne-searchapi-catalogpausedreason
+  commentId: T:SearchAPI._CatalogPausedReason
+  fullName: SearchAPI._CatalogPausedReason
+  nameWithType: _CatalogPausedReason
+- uid: SearchAPI._CatalogStatus
+  name: _CatalogStatus
+  href: ne-searchapi-catalogstatus
+  commentId: T:SearchAPI._CatalogStatus
+  fullName: SearchAPI._CatalogStatus
+  nameWithType: _CatalogStatus
+- uid: SearchAPI.CLUSION_REASON
+  name: CLUSION_REASON
+  href: ne-searchapi-clusion_reason
+  commentId: T:SearchAPI.CLUSION_REASON
+  fullName: SearchAPI.CLUSION_REASON
+  nameWithType: CLUSION_REASON
+- uid: SearchAPI._PROXY_ACCESS
+  name: _PROXY_ACCESS
+  href: ne-searchapi-proxy_access
+  commentId: T:SearchAPI._PROXY_ACCESS
+  fullName: SearchAPI._PROXY_ACCESS
+  nameWithType: _PROXY_ACCESS

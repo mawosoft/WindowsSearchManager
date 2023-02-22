@@ -33,3 +33,5 @@
     href: Test-SearchRule.md
   - name: Update-SearchCatalog
     href: Update-SearchCatalog.md
+- name: Mawosoft.PowerShell.WindowsSearchManager
+  href: ../api/Mawosoft.PowerShell.WindowsSearchManager.yml
