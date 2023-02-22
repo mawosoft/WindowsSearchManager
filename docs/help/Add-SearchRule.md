@@ -1,7 +1,7 @@
 ---
 external help file: Mawosoft.PowerShell.WindowsSearchManager.dll-Help.xml
 Module Name: WindowsSearchManager
-online version: https://github.com/mawosoft/WindowsSearchManager/blob/master/docs/help/Add-SearchRule.md
+online version: https://mawosoft.github.io/WindowsSearchManager/reference/Add-SearchRule.html
 schema: 2.0.0
 ---
 
@@ -41,7 +41,7 @@ PS C:\> {{ Add example code here }}
 {{ Fill Catalog Description }}
 
 ```yaml
-Type: String
+Type: System.String
 Parameter Sets: (All)
 Aliases:
 
@@ -56,7 +56,7 @@ Accept wildcard characters: False
 Prompts you for confirmation before running the cmdlet.
 
 ```yaml
-Type: SwitchParameter
+Type: System.Management.Automation.SwitchParameter
 Parameter Sets: (All)
 Aliases: cf
 
@@ -71,7 +71,7 @@ Accept wildcard characters: False
 {{ Fill InputObject Description }}
 
 ```yaml
-Type: SearchRuleInfo[]
+Type: Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo[]
 Parameter Sets: InputParameterSet
 Aliases:
 
@@ -86,7 +86,7 @@ Accept wildcard characters: False
 {{ Fill OverrideChildren Description }}
 
 ```yaml
-Type: SwitchParameter
+Type: System.Management.Automation.SwitchParameter
 Parameter Sets: PathParameterSet
 Aliases:
 
@@ -101,7 +101,7 @@ Accept wildcard characters: False
 {{ Fill Path Description }}
 
 ```yaml
-Type: String[]
+Type: System.String[]
 Parameter Sets: PathParameterSet
 Aliases:
 
@@ -116,7 +116,7 @@ Accept wildcard characters: False
 {{ Fill RuleSet Description }}
 
 ```yaml
-Type: SearchRuleSet
+Type: Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo+SearchRuleSet
 Parameter Sets: PathParameterSet
 Aliases:
 Accepted values: User, Default
@@ -132,7 +132,7 @@ Accept wildcard characters: False
 {{ Fill RuleType Description }}
 
 ```yaml
-Type: SearchRuleType
+Type: Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo+SearchRuleType
 Parameter Sets: PathParameterSet
 Aliases:
 Accepted values: Exclude, Include
@@ -149,7 +149,7 @@ Shows what would happen if the cmdlet runs.
 The cmdlet is not run.
 
 ```yaml
-Type: SwitchParameter
+Type: System.Management.Automation.SwitchParameter
 Parameter Sets: (All)
 Aliases: wi
 

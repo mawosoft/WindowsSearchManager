@@ -1,7 +1,7 @@
 ---
 external help file: Mawosoft.PowerShell.WindowsSearchManager.dll-Help.xml
 Module Name: WindowsSearchManager
-online version: https://github.com/mawosoft/WindowsSearchManager/blob/master/docs/help/Set-SearchManager.md
+online version: https://mawosoft.github.io/WindowsSearchManager/reference/Set-SearchManager.html
 schema: 2.0.0
 ---
 
@@ -36,7 +36,7 @@ PS C:\> {{ Add example code here }}
 Prompts you for confirmation before running the cmdlet.
 
 ```yaml
-Type: SwitchParameter
+Type: System.Management.Automation.SwitchParameter
 Parameter Sets: (All)
 Aliases: cf
 
@@ -51,7 +51,7 @@ Accept wildcard characters: False
 {{ Fill ProxyAccess Description }}
 
 ```yaml
-Type: _PROXY_ACCESS
+Type: SearchAPI._PROXY_ACCESS
 Parameter Sets: (All)
 Aliases:
 Accepted values: PROXY_ACCESS_PRECONFIG, PROXY_ACCESS_DIRECT, PROXY_ACCESS_PROXY
@@ -67,7 +67,7 @@ Accept wildcard characters: False
 {{ Fill ProxyBypassList Description }}
 
 ```yaml
-Type: String
+Type: System.String
 Parameter Sets: (All)
 Aliases:
 
@@ -82,7 +82,7 @@ Accept wildcard characters: False
 {{ Fill ProxyBypassLocal Description }}
 
 ```yaml
-Type: SwitchParameter
+Type: System.Management.Automation.SwitchParameter
 Parameter Sets: (All)
 Aliases:
 
@@ -97,7 +97,7 @@ Accept wildcard characters: False
 {{ Fill ProxyName Description }}
 
 ```yaml
-Type: String
+Type: System.String
 Parameter Sets: (All)
 Aliases:
 
@@ -112,7 +112,7 @@ Accept wildcard characters: False
 {{ Fill ProxyPortNumber Description }}
 
 ```yaml
-Type: UInt32
+Type: System.UInt32
 Parameter Sets: (All)
 Aliases:
 
@@ -127,7 +127,7 @@ Accept wildcard characters: False
 {{ Fill UserAgent Description }}
 
 ```yaml
-Type: String
+Type: System.String
 Parameter Sets: (All)
 Aliases:
 
@@ -143,7 +143,7 @@ Shows what would happen if the cmdlet runs.
 The cmdlet is not run.
 
 ```yaml
-Type: SwitchParameter
+Type: System.Management.Automation.SwitchParameter
 Parameter Sets: (All)
 Aliases: wi
 

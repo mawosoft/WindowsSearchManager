@@ -1,7 +1,7 @@
 ---
 external help file: Mawosoft.PowerShell.WindowsSearchManager.dll-Help.xml
 Module Name: WindowsSearchManager
-online version: https://github.com/mawosoft/WindowsSearchManager/blob/master/docs/help/Update-SearchCatalog.md
+online version: https://mawosoft.github.io/WindowsSearchManager/reference/Update-SearchCatalog.html
 schema: 2.0.0
 ---
 
@@ -45,7 +45,7 @@ PS C:\> {{ Add example code here }}
 {{ Fill All Description }}
 
 ```yaml
-Type: SwitchParameter
+Type: System.Management.Automation.SwitchParameter
 Parameter Sets: AllParameterSet
 Aliases:
 
@@ -60,7 +60,7 @@ Accept wildcard characters: False
 {{ Fill Catalog Description }}
 
 ```yaml
-Type: String
+Type: System.String
 Parameter Sets: (All)
 Aliases:
 
@@ -75,7 +75,7 @@ Accept wildcard characters: False
 Prompts you for confirmation before running the cmdlet.
 
 ```yaml
-Type: SwitchParameter
+Type: System.Management.Automation.SwitchParameter
 Parameter Sets: (All)
 Aliases: cf
 
@@ -90,7 +90,7 @@ Accept wildcard characters: False
 {{ Fill Path Description }}
 
 ```yaml
-Type: String[]
+Type: System.String[]
 Parameter Sets: PathParameterSet
 Aliases:
 
@@ -105,7 +105,7 @@ Accept wildcard characters: True
 {{ Fill RootPath Description }}
 
 ```yaml
-Type: String[]
+Type: System.String[]
 Parameter Sets: RootParameterSet
 Aliases:
 
@@ -121,7 +121,7 @@ Shows what would happen if the cmdlet runs.
 The cmdlet is not run.
 
 ```yaml
-Type: SwitchParameter
+Type: System.Management.Automation.SwitchParameter
 Parameter Sets: (All)
 Aliases: wi
 

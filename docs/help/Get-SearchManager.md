@@ -1,7 +1,7 @@
 ---
 external help file: Mawosoft.PowerShell.WindowsSearchManager.dll-Help.xml
 Module Name: WindowsSearchManager
-online version: https://github.com/mawosoft/WindowsSearchManager/blob/master/docs/help/Get-SearchManager.md
+online version: https://mawosoft.github.io/WindowsSearchManager/reference/Get-SearchManager.html
 schema: 2.0.0
 ---
 

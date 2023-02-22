@@ -1,7 +1,7 @@
 ---
 external help file: Mawosoft.PowerShell.WindowsSearchManager.dll-Help.xml
 Module Name: WindowsSearchManager
-online version: https://github.com/mawosoft/WindowsSearchManager/blob/master/docs/help/Test-SearchRule.md
+online version: https://mawosoft.github.io/WindowsSearchManager/reference/Test-SearchRule.html
 schema: 2.0.0
 ---
 
@@ -50,7 +50,7 @@ PS C:\> {{ Add example code here }}
 {{ Fill Catalog Description }}
 
 ```yaml
-Type: String
+Type: System.String
 Parameter Sets: (All)
 Aliases:
 
@@ -65,7 +65,7 @@ Accept wildcard characters: False
 {{ Fill Detailed Description }}
 
 ```yaml
-Type: SwitchParameter
+Type: System.Management.Automation.SwitchParameter
 Parameter Sets: DetailedParameterSet
 Aliases:
 
@@ -80,7 +80,7 @@ Accept wildcard characters: False
 {{ Fill HasChildScope Description }}
 
 ```yaml
-Type: SwitchParameter
+Type: System.Management.Automation.SwitchParameter
 Parameter Sets: ChildScopeParameterSet
 Aliases:
 
@@ -95,7 +95,7 @@ Accept wildcard characters: False
 {{ Fill HasParentScope Description }}
 
 ```yaml
-Type: SwitchParameter
+Type: System.Management.Automation.SwitchParameter
 Parameter Sets: ParentScopeParameterSet
 Aliases:
 
@@ -110,7 +110,7 @@ Accept wildcard characters: False
 {{ Fill IsIncluded Description }}
 
 ```yaml
-Type: SwitchParameter
+Type: System.Management.Automation.SwitchParameter
 Parameter Sets: IncludedParameterSet
 Aliases:
 
@@ -125,7 +125,7 @@ Accept wildcard characters: False
 {{ Fill Path Description }}
 
 ```yaml
-Type: String[]
+Type: System.String[]
 Parameter Sets: (All)
 Aliases:
 

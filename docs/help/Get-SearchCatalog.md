@@ -1,7 +1,7 @@
 ---
 external help file: Mawosoft.PowerShell.WindowsSearchManager.dll-Help.xml
 Module Name: WindowsSearchManager
-online version: https://github.com/mawosoft/WindowsSearchManager/blob/master/docs/help/Get-SearchCatalog.md
+online version: https://mawosoft.github.io/WindowsSearchManager/reference/Get-SearchCatalog.html
 schema: 2.0.0
 ---
 
@@ -34,7 +34,7 @@ PS C:\> {{ Add example code here }}
 {{ Fill Catalog Description }}
 
 ```yaml
-Type: String
+Type: System.String
 Parameter Sets: (All)
 Aliases:
 
