@@ -4,37 +4,94 @@
 .SYNOPSIS
     Generate markdown help via platyPS.
 
+.DESCRIPTION
+    Imports the required version of platyPS, builds and imports WindowsSearchManager.
+    Uses New-MarkdownHelp if no help files exists yet, otherwise Update-MarkdownHelpModule.
+    In the latter case, the current version of the help files is backed up before updating.
+    If no changes occured, the backup is deleted, otherwise WinMerge is started to show the diffs.
+
 .NOTES
-    - Imports platyPS module as defined in help.msbuildproj.
-    - Builds and imports WindowsSearchManager
-    - Invokes New-MarkdownHelp or Update-MarkdownHelp
+    By default, the script starts a new PowerShell process to avoid importing WindowsSearchManager
+    into the current instance, which would block subsequent builds of the module because the assembly
+    remains loaded until PowerShell exits.
+
+    Current behavior of platyPS (as of v0.14.2) for full vs. short type names (String vs. System.String):
+    - Syntax: **Always** uses short type name.
+    - Parameters: Controlled by -UseFullTypeName
+    - Inputs/Outputs: **Always uses full type name.
+    As long as the Syntax section keeps the short name, we should use the -UseFullTypeName switch
+    to make DocFx xrefs easier.
 #>
 
 #Requires -Version 7
 
 [CmdletBinding()]
 param(
+    # Forwarded to New-MarkdownHelp and Update-MarkdownHelpModule. 
+    # Uses full type name instead of short name for parameters.
+    [switch]$UseFullTypeName,
+
     # Forwarded in case Update-MarkdownHelpModule is invoked, otherwise ignored.
+    # Refreshes the Input and Output sections to reflect the current state of the cmdlet.
+    # WARNING: this parameter will remove any manual additions to these sections.
     [switch]$UpdateInputOutput,
+
     # Forwarded in case Update-MarkdownHelpModule is invoked, otherwise ignored.
-    [switch]$Force
+    # Removes help files that no longer exists within sessions (for example if function was deleted).
+    [switch]$Force,
+
+    # Controls whether the script is run in a new PowerShell process.
+    # 'Conditional' starts a new process only if WindowsSearchManager has already been imported.
+    [ValidateSet('Always', 'Conditional', 'Never')]
+    [string]$NewProcess = 'Always'
 )
 
 Set-StrictMode -Version 3.0
 $ErrorActionPreference = 'Stop'
 
-& "$PSScriptRoot/importPlatyPS.ps1"
-[string]$srcdir = "$PSScriptRoot/../../src/Mawosoft.PowerShell.WindowsSearchManager"
-dotnet publish "$srcdir/Mawosoft.PowerShell.WindowsSearchManager.csproj"
-if ($LASTEXITCODE -ne 0) {
-    throw "dotnet publish exited with code=$LASTEXITCODE"
+if ($NewProcess -eq 'Always' -or ($NewProcess -eq 'Conditional' -and (Get-Module WindowsSearchManager))) {
+    [string]$command = "& '$PSCommandPath' -NewProcess:Never"
+    # Need to enumerate because common parameters may exist
+    foreach ($param in $PSBoundParameters.GetEnumerator()) {
+        if ($param.Key -eq 'NewProcess') { continue }
+        if ($MyInvocation.MyCommand.Parameters[$param.Key].SwitchParameter) {
+            $command += " -$($param.Key):`$$($param.Value)"
+        }
+        else {
+            # This should be sufficient for non-switches in common parameters, i.e. no quotes needed.
+            $command += " -$($param.Key) $($param.Value)"
+        }
+    }
+    pwsh -Command $command
+    if ($LASTEXITCODE -ne 0) {
+        throw "New PowerShell process failed with exit code $LASTEXITCODE"
+    }
     return
 }
-Import-Module "$srcdir/bin/Debug/netstandard2.0/WindowsSearchManager" -Force
+
+& "$PSScriptRoot/importPlatyPS.ps1"
+& "$PSScriptRoot/importWindowsSearchManager.ps1"
+
 [string]$helpdir = "$PSScriptRoot/../help"
-if (Test-Path "$helpdir/*.md") {
-    Update-MarkdownHelpModule -Path $helpdir -UpdateInputOutput:$UpdateInputOutput -Force:$Force
+if (-not (Test-Path "$helpdir/*.md")) {
+    New-MarkdownHelp -Module 'WindowsSearchManager' -OutputFolder $helpdir -UseFullTypeName:$UseFullTypeName
 }
 else {
-    New-MarkdownHelp -Module 'WindowsSearchManager' -OutputFolder $helpdir
+    [string]$bakdir = Join-Path $helpdir "bak$(Get-Date -Format FileDateTime)"
+    $null = New-Item $bakdir -ItemType Directory
+    Get-ChildItem "$helpdir/*.md" -File | Copy-Item -Destination $bakdir
+
+    Update-MarkdownHelpModule -Path $helpdir -UseFullTypeName:$UseFullTypeName -UpdateInputOutput:$UpdateInputOutput -Force:$Force
+
+    if (Compare-Object -ReferenceObject (Get-ChildItem "$helpdir/*.md" -File | Get-FileHash) `
+            -DifferenceObject (Get-ChildItem "$bakdir/*" -File | Get-FileHash) `
+            -Property Hash, { Split-Path $_.Path -Leaf }) {
+        [string]$winmerge = Join-Path $env:ProgramFiles 'WinMerge\WinMergeU.exe'
+        if (Test-Path $winmerge -PathType Leaf) {
+            & $winmerge $helpdir $bakdir
+        }
+    }
+    else {
+        Remove-Item $bakdir -Recurse -ErrorAction Ignore
+    }
 }

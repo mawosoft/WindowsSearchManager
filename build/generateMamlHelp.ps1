@@ -7,9 +7,13 @@
 .NOTES
     This is intended for use in MSBuild projects where platyPS is restored via <PackageReference>
     to support central version management via Directory.Packages.props.
+    The generated MAML help file is postprocessed to apply some tweaks.
 #>
 
 #Requires -Version 7
+
+using namespace System.IO
+using namespace System.Xml.Linq
 
 [CmdletBinding()]
 param(
@@ -37,4 +41,17 @@ if ($PlatyPSImportPath) {
     Import-Module -Name $PlatyPSImportPath
 }
 # Leave path testing to platyPS
-New-ExternalHelp -Path $Path -OutputPath $Destination -Force
+New-ExternalHelp -Path $Path -OutputPath $Destination -Force | Where-Object Extension -eq '.xml' | ForEach-Object {
+    # Postprocess MAML files
+    [XDocument]$maml = [XDocument]::Load($_.FullName)
+    # EXAMPLES and NOTES are the only help sections that can be omitted from display if they have no content.
+    # All other help sections will *always* show their heading. For EXAMPLES, omission happens automatically,
+    # for NOTES, an empty <maml:alertSet> node must be removed.
+    [array]$emptyNotes = $maml.Root.Descendants('{http://schemas.microsoft.com/maml/2004/10}alertSet').Where({
+            $_.Value.Length -eq 0
+        })
+    if ($emptyNotes) {
+        $emptyNotes.ForEach({ $_.Remove() })
+        $maml.Save($_.FullName)
+    }
+}

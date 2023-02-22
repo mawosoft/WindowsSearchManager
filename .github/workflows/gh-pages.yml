@@ -1,4 +1,4 @@
-name: Build and Publish Docs Website
+name: Build gh-pages
 
 on:
   workflow_dispatch:
@@ -11,6 +11,11 @@ env:
   DOTNET_NOLOGO: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
+  MSBuildDebugEngine: 1
+  MSBUILDLOGTASKINPUTS: 1
+  MSBUILDTARGETOUTPUTLOGGING: true
+  MSBUILDLOGIMPORTS: 1
+  MSBUILDLOGALLENVIRONMENTVARIABLES: true
 
 jobs:
   gh-pages:
@@ -19,18 +24,21 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
       with:
-        fetch-depth: 0
+        fetch-depth: 1
     - name: DotNet Info
       run: dotnet --info
     - name: DocFX Build
       run: |
         . ./build/startNativeExecution.ps1
-        Start-NativeExecution { dotnet build ./docs/docs.msbuildproj -c Debug -bl:./Binlogs/build_docfx.binlog }
+        Set-Alias exec Start-NativeExecution
+        exec { dotnet restore }
+        exec { dotnet build ./docs/docs.msbuildproj }
     - name: Upload Binlogs
+      if: ${{ always() }}
       uses: actions/upload-artifact@v3
       with:
         name: DocFX-Binlogs
-        path: ./Binlogs/
+        path: '**/MSBuild_Logs/*'
     - name: Publish to gh-pages
       uses: peaceiris/actions-gh-pages@v3
       with:

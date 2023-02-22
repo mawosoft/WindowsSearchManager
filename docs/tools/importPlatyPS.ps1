@@ -8,6 +8,7 @@
 #Requires -Version 7
 
 using namespace System
+using namespace System.IO
 using namespace System.Xml
 
 [CmdletBinding()]
@@ -28,5 +29,14 @@ if (-not (Test-Path $propsFile -PathType Leaf)) {
 
 [XmlNode]$docElem = (Select-Xml -Path $propsFile -XPath '/*').Node
 [string]$pkgdir = (Select-Xml -xml $docElem -XPath '//ns:PkgplatyPS' -Namespace @{ ns = $docElem.NamespaceURI }).Node.InnerText
+
+[string]$moduleBase = (Get-Module -Name platyPS)?.ModuleBase
+if ($moduleBase) {
+    if ([Path]::TrimEndingDirectorySeparator($moduleBase) -ne [Path]::TrimEndingDirectorySeparator($pkgdir)) {
+        throw 'A different platyPS module has been already imported from ' + $moduleBase
+        return
+    }
+}
+
 [string]$platyPSImportPath = Join-Path $pkgdir 'platyPS.psd1'
 Import-Module $platyPSImportPath
