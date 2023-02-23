@@ -19,8 +19,8 @@ jobs:
         fetch-depth: 1
     - name: Setup dotnet (pinned)
       uses: actions/setup-dotnet@v3
-        with: 
-          global-json-file: ./global.json
+      with: 
+        global-json-file: ./global.json
     - name: Restore
       run: |
         . ./build/startNativeExecution.ps1
