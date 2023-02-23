@@ -1,7 +1,7 @@
 {
   "sdk": {
-    "version": "7.0.102",
-    "rollForward": "latestMinor"
+    "version": "7.0.103",
+    "rollForward": "disable"
   },
   "msbuild-sdks": {
     "Microsoft.Build.NoTargets": "3.7.0"

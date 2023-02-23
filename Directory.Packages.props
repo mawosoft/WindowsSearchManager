@@ -1,14 +1,12 @@
 <Project>
 
-  <PropertyGroup>
-    <!-- TODO Should we pin this to 10.0.19041.0 for deterministic builds? -->
-    <InteropSearchApiAssemblyPath Condition="'$(InteropSearchApiAssemblyPath)' == ''">$(
+  <PropertyGroup Condition="'$(InteropSearchApiAssemblyPath)' == ''">
+    <_WinSdkVersion Condition="'$(CI)' == 'true'">10.0.19041.0</_WinSdkVersion>
+    <_WinSdkVersion Condition="'$(CI)' != 'true'">$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</_WinSdkVersion>
+    <InteropSearchApiAssemblyPath>$(
       [MSBuild]::NormalizePath(
         $([Microsoft.Build.Utilities.ToolLocationHelper]::GetPlatformSDKLocation('Windows', '10.0')),
-        'bin',
-        $([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0')),
-        'x64',
-        'interop.searchapi.dll')
+        'bin', $(_WinSdkVersion), 'x64', 'interop.searchapi.dll')
     )</InteropSearchApiAssemblyPath>
   </PropertyGroup>
 

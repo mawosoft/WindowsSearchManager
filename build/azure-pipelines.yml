@@ -25,8 +25,9 @@ variables:
 
 steps:
 - checkout: self
-- pwsh: dotnet --info
-  displayName: DotNet Info
+- task: UseDotNet@2
+  inputs:
+    useGlobalJson: true
 - pwsh: |
     . ./build/startNativeExecution.ps1
     Set-Alias exec Start-NativeExecution
@@ -41,7 +42,6 @@ steps:
     MSBUILDLOGTASKINPUTS: 1
     MSBUILDTARGETOUTPUTLOGGING: true
     MSBUILDLOGIMPORTS: 1
-    MSBUILDLOGALLENVIRONMENTVARIABLES: true
 - publish: ./MSBuild_Logs
   condition: succeededOrFailed()
   artifact: azp-Binlogs

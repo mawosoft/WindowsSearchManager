@@ -73,8 +73,10 @@ jobs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
-    - name: DotNet Info
-      run: dotnet --info
+    - name: Setup dotnet (pinned)
+      uses: actions/setup-dotnet@v3
+        with: 
+          global-json-file: ./global.json
     - name: Build
       env:
         MSBuildDebugEngine: 1 # Auto-creates binlogs in ./MSBuild_Logs
@@ -82,18 +84,17 @@ jobs:
         MSBUILDLOGTASKINPUTS: 1
         MSBUILDTARGETOUTPUTLOGGING: true
         MSBUILDLOGIMPORTS: 1
-        MSBUILDLOGALLENVIRONMENTVARIABLES: true
       run: |
         . ./build/startNativeExecution.ps1
         Set-Alias exec Start-NativeExecution
         exec { dotnet restore }
         # Parallel builds causing trouble here
         exec { dotnet build ./docs/help/help.msbuildproj --no-restore }
-        exec { dotnet build ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Debug --no-restore --no-dependencies }
         exec { dotnet build ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Release --no-restore --no-dependencies }
-        exec { dotnet build ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug --no-restore --no-dependencies }
+        exec { dotnet build ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Debug --no-restore --no-dependencies }
         exec { dotnet build ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Release --no-restore --no-dependencies }
-        exec { dotnet build ./docs/docs.msbuildproj --no-restore }
+        exec { dotnet build ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug --no-restore --no-dependencies }
+        exec { dotnet build ./docs/docs.msbuildproj --no-restore -c Release }
         exec { dotnet pack ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Release --no-build -o ./Packages }
     - name: Upload Binlogs
       if: ${{ always() }}
