@@ -25,9 +25,8 @@ variables:
 
 steps:
 - checkout: self
-- task: UseDotNet@2
-  inputs:
-    useGlobalJson: true
+- pwsh: dotnet --info
+  displayName: DotNet Info
 - pwsh: |
     . ./build/startNativeExecution.ps1
     Set-Alias exec Start-NativeExecution
