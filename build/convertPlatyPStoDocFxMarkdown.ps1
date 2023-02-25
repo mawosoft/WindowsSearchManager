@@ -78,18 +78,6 @@ param(
 Set-StrictMode -Version 3.0
 $ErrorActionPreference = 'Stop'
 
-# Default some switches to true.
-# Done here because PSScriptAnalyzer rule suppression doesn't seem to work.
-if (-not $MyInvocation.BoundParameters.ContainsKey('ExludeCommonParameters')) {
-    $ExludeCommonParameters = $true
-}
-if (-not $MyInvocation.BoundParameters.ContainsKey('ExcludeWhatifConfirm')) {
-    $ExcludeWhatifConfirm = $true
-}
-if (-not $MyInvocation.BoundParameters.ContainsKey('ExludeSyntaxParameterSetHeading')) {
-    $ExludeSyntaxParameterSetHeading = $true
-}
-
 
 # Conversion is implemented as a class for better code structure and to avoid output leakage.
 class HelpConverter {
@@ -266,7 +254,7 @@ class HelpConverter {
                 if ($script:ExludeCommonParameters -and $paramName -eq 'CommonParameters') {
                     $skipParameter = $true
                 }
-                elseif ($script:ExcludeWhatifConfirm -and ($paramName -eq '-WhatIf' -or $paramName -eq '-Confirm')) {
+                elseif ($script:ExcludeWhatifConfirm -and ($paramName -in '-WhatIf', '-Confirm')) {
                     $skipParameter = $true
                 }
                 else {
