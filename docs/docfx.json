@@ -15,11 +15,13 @@
         "content": [
             {
                 "files": [
-                    "reference/*",
+                    "reference/*.md",
+                    "reference/toc.yml",
                     "api/*",
                     "toc.yml",
                     "index.md"
-                ]
+                ],
+                "exclude": [ "api/toc.yml" ]
             }
         ],
         "dest": "_site",

@@ -9,10 +9,9 @@
     - Optionally removes technical details from the help text.
     - Adds xref links to type names. If short type names are used, mapping must be provided by the caller.
     - Generates index-All.md and index-<noun>.md files containing cmdlet indices with link and synopsis.
+    - Generates a toc.yml and optionally appends other toc files.
 
 .NOTES
-    The defaults for the -Exclude* parameters mimic the official PowerShell docs.
-
     Type names are replaced with <xref:typename>, which should work well for full type names.
     If short type names are used or to create a custom xref link, a JSON mapping file must be provided.
         {
@@ -37,27 +36,28 @@ using namespace System.Text
 [CmdletBinding()]
 param(
     # Source directory containing the markdown help file(s) created by platyPS
-    [Parameter(Mandatory = $false, Position = 0)]
+    [Parameter(Mandatory, Position = 0)]
     [ValidateNotNullOrEmpty()]
-    [string]$Path = "$PSScriptRoot/../docs/help",
+    [string]$Path,
 
     # Destination directory for converted markdown files.
-    [Parameter(Mandatory = $false, Position = 1)]
+    [Parameter(Mandatory, Position = 1)]
     [ValidateNotNullOrEmpty()]
-    [string]$Destination = "$PSScriptRoot/../docs/reference",
+    [string]$Destination,
+
+    # Additional toc.yml paths to append to the ToC for cmdlets.
+    # The complete ToC will be saved as toc.yml in -Destination.
+    [ValidateNotNullOrEmpty()]
+    [string[]]$AdditionalTocPath,
 
     # JSON file that maps type names in markdown help to xref notation.
-    [Parameter(Mandatory = $false, Position = 2)]
+    [ValidateNotNullOrEmpty()]
     [string]$XrefMap,
 
     # Parameter metadata to exclude in Parameters section.
     # These must match the spelling in the markdown help.
-    [ValidateNotNull()]
-    [string[]]$ExcludeParameterMetadata = @(
-        'Parameter Sets'
-        'Aliases'
-        'Required'
-    ),
+    [ValidateNotNullOrEmpty()]
+    [string[]]$ExcludeParameterMetadata,
 
     # Exclude the description of common parameters from the Parameters section.
     [switch]$ExludeCommonParameters,
@@ -103,6 +103,8 @@ class HelpConverter {
             'UInt32'          = '<xref:System.UInt32>'
             'SwitchParameter' = '<xref:System.Management.Automation.SwitchParameter>'
         })
+    # Module name from YAML header
+    [string]$ModuleName = ''
     # Converted markdown
     [StringBuilder]$DocfxMarkdown = [StringBuilder]::new()
     # Synopsis content range in DocfxMarkdown StringBuilder
@@ -114,11 +116,25 @@ class HelpConverter {
 
     HelpConverter([string]$markdownHelp) {
         [Queue[string]]$lines = $markdownHelp.Split([string[]]("`r`n", "`n"), [StringSplitOptions]::None)
+        # Get module name from YAML header
+        if ($lines.Count -gt 0 -and $lines.Peek() -ceq '---') {
+            $lines.Dequeue()
+            while ($lines.Count -gt 0 -and -not $this.ModuleName) {
+                [string]$line = $lines.Dequeue()
+                if ($line.TrimEnd() -ceq '---') { break }
+                [int]$colon = $line.IndexOf([char]':')
+                if ($colon -lt 0) { continue }
+                if ($line.Substring(0, $colon).Trim() -ne 'Module Name') { continue }
+                $this.ModuleName = $line.Substring($colon + 1).Trim()
+            }
+        }
+        # Fast forward to level1 header
         while ($lines.Count -gt 0 -and -not $lines.Peek().StartsWith('# ', [StringComparison]::Ordinal)) {
             $lines.Dequeue()
         }
         if ($lines.Count -eq 0) { throw "Level 1 header not found" }
         $this.DocfxMarkdown.AppendLine($lines.Dequeue()).AppendLine()
+        # Convert help sections. Each section starts with a level 2 header
         for (; ; ) {
             while ($lines.Count -gt 0 -and -not $lines.Peek().StartsWith('## ', [StringComparison]::Ordinal)) {
                 $lines.Dequeue()
@@ -170,7 +186,7 @@ class HelpConverter {
                 $this.UnknownTypes.Add($value)
             }
         }
-        if (-not $link) { 
+        if (-not $link) {
             # DocFx doesn't use '+' for nested types
             $link = '<xref:' + $value.Replace([char]'+', [char]'.') + '>'
         }
@@ -228,7 +244,7 @@ class HelpConverter {
                 # TODO powershell hljs doesn't work well for syntax notation
                 $this.DocfxMarkdown.AppendLine('```powershell').Append($codeblock).AppendLine('```')
             }
-            elseif (-not $script:ExludeSyntaxParameterSetHeading -or 
+            elseif (-not $script:ExludeSyntaxParameterSetHeading -or
                 -not $line.StartsWith('### ', [StringComparison]::Ordinal)) {
                 $this.DocfxMarkdown.AppendLine($line)
             }
@@ -389,6 +405,7 @@ function Update-Content {
 
 # Supress VT100 esc sequences when invoked via dotnet/msbuild
 # Exec task process hierarchy is dotnet|msbuild -> cmd|sh -> pwsh
+
 try {
     [string]$parent = (Get-Process -Id $PID).Parent.Parent.Name
     if ($parent -eq 'dotnet' -or $parent -eq 'MSBuild') {
@@ -397,6 +414,8 @@ try {
 }
 catch {}
 
+# Validate paths
+
 if (-not (Test-Path $Path -PathType Container)) {
     throw "Directory not found: $Path"
 }
@@ -404,14 +423,22 @@ if (-not (Test-Path $Destination -PathType Container)) {
     throw "Directory not found: $Destination"
 }
 
+foreach ($toc in $AdditionalTocPath) {
+    if (-not (Test-Path $toc -PathType Leaf)) {
+        throw "File not found: $toc"
+    }
+}
+
 if ($XrefMap -and -not (Test-Path $XrefMap -PathType Leaf)) {
-    throw "File not found: $Destination"
+    throw "File not found: $XrefMap"
 }
 
 [string]$includesPath = Join-Path $Destination 'includes'
 if (-not (Test-Path $includesPath -PathType Container)) {
     $null = New-Item $includesPath -ItemType Directory
 }
+
+# Setup globals
 
 [ArrayList]$cmdlets = @()
 [HashSet[string]]$usedTypes = @()
@@ -429,29 +456,55 @@ Join-Path $Path '*-*.md' | Get-ChildItem | ForEach-Object {
     $usedTypes.UnionWith($converter.UsedTypes)
     $unknownTypes.UnionWith($converter.UnknownTypes)
     [string]$destinationFile = Join-Path $Destination $_.Name
-    $converter.DocfxMarkdown.ToString() | Update-Content -Path $destinationFile -NoNewline
+    $content = $converter.DocfxMarkdown.ToString()
+    $content | Update-Content -Path $destinationFile -NoNewline
     $null = $cmdlets.Add([PSCustomObject]@{
-            Name     = $_.BaseName
-            Noun     = $_.BaseName.Split([char]'-', 2)[1]
+            ModuleName = $converter.ModuleName
+            Name       = $_.BaseName
+            Noun       = $_.BaseName.Split([char]'-', 2)[1]
+            TocItem    = @(
+                "  - name: $($_.BaseName)",
+                "    href: $($_.BaseName).md"
+            )
             # Links in an include file are relative to that include file.
             # Surrounding table cell content with empty lines re-enables markdown.
-            TableRow = @(
+            TableRow   = @(
                 '<tr><td>', '',
                 "[$($_.BaseName)](../$($_.BaseName).md)",
                 '', '</td><td>', '',
-                $converter.DocfxMarkdown.ToString(
-                    $converter.SynopsisRange.Start.Value, 
+                $content.Substring($converter.SynopsisRange.Start.Value,
                     $converter.SynopsisRange.End.Value - $converter.SynopsisRange.Start.Value),
                 '', '</td></tr>')
         })
 }
 
+# Create the ToC
+# Assume we are dealing with a single module.
+# Otherwise everything needs to be grouped by module name first.
+
+[string]$moduleName = 'Table of Contents'
+if ($cmdlets -and $cmdlets[0].ModuleName) {
+    $moduleName = $cmdlets[0].ModuleName
+}
+[ArrayList]$lines = @(
+    "- name: $moduleName", '  href: index.md', '  items:',
+    ($cmdlets | Sort-Object Name).TocItem
+)
+foreach ($toc in $AdditionalTocPath) {
+    $lines.AddRange((Get-Content $toc))
+}
+$lines | Update-Content -Path (Join-Path $Destination 'toc.yml')
+
 # Create the includes
 
-'<table>', ($cmdlets | Sort-Object Name).TableRow, '</table>' | Update-Content -Path (Join-Path $includesPath 'index-All.md')
+@(
+    '<table>', ($cmdlets | Sort-Object Name).TableRow, '</table>'
+) | Update-Content -Path (Join-Path $includesPath 'index-All.md')
 
 $cmdlets | Group-Object Noun | ForEach-Object {
-    '<table>', ($_.Group | Sort-Object Name).TableRow, '</table>' | Update-Content -Path (Join-Path $includesPath "index-$($_.Name).md")
+    @(
+        '<table>', ($_.Group | Sort-Object Name).TableRow, '</table>'
+    ) | Update-Content -Path (Join-Path $includesPath "index-$($_.Name).md")
 }
 
 # Verify type mapping

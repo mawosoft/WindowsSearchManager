@@ -1,3 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2023 Matthias Wolf, Mawosoft.
+-->
 <Project Sdk="Microsoft.Build.NoTargets">
 
   <PropertyGroup>
@@ -8,25 +12,32 @@
 
   <PropertyGroup>
     <DocFxToolPath>$([MSBuild]::NormalizePath($(Pkgdocfx), 'tools/net7.0/any/docfx.dll'))</DocFxToolPath>
-    <DocFxConfigFile Condition="'$(DocFxConfigFile)' == ''">$(MSBuildProjectDirectory)/docfx.json</DocFxConfigFile>
+    <DocFxConfigFile Condition="'$(DocFxConfigFile)' == ''">$([MSBuild]::NormalizePath($(MSBuildProjectDirectory), 'docfx.json'))</DocFxConfigFile>
     <DocFxOptions Condition="'$(CI)' == 'true'">$(DocFxOptions) --warningsAsErrors</DocFxOptions>
   </PropertyGroup>
 
   <ItemGroup>
-    <MarkdownHelp Include="help\*.md" />
-    <MarkdownReference Include="@(MarkdownHelp->'reference\%(Filename)%(Extension)')" />
-    <!-- Anything else generated under reference/** that may not yet exist depends on the on the ones above.
-         Thus, it's safe here to use wildcards that only capture existing items. -->
-    <DocFxInput Include="api\index.md" />
-    <DocFxInput Include="reference\**\*" />
-    <DocFxInput Include="templates\**\*" />
-    <DocFxInput Include="*.yml" />
-    <DocFxInput Include="index.md" />
-    <DocFxInput Include="$(DocFxConfigFile)" />
+    <MetaInput Include="$(DocFxConfigFile)" />
+    <MetaInput Include="filter.yml" />
     <!-- None is not auto-populated for *.msbuildproj -->
-    <None Include="@(MarkdownHelp)" />
-    <None Include="@(DocFxInput)" />
-    <DocFxInput Include="@(MarkdownReference)" Exclude="@(DocFxInput)" />
+    <None Include="@(MetaInput)" Exclude="@(None)" />
+    <MetaInput Include="..\src\Mawosoft.PowerShell.WindowsSearchManager\*.cs" />
+    <MetaOutputMarker Include="api\.manifest" />
+    <ConvertInput Include="help\*.md" />
+    <ConvertInput Include="api\toc.yml" />
+    <ConvertOutput Include="@(ConvertInput->'reference\%(Filename)%(Extension)')" />
+    <DocsInput Include="$(DocFxConfigFile)" />
+    <DocsInput Include="*.yml" />
+    <DocsInput Include="index.md" />
+    <DocsInput Include="api\index.md" />
+    <DocsInput Include="reference\index.md" />
+    <DocsInput Include="templates\**\*" />
+    <None Include="@(DocsInput)" Exclude="@(None)" />
+    <DocsInput Include="@(MetaOutputMarker)" Exclude="@(DocsInput)" />
+    <DocsInput Include="@(ConvertOutput)" Exclude="@(DocsInput)" />
+    <DocsInput Include="api\**\*" Exclude="@(DocsInput)" />
+    <DocsInput Include="reference\**\*" Exclude="@(DocsInput)" />
+    <DocsOutputMarker Include="_site/manifest.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,21 +51,62 @@
     <PackageReference Update="@(PackageReference->HasMetadata('VersionOverride'))" Version="%(PackageReference.VersionOverride)" />
   </ItemGroup>
 
+  <!--
+    ============================================================
+
+    GenerateMetadata
+    ConvertPlatyPStoDocFxMarkdown
+    GenerateDocs
+
+    Generates API metadata via DocFx.
+    Converts markdown help into reference (as conceptual doc).
+    Builds docs website via DocFx.
+    Targets are optimized to avoid unnecessary builds.
+
+    ============================================================
+  -->
+
+  <Target Name="GenerateMetadata"
+          Inputs="@(MetaInput)"
+          Outputs="@(MetaOutputMarker)">
+    <Exec Command="dotnet &quot;$(DocFxToolPath)&quot; metadata &quot;$(DocFxConfigFile)&quot; $(DocFxOptions) "
+          WorkingDirectory = "$(MSBuildProjectDirectory)"
+          CustomWarningRegularExpression = "\s+[1-9]\d* warning\(s\)"
+          CustomErrorRegularExpression = "\s+[1-9]\d* error\(s\)"
+          StandardErrorImportance="high"
+          StandardOutputImportance="low" />
+  </Target>
+
   <Target Name="ConvertPlatyPStoDocFxMarkdown"
-          Inputs="@(MarkdownHelp)"
-          Outputs="@(MarkdownReference)">
-    <Exec Command="pwsh -NonInteractive -ExecutionPolicy Bypass -Command &quot;&amp; '../build/convertPlatyPStoDocFxMarkdown.ps1' -Path './help' -Destination './reference' &quot;"
+          Inputs="@(ConvertInput)"
+          Outputs="@(ConvertOutput)"
+          DependsOnTargets="GenerateMetadata">
+    <PropertyGroup>
+      <_command>pwsh -NonInteractive -ExecutionPolicy Bypass -Command &quot;&amp;
+        '../build/convertPlatyPStoDocFxMarkdown.ps1'
+          -Path './help'
+          -Destination './reference'
+          -AdditionalTocPath './api/toc.yml'
+          -ExcludeParameterMetadata @('Parameter Sets', 'Aliases', 'Required')
+          -ExludeCommonParameters
+          -ExcludeWhatifConfirm
+          -ExludeSyntaxParameterSetHeading
+          -BreakSyntaxThreshold 2
+        &quot;
+      </_command>
+    </PropertyGroup>
+    <Exec Command="$(_command.Replace('%0D%0A', ' ').Replace('%0A', ' '))"
           WorkingDirectory = "$(MSBuildProjectDirectory)"
           StandardErrorImportance="high"
           StandardOutputImportance="low" />
   </Target>
 
   <Target Name="GenerateDocs"
-          Inputs="@(DocFxInput)"
-          Outputs="_site/manifest.json"
+          Inputs="@(DocsInput)"
+          Outputs="@(DocsOutputMarker)"
           AfterTargets="Compile"
-          DependsOnTargets="ConvertPlatyPStoDocFxMarkdown">
-    <Exec Command="dotnet &quot;$(DocFxToolPath)&quot; &quot;$(DocFxConfigFile)&quot; $(DocFxOptions) "
+          DependsOnTargets="GenerateMetadata;ConvertPlatyPStoDocFxMarkdown">
+    <Exec Command="dotnet &quot;$(DocFxToolPath)&quot; build &quot;$(DocFxConfigFile)&quot; $(DocFxOptions) "
           WorkingDirectory = "$(MSBuildProjectDirectory)"
           CustomWarningRegularExpression = "\s+[1-9]\d* warning\(s\)"
           CustomErrorRegularExpression = "\s+[1-9]\d* error\(s\)"
@@ -74,12 +126,10 @@
 
   <Target Name="CleanDocs" BeforeTargets="CoreClean">
       <ItemGroup>
-        <Clean Include="@(MarkdownReference)" />
+        <Clean Include="api/*" Exclude="api/index.md" />
+        <Clean Include="@(ConvertOutput)" />
         <Clean Include="reference/includes/index-*.md" />
-        <Clean Include="api/*.yml" />
-        <Clean Include="api/.manifest" />
         <_CleanDir Include="_site" />
-        <_CleanDir Include="$(BaseIntermediateOutputPath).cache" />
       </ItemGroup>
       <RemoveDir Directories="@(_CleanDir)" />
   </Target>

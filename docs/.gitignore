@@ -4,8 +4,9 @@ _site
 # Help file backups
 help/bak*
 
-# Generated reference and include files (<verb>-<noun>.md, index-<noun>.md)
+# Generated reference, toc, and include files (<verb>-<noun>.md, index-<noun>.md)
 reference/*-*.md
+reference/*.yml
 reference/includes/index-*.md
 
 # Generated api files
