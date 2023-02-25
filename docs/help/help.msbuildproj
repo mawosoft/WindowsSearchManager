@@ -1,3 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2023 Matthias Wolf, Mawosoft.
+-->
 <Project Sdk="Microsoft.Build.NoTargets">
 
   <PropertyGroup>
@@ -29,7 +33,16 @@
           Inputs="@(MarkdownHelp)"
           Outputs="$(BaseIntermediateOutputPath)$(MamlHelpFileName)"
           AfterTargets="Compile">
-    <Exec Command="pwsh -NonInteractive -ExecutionPolicy Bypass -Command &quot;&amp; '../../build/generateMamlHelp.ps1' -Path '$(MSBuildProjectDirectory)' -Destination '$(BaseIntermediateOutputPath)' -PlatyPSImportPath '$(PlatyPSImportPath)' &quot;"
+    <PropertyGroup>
+      <_command>pwsh -NonInteractive -ExecutionPolicy Bypass -Command &quot;&amp;
+        '../../build/generateMamlHelp.ps1'
+          -Path '$(MSBuildProjectDirectory)'
+          -Destination '$(BaseIntermediateOutputPath)'
+          -PlatyPSImportPath '$(PlatyPSImportPath)'
+        &quot;
+      </_command>
+    </PropertyGroup>
+    <Exec Command="$(_command.Replace('%0D%0A', ' ').Replace('%0A', ' '))"
           WorkingDirectory = "$(MSBuildProjectDirectory)"
           StandardErrorImportance="high"
           StandardOutputImportance="low" />

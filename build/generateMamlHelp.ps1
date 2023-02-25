@@ -18,18 +18,17 @@ using namespace System.Xml.Linq
 [CmdletBinding()]
 param(
     # Source directory containing the markdown help file(s) created by platyPS
-    [Parameter(Mandatory = $false, Position = 0)]
+    [Parameter(Mandatory, Position = 0)]
     [ValidateNotNullOrEmpty()]
-    [string]$Path = "$PSScriptRoot/../docs/help",
+    [string]$Path,
 
     # Destination directory for converted markdown files.
-    [Parameter(Mandatory = $true, Position = 1)]
+    [Parameter(Mandatory, Position = 1)]
     [ValidateNotNullOrEmpty()]
     [string]$Destination,
 
     # Path from which to import the platyPS module.
     # If not provided, platyPS is assumed to be already installed or imported.
-    [Parameter(Mandatory = $false)]
     [ValidateNotNullOrEmpty()]
     [string]$PlatyPSImportPath
 )

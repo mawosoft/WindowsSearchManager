@@ -27,7 +27,7 @@
 
 [CmdletBinding()]
 param(
-    # Forwarded to New-MarkdownHelp and Update-MarkdownHelpModule. 
+    # Forwarded to New-MarkdownHelp and Update-MarkdownHelpModule.
     # Uses full type name instead of short name for parameters.
     [switch]$UseFullTypeName,
 

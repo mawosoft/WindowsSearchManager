@@ -1,3 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2023 Matthias Wolf, Mawosoft.
+-->
 <Project>
 
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
@@ -94,7 +98,16 @@
           AfterTargets="Compile"
           DependsOnTargets="Compile"
           Condition="Exists('@(IntermediateAssembly)')">
-    <Exec Command="pwsh -NonInteractive -ExecutionPolicy Bypass -Command &quot;&amp; '../../build/updatePSModuleManifestVersion.ps1' -Path '%(PSModuleManifest.FullPath)' -Destination '$(IntermediateOutputPath)' -Version '$(Version)' &quot;"
+    <PropertyGroup>
+      <_command>pwsh -NonInteractive -ExecutionPolicy Bypass -Command &quot;&amp;
+        '../../build/updatePSModuleManifestVersion.ps1'
+          -Path '%(PSModuleManifest.FullPath)'
+          -Destination '$(IntermediateOutputPath)'
+          -Version '$(Version)'
+        &quot;
+      </_command>
+    </PropertyGroup>
+    <Exec Command="$(_command.Replace('%0D%0A', ' ').Replace('%0A', ' '))"
           WorkingDirectory = "$(MSBuildProjectDirectory)"
           StandardErrorImportance="high"
           StandardOutputImportance="low" />
@@ -118,7 +131,16 @@
 
   <Target Name="Pack"
           DependsOnTargets="Publish">
-    <Exec Command="pwsh -NonInteractive -ExecutionPolicy Bypass -Command &quot;&amp; '../../build/packPSModule.ps1' -Path '$(PublishDir)' -Destination '$(PackageOutputPath)' -SkipAutomaticTags:$$(SkipAutomaticTags) &quot;"
+    <PropertyGroup>
+      <_command>pwsh -NonInteractive -ExecutionPolicy Bypass -Command &quot;&amp;
+        '../../build/packPSModule.ps1'
+          -Path '$(PublishDir)'
+          -Destination '$(PackageOutputPath)'
+          -SkipAutomaticTags:$$(SkipAutomaticTags)
+        &quot;
+      </_command>
+    </PropertyGroup>
+    <Exec Command="$(_command.Replace('%0D%0A', ' ').Replace('%0A', ' '))"
           WorkingDirectory = "$(MSBuildProjectDirectory)"
           StandardErrorImportance="high"
           StandardOutputImportance="low" />
