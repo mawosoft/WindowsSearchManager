@@ -28,11 +28,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="resources\SR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <CustomToolNamespace>$(RootNamespace)</CustomToolNamespace>
+      <LastGenOutput>SR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Compile Update="resources\SR.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SR.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../../docs/help/help.msbuildproj" ReferenceOutputAssembly="false" SkipGetTargetFrameworkProperties="true" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Win32.Registry" PrivateAssets="All" />
     <PackageReference Include="PowerShellStandard.Library" PrivateAssets="All" />
     <Reference Include="Interop.SearchAPI" HintPath="$(InteropSearchApiAssemblyPath)" EmbedInteropTypes="true" Private="false" />
   </ItemGroup>

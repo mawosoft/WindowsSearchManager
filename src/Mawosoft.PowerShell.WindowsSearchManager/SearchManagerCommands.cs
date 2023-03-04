@@ -7,13 +7,30 @@ namespace Mawosoft.PowerShell.WindowsSearchManager;
 /// </summary>
 [Cmdlet(VerbsCommon.Get, Nouns.SearchManager)]
 [OutputType(typeof(SearchManagerInfo))]
-public sealed class GetSearchManagerCommand : Cmdlet
+public sealed class GetSearchManagerCommand : SearchApiCommandBase
 {
     protected override void EndProcessing()
     {
-        // TODO Should we catch 'access denied'?
-        SearchManagerInfo info = new(new CSearchManager());
-        WriteObject(info);
+        ISearchManager manager = CreateSearchManager();
+        try
+        {
+            WriteObject(new SearchManagerInfo(manager));
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            ThrowTerminatingError(
+                new ErrorRecord(ex, string.Empty, ErrorCategory.PermissionDenied, null)
+                {
+                    ErrorDetails = new(SR.AdminRequiredForOperation)
+                });
+            throw; // Unreachable
+
+        }
+        catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
+        {
+            ThrowTerminatingError(rec);
+            throw; // Unreachable
+        }
     }
 }
 
@@ -21,7 +38,7 @@ public sealed class GetSearchManagerCommand : Cmdlet
 /// Applies global SearchManager settings. Requires admin rights.
 /// </summary>
 [Cmdlet(VerbsCommon.Set, Nouns.SearchManager, ConfirmImpact = ConfirmImpact.Medium, SupportsShouldProcess = true)]
-public sealed class SetSearchManagerCommand : PSCmdlet
+public sealed class SetSearchManagerCommand : SearchApiCommandBase
 {
     [Parameter]
     [ValidateNotNullOrEmpty()]
@@ -50,16 +67,35 @@ public sealed class SetSearchManagerCommand : PSCmdlet
     public SwitchParameter ProxyBypassLocal { get; set; }
 
     /// <summary>
-    /// Gets or sets the proxy bypass list. An empty string is allowed if there is nothing to bypass.
+    /// Gets or sets the proxy bypass list. An empty array or string is allowed if there is nothing to bypass.
     /// </summary>
     [Parameter]
     [ValidateNotNull()]
-    public string? ProxyBypassList { get; set; }
+    public string[]? ProxyBypassList { get; set; }
 
     protected override void EndProcessing()
     {
-        CSearchManager manager = new();
-        SearchManagerInfo info = new(manager);
+        ISearchManager manager = CreateSearchManager();
+        SearchManagerInfo info;
+        try
+        {
+            info = new(manager);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            ThrowTerminatingError(
+                new ErrorRecord(ex, string.Empty, ErrorCategory.PermissionDenied, null)
+                {
+                    ErrorDetails = new(SR.AdminRequiredForOperation)
+                });
+            throw; // Unreachable
+
+        }
+        catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
+        {
+            ThrowTerminatingError(rec);
+            throw; // Unreachable
+        }
         bool setProxy = false;
         bool setUserAgent = false;
         if (MyInvocation.BoundParameters.ContainsKey(nameof(ProxyAccess)))
@@ -84,37 +120,42 @@ public sealed class SetSearchManagerCommand : PSCmdlet
         }
         if (ProxyBypassList != null)
         {
-            info.ProxyBypassList = ProxyBypassList;
+            info.ProxyBypassList = string.Join(",", ProxyBypassList);
             setProxy = true;
         }
 
-        string description = string.Empty;
-        if (!string.IsNullOrEmpty(UserAgent))
+        string target = string.Empty;
+        if (UserAgent != null)
         {
             setUserAgent = true;
-            if (description.Length > 0) { description += Environment.NewLine; }
-            // TODO stringres
-            description += $"Setting UserAgent={UserAgent}";
+            target += string.Format(SR.SetUserAgent, UserAgent);
         }
         if (setProxy)
         {
-            if (description.Length > 0) { description += Environment.NewLine; }
-            // TODO stringres
-            description += $"Setting Proxy: Access={info.ProxyAccess}, Name={info.ProxyName}, PortNumber={info.ProxyPortNumber}, BypassLocal={info.ProxyBypassLocal}, BypassList={info.ProxyBypassList}";
+            target += string.Format(SR.SetProxy, info.ProxyAccess, info.ProxyName, info.ProxyPortNumber, info.ProxyBypassLocal, info.ProxyBypassList);
         }
 
-        if ((setProxy || setUserAgent) && ShouldProcess(description))
+        if ((setProxy || setUserAgent) && ShouldProcess(target))
         {
-            if (setProxy)
+            try
             {
-                // TODO Invalid proxy settings will result in COMException with HRESULT: 0x80040D31.
-                // See C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\um\WindowsSearchErrors.h
-                // See also C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\shared\winerror.h
-                manager.SetProxy(info.ProxyAccess, info.ProxyBypassLocal ? 1 : 0, info.ProxyPortNumber, info.ProxyName, info.ProxyBypassList);
+                if (setProxy)
+                {
+                    manager.SetProxy(info.ProxyAccess,
+                                     info.ProxyBypassLocal ? 1 : 0,
+                                     info.ProxyPortNumber,
+                                     info.ProxyName,
+                                     info.ProxyBypassList);
+                }
+                if (setUserAgent)
+                {
+                    manager.UserAgent = UserAgent;
+                }
             }
-            if (setUserAgent)
+            catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
             {
-                manager.UserAgent = UserAgent;
+                ThrowTerminatingError(rec);
+                throw; // Unreachable
             }
         }
     }

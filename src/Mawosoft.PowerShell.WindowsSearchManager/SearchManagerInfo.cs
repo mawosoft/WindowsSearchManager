@@ -20,7 +20,7 @@ public sealed class SearchManagerInfo : ICloneable
 
     public SearchManagerInfo() { }
 
-    internal SearchManagerInfo(CSearchManager searchManager)
+    internal SearchManagerInfo(ISearchManager searchManager)
     {
         if (searchManager == null) throw new ArgumentNullException(nameof(searchManager));
 

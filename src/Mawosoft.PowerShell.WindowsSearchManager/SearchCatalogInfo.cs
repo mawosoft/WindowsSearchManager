@@ -21,9 +21,6 @@ public sealed class SearchCatalogInfo : ICloneable
     public int HighPriorityQueueCount { get; private set; }
     public string? PathBeingIndexed { get; private set; }
 
-    // TODO stringres
-    private const string AdminRequired = "N/A: Requires admin rights.";
-
     public SearchCatalogInfo() { }
 
     internal SearchCatalogInfo(ISearchCatalogManager searchCatalog)
@@ -48,7 +45,7 @@ public sealed class SearchCatalogInfo : ICloneable
         }
         catch (UnauthorizedAccessException)
         {
-            PathBeingIndexed = AdminRequired;
+            PathBeingIndexed = SR.NA_AdminRequired;
         }
     }
 
