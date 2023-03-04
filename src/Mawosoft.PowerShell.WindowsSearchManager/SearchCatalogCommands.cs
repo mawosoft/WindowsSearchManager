@@ -3,18 +3,42 @@
 namespace Mawosoft.PowerShell.WindowsSearchManager;
 
 /// <summary>
-/// Returns an object with settings and status infos for a search catalog.
+/// Returns an object with settings and status infos for specified or all search catalogs.
 /// </summary>
 [Cmdlet(VerbsCommon.Get, Nouns.SearchCatalog)]
 [OutputType(typeof(SearchCatalogInfo))]
-public sealed class GetSearchCatalogCommand : DefaultCatalogCommandBase
+public sealed class GetSearchCatalogCommand : SearchApiCommandBase
 {
+    [Parameter(Position = 0)]
+    [ValidateNotNullOrEmpty()]
+    public string? Catalog { get; set; }
+
     protected override void EndProcessing()
     {
-        CSearchManager manager = new();
-        ISearchCatalogManager catalog = manager.GetCatalog(Catalog);
-        SearchCatalogInfo info = new(catalog);
-        WriteObject(info);
+        ISearchManager manager = CreateSearchManager();
+        IEnumerable<string> catalogs;
+        if (Catalog != null)
+        {
+            catalogs = new[] { Catalog };
+        }
+        else
+        {
+            ISearchRegistryProvider registry = SearchManagerFactory.CreateSearchRegistryProvider();
+            catalogs = registry.GetCatalogNames();
+        }
+        foreach (string catalog in catalogs)
+        {
+            try
+            {
+                WriteObject(new SearchCatalogInfo(EnsureNotNull(manager.GetCatalog(catalog))));
+            }
+            catch (Exception ex)
+            {
+                ErrorRecord rec = new(ex, string.Empty, ErrorCategory.NotSpecified, catalog);
+                SearchApiErrorHelper.TrySetErrorDetails(rec);
+                WriteError(rec);
+            }
+        }
     }
 }
 
@@ -26,7 +50,7 @@ public sealed class GetSearchCatalogCommand : DefaultCatalogCommandBase
 /// The timeout properties remain 0 after being set.
 /// </remarks>
 [Cmdlet(VerbsCommon.Set, Nouns.SearchCatalog, ConfirmImpact = ConfirmImpact.Medium, SupportsShouldProcess = true)]
-public sealed class SetSearchCatalogCommand : DefaultCatalogCommandBase
+public sealed class SetSearchCatalogCommand : SearchApiCommandBase
 {
     [Parameter]
     public uint ConnectTimeout { get; set; }
@@ -37,23 +61,34 @@ public sealed class SetSearchCatalogCommand : DefaultCatalogCommandBase
     [Parameter]
     public SwitchParameter DiacriticSensitivity { get; set; }
 
+    [Parameter]
+    [ValidateNotNullOrEmpty()]
+    public string Catalog { get; set; } = DefaultCatalogName;
+
     protected override void EndProcessing()
     {
         if (ShouldProcess(Catalog))
         {
-            CSearchManager manager = new();
-            ISearchCatalogManager catalog = manager.GetCatalog(Catalog);
-            if (MyInvocation.BoundParameters.ContainsKey(nameof(ConnectTimeout)))
+            ISearchCatalogManager catalog = GetCatalogManager(Catalog);
+            try
             {
-                catalog.ConnectTimeout = ConnectTimeout;
+                if (MyInvocation.BoundParameters.ContainsKey(nameof(ConnectTimeout)))
+                {
+                    catalog.ConnectTimeout = ConnectTimeout;
+                }
+                if (MyInvocation.BoundParameters.ContainsKey(nameof(DataTimeout)))
+                {
+                    catalog.DataTimeout = DataTimeout;
+                }
+                if (MyInvocation.BoundParameters.ContainsKey(nameof(DiacriticSensitivity)))
+                {
+                    catalog.DiacriticSensitivity = DiacriticSensitivity ? 1 : 0;
+                }
             }
-            if (MyInvocation.BoundParameters.ContainsKey(nameof(DataTimeout)))
+            catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
             {
-                catalog.DataTimeout = DataTimeout;
-            }
-            if (MyInvocation.BoundParameters.ContainsKey(nameof(DiacriticSensitivity)))
-            {
-                catalog.DiacriticSensitivity = DiacriticSensitivity ? 1 : 0;
+                ThrowTerminatingError(rec);
+                throw; // Unreachable
             }
         }
     }
@@ -63,15 +98,36 @@ public sealed class SetSearchCatalogCommand : DefaultCatalogCommandBase
 /// Resets a search catalog by completely rebuilding the index database. Requires Admin rights.
 /// </summary>
 [Cmdlet(VerbsCommon.Reset, Nouns.SearchCatalog, ConfirmImpact = ConfirmImpact.Medium, SupportsShouldProcess = true)]
-public sealed class ResetSearchCatalogCommand : DefaultCatalogCommandBase
+public sealed class ResetSearchCatalogCommand : SearchApiCommandBase
 {
+    [Parameter(Position = 0)]
+    [ValidateNotNullOrEmpty()]
+    public string Catalog { get; set; } = DefaultCatalogName;
+
     protected override void EndProcessing()
     {
         if (ShouldProcess(Catalog))
         {
-            CSearchManager manager = new();
-            ISearchCatalogManager catalog = manager.GetCatalog(Catalog);
-            catalog.Reset();
+            ISearchCatalogManager catalog = GetCatalogManager(Catalog);
+            try
+            {
+                catalog.Reset();
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                ThrowTerminatingError(
+                    new ErrorRecord(ex, string.Empty, ErrorCategory.PermissionDenied, null)
+                    {
+                        ErrorDetails = new(SR.AdminRequiredForOperation)
+                    });
+                throw; // Unreachable
+
+            }
+            catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
+            {
+                ThrowTerminatingError(rec);
+                throw; // Unreachable
+            }
         }
     }
 }
@@ -82,7 +138,7 @@ public sealed class ResetSearchCatalogCommand : DefaultCatalogCommandBase
 /// </summary>
 [Cmdlet(VerbsData.Update, Nouns.SearchCatalog, DefaultParameterSetName = AllParameterSet,
         ConfirmImpact = ConfirmImpact.Medium, SupportsShouldProcess = true)]
-public sealed class UpdateSearchCatalogCommand : DefaultCatalogCommandBase
+public sealed class UpdateSearchCatalogCommand : SearchApiCommandBase
 {
     private const string AllParameterSet = "AllParameterSet";
     private const string RootParameterSet = "RootParameterSet";
@@ -99,10 +155,13 @@ public sealed class UpdateSearchCatalogCommand : DefaultCatalogCommandBase
     [ValidateNotNullOrEmpty()]
     [SupportsWildcards()]
     public string[]? Path { get; set; }
-    // TODO Prioritize (ISearchCatalogManager2) switch in PathParameterSet?
+
+    [Parameter]
+    [ValidateNotNullOrEmpty()]
+    public string Catalog { get; set; } = DefaultCatalogName;
 
     private ISearchCatalogManager? _catalogManager;
-    private ISearchCatalogManager CatalogManager { get => _catalogManager ??= new CSearchManager().GetCatalog(Catalog); }
+    private ISearchCatalogManager CatalogManager { get => _catalogManager ??= GetCatalogManager(Catalog); }
 
     protected override void ProcessRecord()
     {
@@ -110,18 +169,44 @@ public sealed class UpdateSearchCatalogCommand : DefaultCatalogCommandBase
         {
             if (ShouldProcess(Catalog))
             {
-                CatalogManager.Reindex();
+                try
+                {
+                    CatalogManager.Reindex();
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    ThrowTerminatingError(
+                        new ErrorRecord(ex, string.Empty, ErrorCategory.PermissionDenied, null)
+                        {
+                            ErrorDetails = new(SR.AdminRequiredForOperation)
+                        });
+                    throw; // Unreachable
+
+                }
+                catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
+                {
+                    ThrowTerminatingError(rec);
+                    throw; // Unreachable
+                }
             }
         }
         else if (RootPath?.Length > 0)
         {
             foreach (string path in RootPath)
             {
-                // TODO stringres?
                 string target = $"{Catalog} {nameof(RootPath)}={path}";
                 if (ShouldProcess(target))
                 {
-                    CatalogManager.ReindexSearchRoot(path);
+                    try
+                    {
+                        CatalogManager.ReindexSearchRoot(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorRecord rec = new(ex, string.Empty, ErrorCategory.NotSpecified, target);
+                        SearchApiErrorHelper.TrySetErrorDetails(rec);
+                        WriteError(rec);
+                    }
                 }
             }
         }
@@ -129,13 +214,19 @@ public sealed class UpdateSearchCatalogCommand : DefaultCatalogCommandBase
         {
             foreach (string path in Path)
             {
-                // TODO stringres?
                 string target = $"{Catalog} {nameof(Path)}={path}";
                 if (ShouldProcess(target))
                 {
-                    // TODO error 0x80040D07 if path is excluded from index.
-                    // Can be confusing when using nonexisting path like c:\foo which indeed is not included unless c:\ is.
-                    CatalogManager.ReindexMatchingURLs(path);
+                    try
+                    {
+                        CatalogManager.ReindexMatchingURLs(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorRecord rec = new(ex, string.Empty, ErrorCategory.NotSpecified, target);
+                        SearchApiErrorHelper.TrySetErrorDetails(rec);
+                        WriteError(rec);
+                    }
                 }
             }
         }
@@ -146,9 +237,9 @@ public sealed class UpdateSearchCatalogCommand : DefaultCatalogCommandBase
 /// Creates a new search catalog.
 /// </summary>
 [Cmdlet(VerbsCommon.New, Nouns.SearchCatalog, ConfirmImpact = ConfirmImpact.Low, SupportsShouldProcess = true)]
-public sealed class NewSearchCatalogCommand : Cmdlet
+public sealed class NewSearchCatalogCommand : SearchApiCommandBase
 {
-    [Parameter(Mandatory = true)]
+    [Parameter(Mandatory = true, Position = 0)]
     [ValidateNotNullOrEmpty()]
     public string? Catalog { get; set; }
 
@@ -156,8 +247,16 @@ public sealed class NewSearchCatalogCommand : Cmdlet
     {
         if (Catalog != null && ShouldProcess(Catalog))
         {
-            ISearchManager2 manager = new CSearchManager() as ISearchManager2 ?? throw new NotSupportedException();
-            manager.CreateCatalog(Catalog, out ISearchCatalogManager catalog);
+            ISearchManager2 manager = GetSearchManager2();
+            try
+            {
+                manager.CreateCatalog(Catalog, out _);
+            }
+            catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
+            {
+                ThrowTerminatingError(rec);
+                throw; // Unreachable
+            }
         }
     }
 }
@@ -166,9 +265,9 @@ public sealed class NewSearchCatalogCommand : Cmdlet
 /// Deletes a search catalog
 /// </summary>
 [Cmdlet(VerbsCommon.Remove, Nouns.SearchCatalog, ConfirmImpact = ConfirmImpact.High, SupportsShouldProcess = true)]
-public sealed class RemoveSearchCatalogCommand : Cmdlet
+public sealed class RemoveSearchCatalogCommand : SearchApiCommandBase
 {
-    [Parameter(Mandatory = true)]
+    [Parameter(Mandatory = true, Position = 0)]
     [ValidateNotNullOrEmpty()]
     public string? Catalog { get; set; }
 
@@ -176,8 +275,16 @@ public sealed class RemoveSearchCatalogCommand : Cmdlet
     {
         if (Catalog != null && ShouldProcess(Catalog))
         {
-            ISearchManager2 manager = new CSearchManager() as ISearchManager2 ?? throw new NotSupportedException();
-            manager.DeleteCatalog(Catalog);
+            ISearchManager2 manager = GetSearchManager2();
+            try
+            {
+                manager.DeleteCatalog(Catalog);
+            }
+            catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
+            {
+                ThrowTerminatingError(rec);
+                throw; // Unreachable
+            }
         }
     }
 }

@@ -1,7 +1,5 @@
 // Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
-using System.IO;
-
 namespace Mawosoft.PowerShell.WindowsSearchManager;
 
 /// <summary>
@@ -9,31 +7,41 @@ namespace Mawosoft.PowerShell.WindowsSearchManager;
 /// </summary>
 [Cmdlet(VerbsCommon.Get, Nouns.SearchRoot)]
 [OutputType(typeof(SearchRootInfo), typeof(string))]
-public sealed class GetSearchRootCommand : DefaultCatalogCommandBase
+public sealed class GetSearchRootCommand : SearchApiCommandBase
 {
+    [Parameter(Position = 0)]
+    [ValidateNotNullOrEmpty()]
+    public string Catalog { get; set; } = DefaultCatalogName;
+
     [Parameter]
     public SwitchParameter PathOnly { get; set; }
 
     protected override void EndProcessing()
     {
-        CSearchManager manager = new();
-        ISearchCatalogManager catalog = manager.GetCatalog(Catalog);
-        ISearchCrawlScopeManager scope = catalog.GetCrawlScopeManager();
-        IEnumSearchRoots roots = scope.EnumerateRoots();
-        for (; ; )
+        ISearchCrawlScopeManager scope = GetCrawlScopeManager(Catalog);
+        try
         {
-            uint fetched = 0;
-            roots.Next(1, out CSearchRoot root, ref fetched);
-            if (fetched != 1 || root == null) break;
-            if (PathOnly)
+            IEnumSearchRoots? roots = scope.EnumerateRoots();
+            if (roots == null) return; // null -> none
+            for (; ; )
             {
-                WriteObject(root.RootURL);
+                uint fetched = 0;
+                roots.Next(1, out CSearchRoot root, ref fetched);
+                if (fetched != 1 || root == null) break;
+                if (PathOnly)
+                {
+                    WriteObject(root.RootURL);
+                }
+                else
+                {
+                    WriteObject(new SearchRootInfo(root));
+                }
             }
-            else
-            {
-                SearchRootInfo info = new(root);
-                WriteObject(info);
-            }
+        }
+        catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
+        {
+            ThrowTerminatingError(rec);
+            throw; // Unreachable
         }
     }
 }
@@ -47,7 +55,7 @@ public sealed class GetSearchRootCommand : DefaultCatalogCommandBase
 /// </remarks>
 [Cmdlet(VerbsCommon.Add, Nouns.SearchRoot, DefaultParameterSetName = PathParameterSet,
         ConfirmImpact = ConfirmImpact.Medium, SupportsShouldProcess = true)]
-public sealed class AddSearchRootCommand : DefaultCatalogCommandBase
+public sealed class AddSearchRootCommand : SearchApiCommandBase
 {
     private const string PathParameterSet = "PathParameterSet";
     private const string InputParameterSet = "InputParameterSet";
@@ -59,71 +67,76 @@ public sealed class AddSearchRootCommand : DefaultCatalogCommandBase
     [Parameter(Mandatory = true, ParameterSetName = InputParameterSet, ValueFromPipeline = true)]
     public SearchRootInfo[]? InputObject { get; set; }
 
+    [Parameter(Position = 1)]
+    [ValidateNotNullOrEmpty()]
+    public string Catalog { get; set; } = DefaultCatalogName;
+
     private ISearchCrawlScopeManager? _scopeManager;
-    private ISearchCrawlScopeManager ScopeManager { get => _scopeManager ??= new CSearchManager().GetCatalog(Catalog).GetCrawlScopeManager(); }
+    private ISearchCrawlScopeManager ScopeManager { get => _scopeManager ??= GetCrawlScopeManager(Catalog); }
 
     protected override void ProcessRecord()
     {
+        SearchRootInfo[] infos;
         if (ParameterSetName == InputParameterSet)
         {
-            if (InputObject?.Length > 0)
+            if (!(InputObject?.Length > 0)) return;
+            infos = InputObject;
+        }
+        else
+        {
+            if (!(Path?.Length > 0)) return;
+            infos = new SearchRootInfo[Path.Length];
+            for (int i = 0; i < Path.Length; i++)
             {
-                foreach (SearchRootInfo info in InputObject)
-                {
-                    // TODO stringres?
-                    string target = $"{Catalog} {nameof(SearchRootInfo.Path)}={info.Path}";
-                    if (ShouldProcess(target))
-                    {
-                        ScopeManager.AddRoot(info.ToCSearchRoot());
-                    }
-                }
+                infos[i].Path= Path[i];
             }
         }
-        else if (Path?.Length > 0)
+        try
         {
-            foreach (string path in Path)
+            foreach (SearchRootInfo info in infos)
             {
-                SearchRootInfo info = new()
-                {
-                    Path = path
-                };
-                // TODO stringres?
-                string target = $"{Catalog} {nameof(SearchRootInfo.Path)}={info.Path}";
+                string target = $"{Catalog} {nameof(Path)}={info.Path}";
                 if (ShouldProcess(target))
                 {
                     ScopeManager.AddRoot(info.ToCSearchRoot());
                 }
             }
         }
+        catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
+        {
+            ThrowTerminatingError(rec);
+            throw; // Unreachable
+        }
     }
 
-    protected override void EndProcessing()
-    {
-        // Only !=null if something has been added/removed.
-        _scopeManager?.SaveAll();
-    }
+    protected override void EndProcessing() => SaveCrawlScopeManager(_scopeManager);
 }
 
 /// <summary>
 /// Remove one or more search roots from a catalog.
 /// </summary>
 [Cmdlet(VerbsCommon.Remove, Nouns.SearchRoot, ConfirmImpact = ConfirmImpact.High, SupportsShouldProcess = true)]
-public sealed class RemoveSearchRootCommand : DefaultCatalogCommandBase
+public sealed class RemoveSearchRootCommand : SearchApiCommandBase
 {
     [Parameter(Mandatory = true, Position = 0, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
     [ValidateNotNullOrEmpty()]
     public string[]? Path { get; set; }
 
+    [Parameter(Position = 1)]
+    [ValidateNotNullOrEmpty()]
+    public string Catalog { get; set; } = DefaultCatalogName;
+
     private ISearchCrawlScopeManager? _scopeManager;
-    private ISearchCrawlScopeManager ScopeManager { get => _scopeManager ??= new CSearchManager().GetCatalog(Catalog).GetCrawlScopeManager(); }
+    private ISearchCrawlScopeManager ScopeManager { get => _scopeManager ??= GetCrawlScopeManager(Catalog); }
 
     protected override void ProcessRecord()
     {
-        if (Path?.Length > 0)
+        if (!(Path?.Length > 0)) return;
+
+        try
         {
             foreach (string path in Path)
             {
-                // TODO stringres?
                 string target = $"{Catalog} {nameof(Path)}={path}";
                 if (ShouldProcess(target))
                 {
@@ -131,11 +144,12 @@ public sealed class RemoveSearchRootCommand : DefaultCatalogCommandBase
                 }
             }
         }
+        catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
+        {
+            ThrowTerminatingError(rec);
+            throw; // Unreachable
+        }
     }
 
-    protected override void EndProcessing()
-    {
-        // Only !=null if something has been added/removed.
-        _scopeManager?.SaveAll();
-    }
+    protected override void EndProcessing() => SaveCrawlScopeManager(_scopeManager);
 }
