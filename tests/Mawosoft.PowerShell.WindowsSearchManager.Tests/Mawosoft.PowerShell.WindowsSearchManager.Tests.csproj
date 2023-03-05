@@ -4,6 +4,10 @@
     <TargetFrameworks>net7.0;net6.0;$(NetFxTfm)</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <Description>Tests for Mawosoft.PowerShell.WindowsSearchManager</Description>
+    <!-- MSB3270 Processor architecture mismatch. Reason: interop.searchapi.dll only has processor-specific flavors,
+                 but we only use it to embed the interop types, in which case architecture doesn't matter.
+    -->
+    <NoWarn>$(NoWarn);MSB3270</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -28,16 +32,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="coverlet.collector">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="System.ServiceProcess.ServiceController" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.collector">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+    <Reference Include="Interop.SearchAPI" HintPath="$(InteropSearchApiAssemblyPath)" EmbedInteropTypes="true" Private="false" />
   </ItemGroup>
 
 </Project>
