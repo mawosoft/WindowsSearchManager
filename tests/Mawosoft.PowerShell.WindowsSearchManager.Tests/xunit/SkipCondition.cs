@@ -41,6 +41,11 @@ internal static class SkipCondition
 
     private static bool IsWSearchEnabled()
     {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            throw new PlatformNotSupportedException();
+        }
+
         using ServiceController sc = new("WSearch");
         return sc.StartType != ServiceStartMode.Disabled;
     }
