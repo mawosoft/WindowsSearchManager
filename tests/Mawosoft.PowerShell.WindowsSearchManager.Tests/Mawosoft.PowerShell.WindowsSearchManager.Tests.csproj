@@ -23,10 +23,8 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
-    <PackageReference Update="Microsoft.PowerShell.SDK" VersionOverride="7.3.1" />
-    <PackageReference Update="System.Management.Automation" VersionOverride="7.3.1" />
-    <!-- See Known Issues https://github.com/PowerShell/PowerShell/releases/tag/v7.3.1 -->
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" VersionOverride="7.0.0-preview.2.22152.2" NoWarn="NU1605" />
+    <PackageReference Update="Microsoft.PowerShell.SDK" VersionOverride="7.3.3" />
+    <PackageReference Update="System.Management.Automation" VersionOverride="7.3.3" />
   </ItemGroup>
 
   <ItemGroup>
