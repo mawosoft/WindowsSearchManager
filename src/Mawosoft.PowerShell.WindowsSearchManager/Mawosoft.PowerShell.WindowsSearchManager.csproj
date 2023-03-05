@@ -41,7 +41,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../docs/help/help.msbuildproj" ReferenceOutputAssembly="false" SkipGetTargetFrameworkProperties="true" />
+    <!-- Exclude the help project when building for a help update via platyPS because of code changes. -->
+    <ProjectReference Condition="'$(NoMamlHelp)' != 'true'"
+                      Include="../../docs/help/help.msbuildproj"
+                      ReferenceOutputAssembly="false"
+                      SkipGetTargetFrameworkProperties="true" />
   </ItemGroup>
 
   <ItemGroup>

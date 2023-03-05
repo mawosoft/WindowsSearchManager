@@ -9,10 +9,13 @@
 
 [CmdletBinding()]
 param(
-    # Build configuration to use. Defaults to 'Debug'.
+    # Build configuration to use. Defaults to 'Release'.
     [ValidateSet('Debug', 'Release')]
     [Alias('c')]
-    [string]$Configuration = 'Debug'
+    [string]$Configuration = 'Release',
+
+    # Exclude the MAML help file from build
+    [switch]$NoMamlHelp
 )
 
 Set-StrictMode -Version 3.0
@@ -24,7 +27,7 @@ if (Get-Module WindowsSearchManager) {
 }
 
 [string]$srcdir = "$PSScriptRoot/../../src/Mawosoft.PowerShell.WindowsSearchManager"
-dotnet publish "$srcdir/Mawosoft.PowerShell.WindowsSearchManager.csproj" -c $Configuration
+dotnet publish "$srcdir/Mawosoft.PowerShell.WindowsSearchManager.csproj" -c $Configuration -p:NoMamlHelp=$NoMamlHelp
 if ($LASTEXITCODE -ne 0) {
     throw "dotnet publish exited with code=$LASTEXITCODE"
     return

@@ -70,7 +70,10 @@ if ($NewProcess -eq 'Always' -or ($NewProcess -eq 'Conditional' -and (Get-Module
 }
 
 & "$PSScriptRoot/importPlatyPS.ps1"
-& "$PSScriptRoot/importWindowsSearchManager.ps1"
+
+# We need to exclude the current MAML help file from build/import.
+# Otherwise platyPS would not see any changes to parameter sets and simply report the MAML help content.
+& "$PSScriptRoot/importWindowsSearchManager.ps1" -NoMamlHelp
 
 [string]$helpdir = "$PSScriptRoot/../help"
 if (-not (Test-Path "$helpdir/*.md")) {

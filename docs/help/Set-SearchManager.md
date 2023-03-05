@@ -14,7 +14,7 @@ schema: 2.0.0
 
 ```
 Set-SearchManager [-UserAgent <String>] [-ProxyAccess <_PROXY_ACCESS>] [-ProxyName <String>]
- [-ProxyPortNumber <UInt32>] [-ProxyBypassLocal] [-ProxyBypassList <String>] [-WhatIf] [-Confirm]
+ [-ProxyPortNumber <UInt32>] [-ProxyBypassLocal] [-ProxyBypassList <String[]>] [-WhatIf] [-Confirm]
  [<CommonParameters>]
 ```
 
@@ -67,7 +67,7 @@ Accept wildcard characters: False
 {{ Fill ProxyBypassList Description }}
 
 ```yaml
-Type: System.String
+Type: System.String[]
 Parameter Sets: (All)
 Aliases:
 
