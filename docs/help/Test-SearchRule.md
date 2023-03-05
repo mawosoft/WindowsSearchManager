@@ -14,22 +14,22 @@ schema: 2.0.0
 
 ### IncludedParameterSet (Default)
 ```
-Test-SearchRule [-Path] <String[]> [-IsIncluded] [-Catalog <String>] [<CommonParameters>]
+Test-SearchRule [-Path] <String[]> [-IsIncluded] [[-Catalog] <String>] [<CommonParameters>]
 ```
 
 ### ChildScopeParameterSet
 ```
-Test-SearchRule [-Path] <String[]> [-HasChildScope] [-Catalog <String>] [<CommonParameters>]
+Test-SearchRule [-Path] <String[]> [-HasChildScope] [[-Catalog] <String>] [<CommonParameters>]
 ```
 
 ### ParentScopeParameterSet
 ```
-Test-SearchRule [-Path] <String[]> [-HasParentScope] [-Catalog <String>] [<CommonParameters>]
+Test-SearchRule [-Path] <String[]> [-HasParentScope] [[-Catalog] <String>] [<CommonParameters>]
 ```
 
 ### DetailedParameterSet
 ```
-Test-SearchRule [-Path] <String[]> [-Detailed] [-Catalog <String>] [<CommonParameters>]
+Test-SearchRule [-Path] <String[]> [-Detailed] [[-Catalog] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -55,7 +55,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: Named
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

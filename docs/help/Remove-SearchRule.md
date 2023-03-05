@@ -13,7 +13,7 @@ schema: 2.0.0
 ## SYNTAX
 
 ```
-Remove-SearchRule [-Path] <String[]> [-RuleSet <SearchRuleSet>] [-Catalog <String>] [-WhatIf] [-Confirm]
+Remove-SearchRule [-Path] <String[]> [[-RuleSet] <SearchRuleSet>] [[-Catalog] <String>] [-WhatIf] [-Confirm]
  [<CommonParameters>]
 ```
 
@@ -40,7 +40,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: Named
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -86,7 +86,7 @@ Aliases:
 Accepted values: User, Default
 
 Required: False
-Position: Named
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

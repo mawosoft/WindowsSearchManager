@@ -13,7 +13,7 @@ Returns an object with settings and status information for a catalog.
 ## SYNTAX
 
 ```
-Get-SearchCatalog [-Catalog <String>] [<CommonParameters>]
+Get-SearchCatalog [[-Catalog] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -39,7 +39,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: Named
+Position: 0
 Default value: SystemIndex
 Accept pipeline input: False
 Accept wildcard characters: False

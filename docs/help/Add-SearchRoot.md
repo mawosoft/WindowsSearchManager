@@ -14,12 +14,12 @@ schema: 2.0.0
 
 ### PathParameterSet (Default)
 ```
-Add-SearchRoot [-Path] <String[]> [-Catalog <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-SearchRoot [-Path] <String[]> [[-Catalog] <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### InputParameterSet
 ```
-Add-SearchRoot -InputObject <SearchRootInfo[]> [-Catalog <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-SearchRoot -InputObject <SearchRootInfo[]> [[-Catalog] <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -45,7 +45,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: Named
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

@@ -14,13 +14,13 @@ schema: 2.0.0
 
 ### PathParameterSet (Default)
 ```
-Add-SearchRule [-Path] <String[]> [-RuleSet <SearchRuleSet>] -RuleType <SearchRuleType> [-OverrideChildren]
- [-Catalog <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-SearchRule [-Path] <String[]> [[-RuleSet] <SearchRuleSet>] [-RuleType] <SearchRuleType> [-OverrideChildren]
+ [[-Catalog] <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### InputParameterSet
 ```
-Add-SearchRule -InputObject <SearchRuleInfo[]> [-Catalog <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-SearchRule -InputObject <SearchRuleInfo[]> [[-Catalog] <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -46,7 +46,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: Named
+Position: 3
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -122,7 +122,7 @@ Aliases:
 Accepted values: User, Default
 
 Required: False
-Position: Named
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -138,7 +138,7 @@ Aliases:
 Accepted values: Exclude, Include
 
 Required: True
-Position: Named
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
