@@ -141,6 +141,7 @@ jobs:
       id: test
       if: ${{ github.event.inputs.skip-tests != 'true' }}
       run: |
+        Set-Service wsearch -StartupType Automatic
         Start-Service wsearch
         ./build/test.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug, Release -f net7.0, net6.0, net48 -v detailed -r ./TestResults -ff:$${{ strategy.fail-fast }}
     - name: Upload Test results

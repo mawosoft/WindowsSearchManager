@@ -48,6 +48,7 @@ steps:
   artifact: azp-Binlogs
   displayName: Upload Binlogs
 - pwsh: |
+    Set-Service wsearch -StartupType Automatic
     Start-Service wsearch
     ./build/test.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug -f net7.0, net6.0, net48 -v detailed -r ./TestResults -s ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/coverlet.runsettings
   displayName: Test
