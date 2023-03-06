@@ -13,13 +13,13 @@ public sealed class SearchCatalogInfo : ICloneable
     public uint ConnectTimeout { get; set; }
     public uint DataTimeout { get; set; }
     public bool DiacriticSensitivity { get; set; }
-    public _CatalogStatus Status { get; private set; }
-    public _CatalogPausedReason PausedReason { get; private set; }
-    public int ItemCount { get; private set; }
-    public int ItemsToIndexCount { get; private set; }
-    public int NotificationQueueCount { get; private set; }
-    public int HighPriorityQueueCount { get; private set; }
-    public string? PathBeingIndexed { get; private set; }
+    public _CatalogStatus Status { get; }
+    public _CatalogPausedReason PausedReason { get; }
+    public int ItemCount { get; }
+    public int ItemsToIndexCount { get; }
+    public int NotificationQueueCount { get; }
+    public int HighPriorityQueueCount { get; }
+    public string? PathBeingIndexed { get; }
 
     public SearchCatalogInfo() { }
 

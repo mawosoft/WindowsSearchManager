@@ -16,7 +16,6 @@ public class SearchRegistryProviderTests
     }
 
     [SkippableFact(SkipCondition.IsNotNetFramework, SkipCondition.IsCIandWSearchDisabled)]
-    [Trait("wsearch","enabled")]
     public void GetCatalogNames_PSDesktop_Succeeds()
     {
         ISearchRegistryProvider srp = new SearchRegistryProviderPSDesktop();
