@@ -4,9 +4,9 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 public class SearchRegistryProviderTests
 {
-    // TODO not sure if reg entries exist on GitHub runners where WSearch is disabled by default
+    // On CI runners, WSearch is disabled by default, has never run, and therefore has no catalogs.
 
-    [SkippableFact(SkipCondition.IsNetFramework)]
+    [SkippableFact(SkipCondition.IsNetFramework, SkipCondition.IsCIandWSearchDisabled)]
     public void GetCatalogNames_PSCore_Succeeds()
     {
         ISearchRegistryProvider srp = new SearchRegistryProviderPSCore();
@@ -15,7 +15,8 @@ public class SearchRegistryProviderTests
         Assert.Contains(SearchApiCommandBase.DefaultCatalogName, names);
     }
 
-    [SkippableFact(SkipCondition.IsNotNetFramework)]
+    [SkippableFact(SkipCondition.IsNotNetFramework, SkipCondition.IsCIandWSearchDisabled)]
+    [Trait("wsearch","enabled")]
     public void GetCatalogNames_PSDesktop_Succeeds()
     {
         ISearchRegistryProvider srp = new SearchRegistryProviderPSDesktop();
