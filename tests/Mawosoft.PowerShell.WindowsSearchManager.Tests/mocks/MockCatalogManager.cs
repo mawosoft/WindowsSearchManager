@@ -11,6 +11,9 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 internal class MockCatalogManager : ISearchCatalogManager
 {
+    // If true will throw if member access requires admin rights
+    internal bool NoAdmin { get; set; }
+
     internal virtual _CatalogStatus Status { get; set; } = _CatalogStatus.CATALOG_STATUS_PAUSED;
     internal virtual _CatalogPausedReason PausedReason { get; set; } = _CatalogPausedReason.CATALOG_PAUSED_REASON_USER_ACTIVE;
     internal virtual int NumberOfItemsInternal { get; set; } = 1000;
@@ -32,7 +35,12 @@ internal class MockCatalogManager : ISearchCatalogManager
     public virtual void NumberOfItemsToIndex(out int plIncrementalCount,
         out int plNotificationQueue, out int plHighPriorityQueue)
         => (plIncrementalCount, plNotificationQueue, plHighPriorityQueue) = NumberOfItemsToIndexInternal;
-    public virtual string URLBeingIndexed() => URLBeingIndexedInternal;
+    public virtual string URLBeingIndexed()
+    {
+        if (NoAdmin) throw new UnauthorizedAccessException();
+        return URLBeingIndexedInternal;
+    }
+
     public virtual uint GetURLIndexingState(string pszUrl) => throw new NotSupportedException();
     public virtual ISearchPersistentItemsChangedSink GetPersistentItemsChangedSink() => throw new NotImplementedException();
     public virtual void RegisterViewForNotification(string pszView, ISearchViewChangedSink pViewChangedSink, out uint pdwCookie) => throw new NotSupportedException();

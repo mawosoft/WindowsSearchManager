@@ -47,4 +47,20 @@ public class SearchManagerInfoTests
         Assert.Equal(mock.LocalByPassInternal != 0, info.ProxyBypassLocal);
         Assert.Equal(mock.ByPassListInternal, info.ProxyBypassList);
     }
+
+    [Fact]
+    public void Clone_Succeeds()
+    {
+        MockSearchManager mock = new()
+        {
+            UseProxyInternal = _PROXY_ACCESS.PROXY_ACCESS_PROXY,
+            LocalByPassInternal = 1,
+            PortNumberInternal = 111,
+            ProxyNameInternal = "foo",
+            ByPassListInternal = "bar,baz"
+        };
+        SearchManagerInfo info = new(mock);
+        SearchManagerInfo clone = (SearchManagerInfo)info.Clone();
+        Assert.Equal(info, clone, ShallowFieldComparer.Instance);
+    }
 }
