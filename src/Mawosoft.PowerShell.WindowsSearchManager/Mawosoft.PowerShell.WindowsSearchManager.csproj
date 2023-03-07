@@ -49,7 +49,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Win32.Registry" PrivateAssets="All" />
     <PackageReference Include="PowerShellStandard.Library" PrivateAssets="All" />
     <Reference Include="Interop.SearchAPI" HintPath="$(InteropSearchApiAssemblyPath)" EmbedInteropTypes="true" Private="false" />

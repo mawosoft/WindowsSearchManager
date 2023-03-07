@@ -35,4 +35,8 @@
     <PSRootModuleName>Mawosoft.PowerShell.WindowsSearchManager</PSRootModuleName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
+  </ItemGroup>
+
 </Project>
