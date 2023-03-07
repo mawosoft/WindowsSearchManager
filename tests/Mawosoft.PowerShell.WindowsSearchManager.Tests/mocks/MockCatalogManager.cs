@@ -2,23 +2,25 @@
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
-// Exceptions NotImplemented vs NotSupported
-// - NotSupported: the original COM class does not support this member.
-// - NotImplemented: the Mock is missing a implementation for this member
+// NotSupportedException: the original COM class does not support this member.
+// NotImplementedException: the Mock is missing a implementation for this member.
 //
 // Internal members are used to setup mock behavior.
-// Everything is virtual to allow minimal changes per testcase.
 
 internal class MockCatalogManager : ISearchCatalogManager
 {
-    // If true will throw if member access requires admin rights
+    // If true will throw if member access requires admin rights.
     internal bool NoAdmin { get; set; }
 
-    internal virtual _CatalogStatus Status { get; set; } = _CatalogStatus.CATALOG_STATUS_PAUSED;
-    internal virtual _CatalogPausedReason PausedReason { get; set; } = _CatalogPausedReason.CATALOG_PAUSED_REASON_USER_ACTIVE;
-    internal virtual int NumberOfItemsInternal { get; set; } = 1000;
-    internal virtual (int Items, int Notifications, int HighPrio) NumberOfItemsToIndexInternal { get; set; } = (100, 300, 1);
-    internal virtual string URLBeingIndexedInternal { get; set; } = @"C:\foo\bar";
+    // Simple properties representing data accessed via the public interface.
+
+    internal _CatalogStatus Status { get; set; } = _CatalogStatus.CATALOG_STATUS_PAUSED;
+    internal _CatalogPausedReason PausedReason { get; set; } = _CatalogPausedReason.CATALOG_PAUSED_REASON_USER_ACTIVE;
+    internal int NumberOfItemsInternal { get; set; } = 1000;
+    internal (int Items, int Notifications, int HighPrio) NumberOfItemsToIndexInternal { get; set; } = (100, 300, 1);
+    internal string URLBeingIndexedInternal { get; set; } = @"C:\foo\bar";
+
+    // ISearchCatalogManager
 
     public virtual IntPtr GetParameter(string pszName) => throw new NotSupportedException();
     public virtual void SetParameter(string pszName, ref tag_inner_PROPVARIANT pValue) => throw new NotSupportedException();
@@ -52,7 +54,7 @@ internal class MockCatalogManager : ISearchCatalogManager
     public virtual ISearchCrawlScopeManager GetCrawlScopeManager() => throw new NotImplementedException();
 
     public virtual string Name { get; internal set; } = "SystemIndex";
-    public virtual uint ConnectTimeout { get ; set; }
+    public virtual uint ConnectTimeout { get; set; }
     public virtual uint DataTimeout { get; set; }
     public virtual int DiacriticSensitivity { get; set; }
 }

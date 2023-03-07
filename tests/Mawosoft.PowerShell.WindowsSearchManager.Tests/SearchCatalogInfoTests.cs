@@ -27,28 +27,10 @@ public class SearchCatalogInfoTests
         Assert.Throws<ArgumentNullException>("searchCatalog", () => new SearchCatalogInfo(null!));
     }
 
-    [Fact]
-    public void ctor_ISearchCatalogManager_Succeeds()
-    {
-        MockCatalogManager mock = new();
-        SearchCatalogInfo info = new(mock);
-        Assert.Equal(mock.Name, info.Catalog);
-        Assert.Equal(mock.ConnectTimeout, info.ConnectTimeout);
-        Assert.Equal(mock.DataTimeout, info.DataTimeout);
-        Assert.Equal(mock.DiacriticSensitivity != 0, info.DiacriticSensitivity);
-        Assert.Equal(mock.Status, info.Status);
-        Assert.Equal(mock.PausedReason, info.PausedReason);
-        Assert.Equal(mock.NumberOfItemsInternal, info.ItemCount);
-        Assert.Equal(mock.NumberOfItemsToIndexInternal.Items, info.ItemsToIndexCount);
-        Assert.Equal(mock.NumberOfItemsToIndexInternal.Notifications, info.NotificationQueueCount);
-        Assert.Equal(mock.NumberOfItemsToIndexInternal.HighPrio, info.HighPriorityQueueCount);
-        Assert.Equal(mock.URLBeingIndexedInternal, info.PathBeingIndexed);
-    }
-
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public void ctor_ISearchCatalogManager_NoAdmin_Succeeds(bool noAdmin)
+    public void ctor_ISearchCatalogManager_Succeeds(bool noAdmin)
     {
         MockCatalogManager mock = new()
         {

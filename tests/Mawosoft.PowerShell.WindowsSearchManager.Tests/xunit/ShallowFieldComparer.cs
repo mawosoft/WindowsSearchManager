@@ -6,7 +6,7 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 internal class ShallowFieldComparer : IEqualityComparer, IEqualityComparer<object>
 {
-    public static ShallowFieldComparer Instance = new ShallowFieldComparer();
+    public static ShallowFieldComparer Instance = new();
 
     private ShallowFieldComparer() { }
 
@@ -18,8 +18,7 @@ internal class ShallowFieldComparer : IEqualityComparer, IEqualityComparer<objec
         if (t != y.GetType()) return false;
         FieldInfo[] fields = t.GetFields(BindingFlags.Public
                                          | BindingFlags.NonPublic
-                                         | BindingFlags.Instance
-                                         | BindingFlags.DeclaredOnly);
+                                         | BindingFlags.Instance);
         foreach (FieldInfo field in fields)
         {
             object? fx = field.GetValue(x);

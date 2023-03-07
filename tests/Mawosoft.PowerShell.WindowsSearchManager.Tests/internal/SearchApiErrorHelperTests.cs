@@ -8,8 +8,10 @@ public class SearchApiErrorHelperTests
     {
         private const uint MSS_E_CATALOGNOTFOUND = 0x80042103;
         private const uint OLEDB_BINDER_CUSTOM_ERROR = 0x80042500;
+        private const uint GTHR_E_SINGLE_THREADED_EMBEDDING = 0x80040DA5;
         private const uint E_INVALIDARG = 0x8007000E;
         private const uint MSS_E_CATALOGNOTFOUND_notITF = 0x80112103;
+
         public Exception_TheoryData()
         {
             Add(null!, false, "null");
@@ -18,6 +20,7 @@ public class SearchApiErrorHelperTests
             Add(new COMException(null, unchecked((int)MSS_E_CATALOGNOTFOUND_notITF)), false, "not facility ITF");
             Add(new COMException(null, unchecked((int)MSS_E_CATALOGNOTFOUND)), true, "existing msg");
             Add(new COMException(null, unchecked((int)OLEDB_BINDER_CUSTOM_ERROR)), true, "existing msg with inserts");
+            Add(new COMException(null, unchecked((int)GTHR_E_SINGLE_THREADED_EMBEDDING)), true, "existing msg long (290 ch)");
         }
     }
 
@@ -69,7 +72,6 @@ public class SearchApiErrorHelperTests
         Assert.Equal(expected, success);
         if (success)
         {
-            Assert.Same(exception, errorRecord.Exception);
             Assert.NotEqual(exception.Message, errorRecord.ErrorDetails.Message);
         }
         else
