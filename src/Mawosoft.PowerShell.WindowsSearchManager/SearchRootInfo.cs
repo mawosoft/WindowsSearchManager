@@ -28,7 +28,7 @@ public sealed class SearchRootInfo : ICloneable
         FollowDirectories = true;
     }
 
-    internal SearchRootInfo(CSearchRoot searchRoot)
+    internal SearchRootInfo(ISearchRoot searchRoot)
     {
         if (searchRoot == null) throw new ArgumentNullException(nameof(searchRoot));
 

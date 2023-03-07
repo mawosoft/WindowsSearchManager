@@ -28,14 +28,10 @@ public class DefaultSearchManagerFactoryTests
     public void CreateSearchRegistryProvider_Succeeds()
     {
         ISearchRegistryProvider srp = DefaultSearchManagerFactory.Instance.CreateSearchRegistryProvider();
-        if (RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework", StringComparison.OrdinalIgnoreCase))
-        {
-            Assert.IsType<SearchRegistryProviderPSDesktop>(srp);
-        }
-        else
-        {
-            Assert.IsType<SearchRegistryProviderPSCore>(srp);
-        }
-
+#if NETFRAMEWORK
+        Assert.IsType<SearchRegistryProviderPSDesktop>(srp);
+#else
+        Assert.IsType<SearchRegistryProviderPSCore>(srp);
+#endif
     }
 }

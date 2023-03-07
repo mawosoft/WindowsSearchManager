@@ -27,7 +27,7 @@ public sealed class SearchRuleInfo : ICloneable
         FollowFlags = _FOLLOW_FLAGS.FF_INDEXCOMPLEXURLS;
     }
 
-    internal SearchRuleInfo(CSearchScopeRule searchScopeRule)
+    internal SearchRuleInfo(ISearchScopeRule searchScopeRule)
     {
         if (searchScopeRule == null) throw new ArgumentNullException(nameof(searchScopeRule));
 

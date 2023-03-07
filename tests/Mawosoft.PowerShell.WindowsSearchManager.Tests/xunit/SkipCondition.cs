@@ -17,8 +17,11 @@ internal static class SkipCondition
 
     static SkipCondition()
     {
-        s_isNetFramework = RuntimeInformation.FrameworkDescription.StartsWith(
-            ".NET Framework", StringComparison.OrdinalIgnoreCase);
+#if NETFRAMEWORK
+        s_isNetFramework = true;
+#else
+        s_isNetFramework = false;
+#endif
 
         foreach (string env in new[] { "CI", "TF_BUILD", "GITHUB_ACTIONS", "APPVEYOR" })
         {
