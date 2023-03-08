@@ -47,7 +47,10 @@ steps:
   condition: succeededOrFailed()
   artifact: azp-Binlogs
   displayName: Upload Binlogs
-- pwsh: ./build/test.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug -f net7.0, net6.0, net48 -v detailed -r ./TestResults -s ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/coverlet.runsettings
+- pwsh: |
+    Set-Service wsearch -StartupType Automatic
+    Start-Service wsearch
+    ./build/test.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug -f net7.0, net6.0, net48 -v detailed -r ./TestResults -s ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/coverlet.runsettings
   displayName: Test
 - task: reportgenerator@5
   condition: succeededOrFailed()

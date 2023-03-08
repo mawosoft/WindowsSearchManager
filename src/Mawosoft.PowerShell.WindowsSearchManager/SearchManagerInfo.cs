@@ -8,9 +8,9 @@ namespace Mawosoft.PowerShell.WindowsSearchManager;
 /// </summary>
 public sealed class SearchManagerInfo : ICloneable
 {
-    public string? Version { get; private set; }
-    public uint MajorVersion { get; private set; }
-    public uint MinorVersion { get; private set; }
+    public string? Version { get; }
+    public uint MajorVersion { get; }
+    public uint MinorVersion { get; }
     public string? UserAgent { get; set; }
     public _PROXY_ACCESS ProxyAccess { get; set; }
     public string? ProxyName { get; set; }
