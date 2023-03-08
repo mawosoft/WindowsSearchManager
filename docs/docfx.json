@@ -8,7 +8,8 @@
                 }
             ],
             "dest": "api",
-            "filter": "filter.yml"
+            "filter": "filter.yml",
+            "noRestore": true
         }
       ],
     "build": {
