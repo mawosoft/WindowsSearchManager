@@ -1,0 +1,142 @@
+{
+  "api/index.html": {
+    "href": "api/index.html",
+    "title": "",
+    "keywords": ""
+  },
+  "api/Mawosoft.PowerShell.WindowsSearchManager.html": {
+    "href": "api/Mawosoft.PowerShell.WindowsSearchManager.html",
+    "title": "Namespace Mawosoft.PowerShell.WindowsSearchManager | Windows Search Manager",
+    "keywords": "Namespace Mawosoft.PowerShell.WindowsSearchManager Classes SearchCatalogInfo POCO for ISearchCatalogManager Admin rights are only required to get the item currently indexed. This is considered of minor importance, and insufficient rights will not throw. SearchManagerInfo POCO for CSearchManager Everything except version info requires admin rights. SearchRootInfo POCO for CSearchRoot Properties declared as internal are not implemented by CSearchRoot. SearchRuleInfo POCO for CSearchScopeRule TestSearchRuleInfo POCO for result of Test-SearchRule -Detailed Enums SearchRuleInfo._FOLLOW_FLAGS _FOLLOW_FLAGS is defined in searchapi.h, but missing from Interop.SearchAPI. SearchRuleInfo.SearchRuleSet SearchRuleInfo.SearchRuleType"
+  },
+  "api/Mawosoft.PowerShell.WindowsSearchManager.SearchCatalogInfo.html": {
+    "href": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchCatalogInfo.html",
+    "title": "Class SearchCatalogInfo | Windows Search Manager",
+    "keywords": "Class SearchCatalogInfo POCO for ISearchCatalogManager Admin rights are only required to get the item currently indexed. This is considered of minor importance, and insufficient rights will not throw. Inheritance object SearchCatalogInfo Implements ICloneable Namespace: Mawosoft.PowerShell.WindowsSearchManager Assembly: Mawosoft.PowerShell.WindowsSearchManager.dll Syntax public sealed class SearchCatalogInfo : ICloneable Constructors SearchCatalogInfo() Declaration public SearchCatalogInfo() Properties Catalog Declaration public string? Catalog { get; set; } Property Value Type Description string ConnectTimeout Declaration public uint ConnectTimeout { get; set; } Property Value Type Description uint DataTimeout Declaration public uint DataTimeout { get; set; } Property Value Type Description uint DiacriticSensitivity Declaration public bool DiacriticSensitivity { get; set; } Property Value Type Description bool HighPriorityQueueCount Declaration public int HighPriorityQueueCount { get; } Property Value Type Description int ItemCount Declaration public int ItemCount { get; } Property Value Type Description int ItemsToIndexCount Declaration public int ItemsToIndexCount { get; } Property Value Type Description int NotificationQueueCount Declaration public int NotificationQueueCount { get; } Property Value Type Description int PathBeingIndexed Declaration public string? PathBeingIndexed { get; } Property Value Type Description string PausedReason Declaration public _CatalogPausedReason PausedReason { get; } Property Value Type Description _CatalogPausedReason Status Declaration public _CatalogStatus Status { get; } Property Value Type Description _CatalogStatus Methods Clone() Declaration public object Clone() Returns Type Description object Implements System.ICloneable"
+  },
+  "api/Mawosoft.PowerShell.WindowsSearchManager.SearchManagerInfo.html": {
+    "href": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchManagerInfo.html",
+    "title": "Class SearchManagerInfo | Windows Search Manager",
+    "keywords": "Class SearchManagerInfo POCO for CSearchManager Everything except version info requires admin rights. Inheritance object SearchManagerInfo Implements ICloneable Namespace: Mawosoft.PowerShell.WindowsSearchManager Assembly: Mawosoft.PowerShell.WindowsSearchManager.dll Syntax public sealed class SearchManagerInfo : ICloneable Constructors SearchManagerInfo() Declaration public SearchManagerInfo() Properties MajorVersion Declaration public uint MajorVersion { get; } Property Value Type Description uint MinorVersion Declaration public uint MinorVersion { get; } Property Value Type Description uint ProxyAccess Declaration public _PROXY_ACCESS ProxyAccess { get; set; } Property Value Type Description _PROXY_ACCESS ProxyBypassList Declaration public string? ProxyBypassList { get; set; } Property Value Type Description string ProxyBypassLocal Declaration public bool ProxyBypassLocal { get; set; } Property Value Type Description bool ProxyName Declaration public string? ProxyName { get; set; } Property Value Type Description string ProxyPortNumber Declaration public uint ProxyPortNumber { get; set; } Property Value Type Description uint UserAgent Declaration public string? UserAgent { get; set; } Property Value Type Description string Version Declaration public string? Version { get; } Property Value Type Description string Methods Clone() Declaration public object Clone() Returns Type Description object Implements System.ICloneable"
+  },
+  "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRootInfo.html": {
+    "href": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRootInfo.html",
+    "title": "Class SearchRootInfo | Windows Search Manager",
+    "keywords": "Class SearchRootInfo POCO for CSearchRoot Properties declared as internal are not implemented by CSearchRoot. Inheritance object SearchRootInfo Implements ICloneable Namespace: Mawosoft.PowerShell.WindowsSearchManager Assembly: Mawosoft.PowerShell.WindowsSearchManager.dll Syntax public sealed class SearchRootInfo : ICloneable Constructors SearchRootInfo() Declaration public SearchRootInfo() Properties AuthenticationType Declaration public _AUTH_TYPE AuthenticationType { get; set; } Property Value Type Description _AUTH_TYPE EnumerationDepth Declaration public uint EnumerationDepth { get; set; } Property Value Type Description uint FollowDirectories Declaration public bool FollowDirectories { get; set; } Property Value Type Description bool HostDepth Declaration public uint HostDepth { get; set; } Property Value Type Description uint IsHierarchical Declaration public bool IsHierarchical { get; set; } Property Value Type Description bool Path Declaration public string? Path { get; set; } Property Value Type Description string ProvidesNotifications Declaration public bool ProvidesNotifications { get; set; } Property Value Type Description bool UseNotificationsOnly Declaration public bool UseNotificationsOnly { get; set; } Property Value Type Description bool Methods Clone() Declaration public object Clone() Returns Type Description object Implements System.ICloneable"
+  },
+  "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo._FOLLOW_FLAGS.html": {
+    "href": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo._FOLLOW_FLAGS.html",
+    "title": "Enum SearchRuleInfo._FOLLOW_FLAGS | Windows Search Manager",
+    "keywords": "Enum SearchRuleInfo._FOLLOW_FLAGS _FOLLOW_FLAGS is defined in searchapi.h, but missing from Interop.SearchAPI. Namespace: Mawosoft.PowerShell.WindowsSearchManager Assembly: Mawosoft.PowerShell.WindowsSearchManager.dll Syntax [Flags] public enum SearchRuleInfo._FOLLOW_FLAGS Fields Name Description FF_INDEXCOMPLEXURLS FF_SUPPRESSINDEXING"
+  },
+  "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo.html": {
+    "href": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo.html",
+    "title": "Class SearchRuleInfo | Windows Search Manager",
+    "keywords": "Class SearchRuleInfo POCO for CSearchScopeRule Inheritance object SearchRuleInfo Implements ICloneable Namespace: Mawosoft.PowerShell.WindowsSearchManager Assembly: Mawosoft.PowerShell.WindowsSearchManager.dll Syntax public sealed class SearchRuleInfo : ICloneable Constructors SearchRuleInfo() Declaration public SearchRuleInfo() Properties FollowFlags Declaration public SearchRuleInfo._FOLLOW_FLAGS FollowFlags { get; set; } Property Value Type Description SearchRuleInfo._FOLLOW_FLAGS OverrideChildren Declaration public bool OverrideChildren { get; set; } Property Value Type Description bool Path Declaration public string? Path { get; set; } Property Value Type Description string RuleSet Declaration public SearchRuleInfo.SearchRuleSet RuleSet { get; set; } Property Value Type Description SearchRuleInfo.SearchRuleSet RuleType Declaration public SearchRuleInfo.SearchRuleType RuleType { get; set; } Property Value Type Description SearchRuleInfo.SearchRuleType Methods Clone() Declaration public object Clone() Returns Type Description object Implements System.ICloneable"
+  },
+  "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo.SearchRuleSet.html": {
+    "href": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo.SearchRuleSet.html",
+    "title": "Enum SearchRuleInfo.SearchRuleSet | Windows Search Manager",
+    "keywords": "Enum SearchRuleInfo.SearchRuleSet Namespace: Mawosoft.PowerShell.WindowsSearchManager Assembly: Mawosoft.PowerShell.WindowsSearchManager.dll Syntax public enum SearchRuleInfo.SearchRuleSet Fields Name Description Default User"
+  },
+  "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo.SearchRuleType.html": {
+    "href": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo.SearchRuleType.html",
+    "title": "Enum SearchRuleInfo.SearchRuleType | Windows Search Manager",
+    "keywords": "Enum SearchRuleInfo.SearchRuleType Namespace: Mawosoft.PowerShell.WindowsSearchManager Assembly: Mawosoft.PowerShell.WindowsSearchManager.dll Syntax public enum SearchRuleInfo.SearchRuleType Fields Name Description Exclude Include"
+  },
+  "api/Mawosoft.PowerShell.WindowsSearchManager.TestSearchRuleInfo.html": {
+    "href": "api/Mawosoft.PowerShell.WindowsSearchManager.TestSearchRuleInfo.html",
+    "title": "Class TestSearchRuleInfo | Windows Search Manager",
+    "keywords": "Class TestSearchRuleInfo POCO for result of Test-SearchRule -Detailed Inheritance object TestSearchRuleInfo Implements ICloneable Namespace: Mawosoft.PowerShell.WindowsSearchManager Assembly: Mawosoft.PowerShell.WindowsSearchManager.dll Syntax public sealed class TestSearchRuleInfo : ICloneable Constructors TestSearchRuleInfo() Declaration public TestSearchRuleInfo() Properties HasChildScope Declaration public bool HasChildScope { get; set; } Property Value Type Description bool HasParentScope Declaration public bool HasParentScope { get; set; } Property Value Type Description bool IsIncluded Declaration public bool IsIncluded { get; set; } Property Value Type Description bool ParentScopeVersiondId Declaration public int ParentScopeVersiondId { get; set; } Property Value Type Description int Path Declaration public string? Path { get; set; } Property Value Type Description string Reason Declaration public CLUSION_REASON Reason { get; set; } Property Value Type Description CLUSION_REASON Methods Clone() Declaration public object Clone() Returns Type Description object Implements System.ICloneable"
+  },
+  "index.html": {
+    "href": "index.html",
+    "title": "Home | Windows Search Manager",
+    "keywords": "Windows Search Manager Reference GitHub PS Gallery A PowerShell Module"
+  },
+  "reference/Add-SearchRoot.html": {
+    "href": "reference/Add-SearchRoot.html",
+    "title": "Add-SearchRoot | Windows Search Manager",
+    "keywords": "Add-SearchRoot {{ Fill in the Synopsis }} Syntax Add-SearchRoot [-Path] <String[]> [[-Catalog] <String>] [-WhatIf] [-Confirm] [<CommonParameters>] Add-SearchRoot -InputObject <SearchRootInfo[]> [[-Catalog] <String>] [-WhatIf] [-Confirm] [<CommonParameters>] Description {{ Fill in the Description }} Examples Example 1 PS C:\\> {{ Add example code here }} {{ Add example description here }} Parameters -Catalog {{ Fill Catalog Description }} Type String Position 1 Default value None Accept pipeline input False Accept wildcard characters False -InputObject {{ Fill InputObject Description }} Type SearchRootInfo[] Position Named Default value None Accept pipeline input True (ByValue) Accept wildcard characters False -Path {{ Fill Path Description }} Type String[] Position 0 Default value None Accept pipeline input True (ByValue) Accept wildcard characters False Inputs String[] SearchRootInfo[] Outputs Object"
+  },
+  "reference/Add-SearchRule.html": {
+    "href": "reference/Add-SearchRule.html",
+    "title": "Add-SearchRule | Windows Search Manager",
+    "keywords": "Add-SearchRule {{ Fill in the Synopsis }} Syntax Add-SearchRule [-Path] <String[]> [[-RuleSet] <SearchRuleSet>] [-RuleType] <SearchRuleType> [-OverrideChildren] [[-Catalog] <String>] [-WhatIf] [-Confirm] [<CommonParameters>] Add-SearchRule -InputObject <SearchRuleInfo[]> [[-Catalog] <String>] [-WhatIf] [-Confirm] [<CommonParameters>] Description {{ Fill in the Description }} Examples Example 1 PS C:\\> {{ Add example code here }} {{ Add example description here }} Parameters -Catalog {{ Fill Catalog Description }} Type String Position 3 Default value None Accept pipeline input False Accept wildcard characters False -InputObject {{ Fill InputObject Description }} Type SearchRuleInfo[] Position Named Default value None Accept pipeline input True (ByValue) Accept wildcard characters False -OverrideChildren {{ Fill OverrideChildren Description }} Type SwitchParameter Position Named Default value False Accept pipeline input False Accept wildcard characters False -Path {{ Fill Path Description }} Type String[] Position 0 Default value None Accept pipeline input True (ByValue) Accept wildcard characters False -RuleSet {{ Fill RuleSet Description }} Type SearchRuleInfo.SearchRuleSet Accepted values User, Default Position 1 Default value None Accept pipeline input False Accept wildcard characters False -RuleType {{ Fill RuleType Description }} Type SearchRuleInfo.SearchRuleType Accepted values Exclude, Include Position 2 Default value None Accept pipeline input False Accept wildcard characters False Inputs String[] SearchRuleInfo[] Outputs Object"
+  },
+  "reference/Get-SearchCatalog.html": {
+    "href": "reference/Get-SearchCatalog.html",
+    "title": "Get-SearchCatalog | Windows Search Manager",
+    "keywords": "Get-SearchCatalog Returns an object with settings and status information for a catalog. Syntax Get-SearchCatalog [[-Catalog] <String>] [<CommonParameters>] Description {{ Fill in the Description }} Examples Example 1 PS C:\\> {{ Add example code here }} {{ Add example description here }} Parameters -Catalog {{ Fill Catalog Description }} Type String Position 0 Default value SystemIndex Accept pipeline input False Accept wildcard characters False Inputs None Outputs SearchCatalogInfo"
+  },
+  "reference/Get-SearchManager.html": {
+    "href": "reference/Get-SearchManager.html",
+    "title": "Get-SearchManager | Windows Search Manager",
+    "keywords": "Get-SearchManager {{ Fill in the Synopsis }} Syntax Get-SearchManager [<CommonParameters>] Description {{ Fill in the Description }} Examples Example 1 PS C:\\> {{ Add example code here }} {{ Add example description here }} Inputs None Outputs SearchManagerInfo"
+  },
+  "reference/Get-SearchRoot.html": {
+    "href": "reference/Get-SearchRoot.html",
+    "title": "Get-SearchRoot | Windows Search Manager",
+    "keywords": "Get-SearchRoot {{ Fill in the Synopsis }} Syntax Get-SearchRoot [[-Catalog] <String>] [-PathOnly] [<CommonParameters>] Description {{ Fill in the Description }} Examples Example 1 PS C:\\> {{ Add example code here }} {{ Add example description here }} Parameters -Catalog {{ Fill Catalog Description }} Type String Position 0 Default value None Accept pipeline input False Accept wildcard characters False -PathOnly {{ Fill PathOnly Description }} Type SwitchParameter Position Named Default value False Accept pipeline input False Accept wildcard characters False Inputs None Outputs SearchRootInfo String"
+  },
+  "reference/Get-SearchRule.html": {
+    "href": "reference/Get-SearchRule.html",
+    "title": "Get-SearchRule | Windows Search Manager",
+    "keywords": "Get-SearchRule {{ Fill in the Synopsis }} Syntax Get-SearchRule [[-Catalog] <String>] [<CommonParameters>] Description {{ Fill in the Description }} Examples Example 1 PS C:\\> {{ Add example code here }} {{ Add example description here }} Parameters -Catalog {{ Fill Catalog Description }} Type String Position 0 Default value None Accept pipeline input False Accept wildcard characters False Inputs None Outputs SearchRuleInfo"
+  },
+  "reference/index.html": {
+    "href": "reference/index.html",
+    "title": "Module WindowsSearchManager | Windows Search Manager",
+    "keywords": "Module WindowsSearchManager TODO Description and other content in this file Install some text SearchManager Get-SearchManager {{ Fill in the Synopsis }} Set-SearchManager {{ Fill in the Synopsis }} SearchCatalog Get-SearchCatalog Returns an object with settings and status information for a catalog. New-SearchCatalog {{ Fill in the Synopsis }} Remove-SearchCatalog {{ Fill in the Synopsis }} Reset-SearchCatalog {{ Fill in the Synopsis }} Set-SearchCatalog {{ Fill in the Synopsis }} Update-SearchCatalog {{ Fill in the Synopsis }} SearchRoot Add-SearchRoot {{ Fill in the Synopsis }} Get-SearchRoot {{ Fill in the Synopsis }} Remove-SearchRoot {{ Fill in the Synopsis }} SearchRule Add-SearchRule {{ Fill in the Synopsis }} Get-SearchRule {{ Fill in the Synopsis }} Remove-SearchRule {{ Fill in the Synopsis }} Reset-SearchRule {{ Fill in the Synopsis }} Test-SearchRule {{ Fill in the Synopsis }} See also SearchAPI link"
+  },
+  "reference/New-SearchCatalog.html": {
+    "href": "reference/New-SearchCatalog.html",
+    "title": "New-SearchCatalog | Windows Search Manager",
+    "keywords": "New-SearchCatalog {{ Fill in the Synopsis }} Syntax New-SearchCatalog [-Catalog] <String> [-WhatIf] [-Confirm] [<CommonParameters>] Description {{ Fill in the Description }} Examples Example 1 PS C:\\> {{ Add example code here }} {{ Add example description here }} Parameters -Catalog {{ Fill Catalog Description }} Type String Position 0 Default value None Accept pipeline input False Accept wildcard characters False Inputs None Outputs Object"
+  },
+  "reference/Remove-SearchCatalog.html": {
+    "href": "reference/Remove-SearchCatalog.html",
+    "title": "Remove-SearchCatalog | Windows Search Manager",
+    "keywords": "Remove-SearchCatalog {{ Fill in the Synopsis }} Syntax Remove-SearchCatalog [-Catalog] <String> [-WhatIf] [-Confirm] [<CommonParameters>] Description {{ Fill in the Description }} Examples Example 1 PS C:\\> {{ Add example code here }} {{ Add example description here }} Parameters -Catalog {{ Fill Catalog Description }} Type String Position 0 Default value None Accept pipeline input False Accept wildcard characters False Inputs None Outputs Object"
+  },
+  "reference/Remove-SearchRoot.html": {
+    "href": "reference/Remove-SearchRoot.html",
+    "title": "Remove-SearchRoot | Windows Search Manager",
+    "keywords": "Remove-SearchRoot {{ Fill in the Synopsis }} Syntax Remove-SearchRoot [-Path] <String[]> [[-Catalog] <String>] [-WhatIf] [-Confirm] [<CommonParameters>] Description {{ Fill in the Description }} Examples Example 1 PS C:\\> {{ Add example code here }} {{ Add example description here }} Parameters -Catalog {{ Fill Catalog Description }} Type String Position 1 Default value None Accept pipeline input False Accept wildcard characters False -Path {{ Fill Path Description }} Type String[] Position 0 Default value None Accept pipeline input True (ByPropertyName, ByValue) Accept wildcard characters False Inputs String[] Outputs Object"
+  },
+  "reference/Remove-SearchRule.html": {
+    "href": "reference/Remove-SearchRule.html",
+    "title": "Remove-SearchRule | Windows Search Manager",
+    "keywords": "Remove-SearchRule {{ Fill in the Synopsis }} Syntax Remove-SearchRule [-Path] <String[]> [[-RuleSet] <SearchRuleSet>] [[-Catalog] <String>] [-WhatIf] [-Confirm] [<CommonParameters>] Description {{ Fill in the Description }} Examples Example 1 PS C:\\> {{ Add example code here }} {{ Add example description here }} Parameters -Catalog {{ Fill Catalog Description }} Type String Position 2 Default value None Accept pipeline input False Accept wildcard characters False -Path {{ Fill Path Description }} Type String[] Position 0 Default value None Accept pipeline input True (ByPropertyName, ByValue) Accept wildcard characters False -RuleSet {{ Fill RuleSet Description }} Type SearchRuleInfo.SearchRuleSet Accepted values User, Default Position 1 Default value None Accept pipeline input False Accept wildcard characters False Inputs String[] Outputs Object"
+  },
+  "reference/Reset-SearchCatalog.html": {
+    "href": "reference/Reset-SearchCatalog.html",
+    "title": "Reset-SearchCatalog | Windows Search Manager",
+    "keywords": "Reset-SearchCatalog {{ Fill in the Synopsis }} Syntax Reset-SearchCatalog [[-Catalog] <String>] [-WhatIf] [-Confirm] [<CommonParameters>] Description {{ Fill in the Description }} Examples Example 1 PS C:\\> {{ Add example code here }} {{ Add example description here }} Parameters -Catalog {{ Fill Catalog Description }} Type String Position 0 Default value None Accept pipeline input False Accept wildcard characters False Inputs None Outputs Object"
+  },
+  "reference/Reset-SearchRule.html": {
+    "href": "reference/Reset-SearchRule.html",
+    "title": "Reset-SearchRule | Windows Search Manager",
+    "keywords": "Reset-SearchRule {{ Fill in the Synopsis }} Syntax Reset-SearchRule [[-Catalog] <String>] [-WhatIf] [-Confirm] [<CommonParameters>] Description {{ Fill in the Description }} Examples Example 1 PS C:\\> {{ Add example code here }} {{ Add example description here }} Parameters -Catalog {{ Fill Catalog Description }} Type String Position 0 Default value None Accept pipeline input False Accept wildcard characters False Inputs None Outputs Object"
+  },
+  "reference/Set-SearchCatalog.html": {
+    "href": "reference/Set-SearchCatalog.html",
+    "title": "Set-SearchCatalog | Windows Search Manager",
+    "keywords": "Set-SearchCatalog {{ Fill in the Synopsis }} Syntax Set-SearchCatalog [-ConnectTimeout <UInt32>] [-DataTimeout <UInt32>] [-DiacriticSensitivity] [-Catalog <String>] [-WhatIf] [-Confirm] [<CommonParameters>] Description {{ Fill in the Description }} Examples Example 1 PS C:\\> {{ Add example code here }} {{ Add example description here }} Parameters -Catalog {{ Fill Catalog Description }} Type String Position Named Default value None Accept pipeline input False Accept wildcard characters False -ConnectTimeout {{ Fill ConnectTimeout Description }} Type UInt32 Position Named Default value None Accept pipeline input False Accept wildcard characters False -DataTimeout {{ Fill DataTimeout Description }} Type UInt32 Position Named Default value None Accept pipeline input False Accept wildcard characters False -DiacriticSensitivity {{ Fill DiacriticSensitivity Description }} Type SwitchParameter Position Named Default value False Accept pipeline input False Accept wildcard characters False Inputs None Outputs Object"
+  },
+  "reference/Set-SearchManager.html": {
+    "href": "reference/Set-SearchManager.html",
+    "title": "Set-SearchManager | Windows Search Manager",
+    "keywords": "Set-SearchManager {{ Fill in the Synopsis }} Syntax Set-SearchManager [-UserAgent <String>] [-ProxyAccess <_PROXY_ACCESS>] [-ProxyName <String>] [-ProxyPortNumber <UInt32>] [-ProxyBypassLocal] [-ProxyBypassList <String[]>] [-WhatIf] [-Confirm] [<CommonParameters>] Description {{ Fill in the Description }} Examples Example 1 PS C:\\> {{ Add example code here }} {{ Add example description here }} Parameters -ProxyAccess {{ Fill ProxyAccess Description }} Type _PROXY_ACCESS Accepted values PROXY_ACCESS_PRECONFIG, PROXY_ACCESS_DIRECT, PROXY_ACCESS_PROXY Position Named Default value None Accept pipeline input False Accept wildcard characters False -ProxyBypassList {{ Fill ProxyBypassList Description }} Type String[] Position Named Default value None Accept pipeline input False Accept wildcard characters False -ProxyBypassLocal {{ Fill ProxyBypassLocal Description }} Type SwitchParameter Position Named Default value False Accept pipeline input False Accept wildcard characters False -ProxyName {{ Fill ProxyName Description }} Type String Position Named Default value None Accept pipeline input False Accept wildcard characters False -ProxyPortNumber {{ Fill ProxyPortNumber Description }} Type UInt32 Position Named Default value None Accept pipeline input False Accept wildcard characters False -UserAgent {{ Fill UserAgent Description }} Type String Position Named Default value None Accept pipeline input False Accept wildcard characters False Inputs None Outputs Object"
+  },
+  "reference/Test-SearchRule.html": {
+    "href": "reference/Test-SearchRule.html",
+    "title": "Test-SearchRule | Windows Search Manager",
+    "keywords": "Test-SearchRule {{ Fill in the Synopsis }} Syntax Test-SearchRule [-Path] <String[]> [-IsIncluded] [[-Catalog] <String>] [<CommonParameters>] Test-SearchRule [-Path] <String[]> [-HasChildScope] [[-Catalog] <String>] [<CommonParameters>] Test-SearchRule [-Path] <String[]> [-HasParentScope] [[-Catalog] <String>] [<CommonParameters>] Test-SearchRule [-Path] <String[]> [-Detailed] [[-Catalog] <String>] [<CommonParameters>] Description {{ Fill in the Description }} Examples Example 1 PS C:\\> {{ Add example code here }} {{ Add example description here }} Parameters -Catalog {{ Fill Catalog Description }} Type String Position 1 Default value None Accept pipeline input False Accept wildcard characters False -Detailed {{ Fill Detailed Description }} Type SwitchParameter Position Named Default value False Accept pipeline input False Accept wildcard characters False -HasChildScope {{ Fill HasChildScope Description }} Type SwitchParameter Position Named Default value False Accept pipeline input False Accept wildcard characters False -HasParentScope {{ Fill HasParentScope Description }} Type SwitchParameter Position Named Default value False Accept pipeline input False Accept wildcard characters False -IsIncluded {{ Fill IsIncluded Description }} Type SwitchParameter Position Named Default value False Accept pipeline input False Accept wildcard characters False -Path {{ Fill Path Description }} Type String[] Position 0 Default value None Accept pipeline input True (ByPropertyName, ByValue) Accept wildcard characters False Inputs String[] Outputs Boolean TestSearchRuleInfo"
+  },
+  "reference/Update-SearchCatalog.html": {
+    "href": "reference/Update-SearchCatalog.html",
+    "title": "Update-SearchCatalog | Windows Search Manager",
+    "keywords": "Update-SearchCatalog {{ Fill in the Synopsis }} Syntax Update-SearchCatalog [-All] [-Catalog <String>] [-WhatIf] [-Confirm] [<CommonParameters>] Update-SearchCatalog -RootPath <String[]> [-Catalog <String>] [-WhatIf] [-Confirm] [<CommonParameters>] Update-SearchCatalog [-Path] <String[]> [-Catalog <String>] [-WhatIf] [-Confirm] [<CommonParameters>] Description {{ Fill in the Description }} Examples Example 1 PS C:\\> {{ Add example code here }} {{ Add example description here }} Parameters -All {{ Fill All Description }} Type SwitchParameter Position Named Default value False Accept pipeline input False Accept wildcard characters False -Catalog {{ Fill Catalog Description }} Type String Position Named Default value None Accept pipeline input False Accept wildcard characters False -Path {{ Fill Path Description }} Type String[] Position 0 Default value None Accept pipeline input True (ByPropertyName, ByValue) Accept wildcard characters True -RootPath {{ Fill RootPath Description }} Type String[] Position Named Default value None Accept pipeline input True (ByPropertyName) Accept wildcard characters False Inputs String[] Outputs Object"
+  }
+}

@@ -1,0 +1,351 @@
+{
+  "homepages": [],
+  "source_base_path": "D:/a/WindowsSearchManager/WindowsSearchManager/docs",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      }
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchCatalogInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchCatalogInfo.html",
+          "hash": "F0kvuWP9D9MxclLzujbJSlj+aqi6JIcAsEsFRgpPWjY="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchManagerInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchManagerInfo.html",
+          "hash": "8mDcqzZ/Bsfw1mcyEITnIjWRxYYdiavEgWczft/sxRI="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRootInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRootInfo.html",
+          "hash": "MRo+GmR+Q8VlwpLcyrss3rP36cDosB8/nJ+GB0MonsE="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo.SearchRuleSet.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo.SearchRuleSet.html",
+          "hash": "DRUzwig10v9p13ayuJirU6diMOgsZ2nlFHdlYcN/nSg="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo.SearchRuleType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo.SearchRuleType.html",
+          "hash": "q4fWFODBraaPN//Yyec6S0KLkb0VFFVAyMb0QPc95uM="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo._FOLLOW_FLAGS.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo._FOLLOW_FLAGS.html",
+          "hash": "2M58I0+QmwittvU/0325jOhMY1R78Vdvqiw2SGz/bDk="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo.html",
+          "hash": "oTN3aH+d4hpot9HToBpw9AumVfGuDP/BHHFu2qxV8/I="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.TestSearchRuleInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.TestSearchRuleInfo.html",
+          "hash": "rxAoEcP9s8C1Q5oZv41K1GfaqMtEmAW7i/FRGevUhLU="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.html",
+          "hash": "7AMCgIfTVMs5e8PBtO5stCTJdwmZloYQwPUznkfBZcs="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html",
+          "hash": "SQZdAfoirntQYKWJvEzXLF3YIBHrNbluHbRWzvw05eM="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "eEfPtXHa/kxfaDfVO1Dwbl3be2bBdMbAnKPPmtQrhB8="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Add-SearchRoot.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Add-SearchRoot.html",
+          "hash": "iwguRGT/iIRAnI4JLGNG6j8jKvqmYAxaClaTyuolhAc="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Add-SearchRule.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Add-SearchRule.html",
+          "hash": "G1lpui3HFiWm/htl7qGs/BFRlanX9xUYWIehI2/FEMA="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Get-SearchCatalog.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Get-SearchCatalog.html",
+          "hash": "mE6U39YODRQBXyJcTfNSGK+O1xUIsWVya0xXImg3eWo="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Get-SearchManager.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Get-SearchManager.html",
+          "hash": "7/EBc7PA2N/a62sfwGCTyXf+XkiAk3FX6s3ezhjyzJ0="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Get-SearchRoot.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Get-SearchRoot.html",
+          "hash": "NNRG6PI1NlybTwrViaRz6gTndPPDzdieUoB4190rk5s="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Get-SearchRule.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Get-SearchRule.html",
+          "hash": "QcDdYU9P2g+0toJeEGECiv0YVp89RUP+yIVtBJFRu/I="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/New-SearchCatalog.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/New-SearchCatalog.html",
+          "hash": "5SVEzaXtgJGxLh+55kLVx3XPm0kb7Kq+Q9/8pESbuJk="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Remove-SearchCatalog.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Remove-SearchCatalog.html",
+          "hash": "2W3HKkGbTFeOhWcdpJuivsXvnk6Njeo6o+NU6eWI9Vs="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Remove-SearchRoot.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Remove-SearchRoot.html",
+          "hash": "OYfFRNRsF058z+kGJOWt7rAAEB+AzZQr9c3cpt37Gb4="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Remove-SearchRule.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Remove-SearchRule.html",
+          "hash": "3sVXWViB927ggTzt/YfCXFbNjFoFdCmGF6BiWynbnNk="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Reset-SearchCatalog.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Reset-SearchCatalog.html",
+          "hash": "pROqk2D9ZQ0BsJ99WXcJPkE9nMJ01WZmU8sIgouNySk="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Reset-SearchRule.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Reset-SearchRule.html",
+          "hash": "b4CiOPhGTha9+zPnQ4Jx9s+W1LDuSyR3Xn3LEC9HwpE="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Set-SearchCatalog.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Set-SearchCatalog.html",
+          "hash": "cTqKuHglL7NKgT8mBWaNk1s6B192oT4hdc8dT6Z5H9k="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Set-SearchManager.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Set-SearchManager.html",
+          "hash": "SMZ9roV2AqRenjymS//d9tN6T7jDFqvJ7JL/DHWlf74="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Test-SearchRule.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Test-SearchRule.html",
+          "hash": "60I3Ivi05KfBKSm0rf1bfnqOBEAkGIxZ0mpcRfNV3lI="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Update-SearchCatalog.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Update-SearchCatalog.html",
+          "hash": "zBNrBYyqDapi/U0sgvpeOm7BmLX57nPA/HIAl1XE+hc="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/index.html",
+          "hash": "YjyAiWkfQGL0JwTiKbYfJCntDHzjWmPKJuHJ06YLZwM="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "reference/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "reference/toc.html",
+          "hash": "hmWRXeLDcY2zVccnpu+7oJ7KE459aAwgbd91p/VmX4o="
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html",
+          "hash": "Jw9ULSi6HhSH+3Z1ya5rHdO3wVIyrlQ10JgF6VRFl1U="
+        }
+      },
+      "version": ""
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

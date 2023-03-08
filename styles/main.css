@@ -1,0 +1,18 @@
+/*
+    docfx.css has svg:hover path { fill: #ffffff; }
+*/
+svg.homePageBtn:hover path {
+    fill: currentColor;
+}
+
+a.homePageBtn {
+    display: inline-block;
+    padding: 10px 20px;
+    color: inherit;
+    border-radius: 4px;
+}
+
+a.homePageBtn:hover {
+    background-color: #333;
+    color: #fff;
+}
