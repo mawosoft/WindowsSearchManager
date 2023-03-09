@@ -88,7 +88,7 @@ public sealed class AddSearchRootCommand : SearchApiCommandBase
             infos = new SearchRootInfo[Path.Length];
             for (int i = 0; i < Path.Length; i++)
             {
-                infos[i].Path= Path[i];
+                infos[i].Path = Path[i];
             }
         }
         try

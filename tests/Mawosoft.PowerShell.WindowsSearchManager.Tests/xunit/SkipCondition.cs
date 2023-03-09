@@ -47,7 +47,9 @@ internal static class SkipCondition
         return null;
     }
 
+#if !NETFRAMEWORK
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+#endif
     private static bool IsWSearchEnabled()
     {
         using ServiceController sc = new("WSearch");

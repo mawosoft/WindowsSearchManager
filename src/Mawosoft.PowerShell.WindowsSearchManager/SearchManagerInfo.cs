@@ -29,7 +29,7 @@ public sealed class SearchManagerInfo : ICloneable
         searchManager.GetIndexerVersion(out uint major, out uint minor);
         MajorVersion = major;
         MinorVersion = minor;
-        UserAgent =  searchManager.UserAgent;
+        UserAgent = searchManager.UserAgent;
         ProxyAccess = searchManager.UseProxy;
         ProxyName = searchManager.ProxyName;
         ProxyPortNumber = searchManager.PortNumber;

@@ -37,8 +37,8 @@ public sealed class SearchCatalogInfo : ICloneable
         ItemCount = searchCatalog.NumberOfItems();
         searchCatalog.NumberOfItemsToIndex(out int incremental, out int notificationQueue, out int highPriorityQueue);
         ItemsToIndexCount = incremental;
-        NotificationQueueCount= notificationQueue;
-        HighPriorityQueueCount= highPriorityQueue;
+        NotificationQueueCount = notificationQueue;
+        HighPriorityQueueCount = highPriorityQueue;
         try
         {
             PathBeingIndexed = searchCatalog.URLBeingIndexed();

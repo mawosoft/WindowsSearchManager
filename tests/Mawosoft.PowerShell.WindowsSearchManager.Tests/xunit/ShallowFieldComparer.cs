@@ -4,7 +4,7 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 public class ShallowFieldComparer : IEqualityComparer, IEqualityComparer<object>
 {
-    public static ShallowFieldComparer Instance = new();
+    public static readonly ShallowFieldComparer Instance = new();
 
     private ShallowFieldComparer() { }
 
