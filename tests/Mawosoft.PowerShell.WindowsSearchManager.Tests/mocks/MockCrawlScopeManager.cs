@@ -2,7 +2,7 @@
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
-internal class MockCrawlScopeManager : ISearchCrawlScopeManager // TODO
+public class MockCrawlScopeManager : ISearchCrawlScopeManager // TODO
 {
     public virtual void AddDefaultScopeRule(string pszUrl, int fInclude, uint fFollowFlags) => throw new NotImplementedException();
     public virtual void AddRoot(CSearchRoot pSearchRoot) => throw new NotImplementedException();

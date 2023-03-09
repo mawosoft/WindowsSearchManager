@@ -8,7 +8,7 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 // NotImplementedException: the Mock is missing a implementation for this member.
 // Internal members are used to setup mock behavior.
 // See also https://github.com/PowerShell/PowerShell/blob/master/src/System.Management.Automation/engine/DefaultCommandRuntime.cs
-internal class MockCommandRuntime : ICommandRuntime
+public class MockCommandRuntime : ICommandRuntime
 {
     internal List<object> Outputs { get; } = new();
     internal List<ErrorRecord> Errors { get; } = new();

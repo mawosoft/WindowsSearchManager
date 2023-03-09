@@ -3,7 +3,7 @@
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 // NotSupportedException: the original COM class does not support this member.
-internal class MockSearchRoot : ISearchRoot
+public class MockSearchRoot : ISearchRoot
 {
     public virtual string Schedule { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
     public virtual string RootURL { get; set; } = string.Empty;

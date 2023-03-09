@@ -7,7 +7,7 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 //
 // Internal members are used to setup mock behavior.
 
-internal class MockCatalogManager : ISearchCatalogManager
+public class MockCatalogManager : ISearchCatalogManager
 {
     internal ISearchCrawlScopeManager? ScopeManager { get; set; }
     internal Exception? ScopeManagerException { get; set; }

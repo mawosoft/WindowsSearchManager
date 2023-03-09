@@ -2,7 +2,7 @@
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
-internal class ShallowFieldComparer : IEqualityComparer, IEqualityComparer<object>
+public class ShallowFieldComparer : IEqualityComparer, IEqualityComparer<object>
 {
     public static ShallowFieldComparer Instance = new();
 
