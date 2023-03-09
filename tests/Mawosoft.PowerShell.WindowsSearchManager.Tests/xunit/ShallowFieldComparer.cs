@@ -1,7 +1,5 @@
 ﻿// Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
-using System.Reflection;
-
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 internal class ShallowFieldComparer : IEqualityComparer, IEqualityComparer<object>

@@ -8,6 +8,7 @@ public class SearchCatalogInfoTests
     public void ctor_Defaults()
     {
         SearchCatalogInfo info = new();
+        Assert.Equal(11, info.GetType().GetProperties().Length);
         Assert.Null(info.Catalog);
         Assert.Equal(0u, info.ConnectTimeout);
         Assert.Equal(0u, info.DataTimeout);
@@ -22,7 +23,7 @@ public class SearchCatalogInfoTests
     }
 
     [Fact]
-    public void ctor_NullArguments_Throws()
+    public void ctor_NullArgument_Throws()
     {
         Assert.Throws<ArgumentNullException>("searchCatalog", () => new SearchCatalogInfo(null!));
     }
@@ -34,7 +35,7 @@ public class SearchCatalogInfoTests
     {
         MockCatalogManager mock = new()
         {
-            NoAdmin= noAdmin
+            NoAdmin = noAdmin
         };
         SearchCatalogInfo info = new(mock);
         Assert.Equal(mock.Name, info.Catalog);

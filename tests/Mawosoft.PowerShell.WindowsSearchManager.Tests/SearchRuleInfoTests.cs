@@ -1,12 +1,14 @@
 ﻿// Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
+
 public class SearchRuleInfoTests
 {
     [Fact]
     public void ctor_Defaults()
     {
         SearchRuleInfo info = new();
+        Assert.Equal(5, info.GetType().GetProperties().Length);
         Assert.Null(info.Path);
         Assert.Equal(SearchRuleInfo.SearchRuleType.Exclude, info.RuleType);
         Assert.Equal(SearchRuleInfo.SearchRuleSet.User, info.RuleSet);
@@ -15,7 +17,7 @@ public class SearchRuleInfoTests
     }
 
     [Fact]
-    public void ctor_NullArguments_Throws()
+    public void ctor_NullArgument_Throws()
     {
         Assert.Throws<ArgumentNullException>("searchScopeRule", () => new SearchRuleInfo(null!));
     }

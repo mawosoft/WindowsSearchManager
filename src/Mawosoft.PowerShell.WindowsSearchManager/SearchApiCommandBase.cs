@@ -17,7 +17,7 @@ public abstract class SearchApiCommandBase : PSCmdlet
 
     // Ensure returned COM object is not null.
     protected static T EnsureNotNull<T>(T value) where T : class
-        => value ?? throw new COMException(string.Format(SR.ReturnedCOMObjectIsNull, nameof(T)), 0);
+        => value ?? throw new COMException(string.Format(SR.ReturnedCOMObjectIsNull, typeof(T).Name), 0);
 
     // Various helpers to get instances of the SearchAPI management main interfaces.
     // On failure, all of these either throw an Exception or an ErrorRecord (via ThrowTerminatingError),

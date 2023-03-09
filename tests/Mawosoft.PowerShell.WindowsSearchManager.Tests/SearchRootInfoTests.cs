@@ -8,6 +8,7 @@ public class SearchRootInfoTests
     public void ctor_Defaults()
     {
         SearchRootInfo info = new();
+        Assert.Equal(8, info.GetType().GetProperties().Length); // + 3x internal
         Assert.Null(info.Schedule);
         Assert.Null(info.Path);
         Assert.True(info.IsHierarchical);
@@ -22,7 +23,7 @@ public class SearchRootInfoTests
     }
 
     [Fact]
-    public void ctor_NullArguments_Throws()
+    public void ctor_NullArgument_Throws()
     {
         Assert.Throws<ArgumentNullException>("searchRoot", () => new SearchRootInfo(null!));
     }
@@ -32,7 +33,7 @@ public class SearchRootInfoTests
     {
         MockSearchRoot mock = new()
         {
-            RootURL = @"fooprotocol:///{bar-class}",
+            RootURL = @"fooprotocol://{bar-sid}/",
             IsHierarchical = 0,
             UseNotificationsOnly = 1,
             EnumerationDepth = 333,
@@ -83,7 +84,7 @@ public class SearchRootInfoTests
         SearchRootInfo info = new()
         {
             Schedule = "schedule",
-            Path = @"fooprotocol:///{bar-class}",
+            Path = @"fooprotocol:///{bar-sid}/",
             UseNotificationsOnly = true,
             EnumerationDepth = 333,
             HostDepth = 222,

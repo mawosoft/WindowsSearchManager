@@ -8,6 +8,7 @@ public class TestSearchRuleInfoTests
     public void ctor_Defaults()
     {
         TestSearchRuleInfo info = new();
+        Assert.Equal(6, info.GetType().GetProperties().Length);
         Assert.Null(info.Path);
         Assert.False(info.IsIncluded);
         Assert.Equal(CLUSION_REASON.CLUSIONREASON_UNKNOWNSCOPE, info.Reason);

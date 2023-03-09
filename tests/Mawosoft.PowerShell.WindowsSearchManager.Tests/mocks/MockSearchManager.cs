@@ -7,8 +7,14 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 //
 // Internal members are used to setup mock behavior.
 
-internal class MockSearchManager : ISearchManager, ISearchManager2
+internal class MockSearchManager : ISearchManager
 {
+    internal ISearchCatalogManager? CatalogManager { get; set; }
+    internal Exception? CatalogManagerException { get; set; }
+
+    internal MockSearchManager() : this(new MockCatalogManager()) { }
+    internal MockSearchManager(ISearchCatalogManager? catalogManager) => CatalogManager = catalogManager;
+
     // Simple properties representing data accessed via the public interface.
 
     internal string IndexerVersionStr { get; set; } = "10.0.1.2";
@@ -34,7 +40,8 @@ internal class MockSearchManager : ISearchManager, ISearchManager2
         ByPassListInternal = pszByPassList;
     }
 
-    public virtual ISearchCatalogManager GetCatalog(string pszCatalog) => throw new NotImplementedException();
+    public virtual ISearchCatalogManager GetCatalog(string pszCatalog)
+        => CatalogManagerException == null ? CatalogManager! : throw CatalogManagerException;
 
     public virtual string ProxyName => ProxyNameInternal;
 
@@ -47,6 +54,12 @@ internal class MockSearchManager : ISearchManager, ISearchManager2
     public virtual int LocalBypass => LocalByPassInternal;
 
     public virtual uint PortNumber => PortNumberInternal;
+}
+
+internal class MockSearchManager2 : MockSearchManager, ISearchManager2
+{
+    internal MockSearchManager2() : base() { }
+    internal MockSearchManager2(ISearchCatalogManager? catalogManager) : base(catalogManager) { }
 
     // ISearchManager2
 
