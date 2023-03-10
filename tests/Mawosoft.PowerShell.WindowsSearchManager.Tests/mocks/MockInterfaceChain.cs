@@ -118,12 +118,12 @@ public class MockInterfaceChain
         }
         if (ShouldHaveErrorRecord)
         {
-            Assert.Single(runtime.Errors);
+            ErrorRecord rec = Assert.Single(runtime.Errors);
+            Assert.Same(ex, rec.Exception);
         }
         else
         {
             Assert.Empty(runtime.Errors);
         }
-
     }
 }

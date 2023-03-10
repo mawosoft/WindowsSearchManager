@@ -2,8 +2,16 @@
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
-public class MockCrawlScopeManager : ISearchCrawlScopeManager // TODO
+// NotSupportedException: the original COM class does not support this member.
+// NotImplementedException: the Mock is missing a implementation for this member.
+//
+// Internal members are used to setup mock behavior.
+
+public class MockCrawlScopeManager : ISearchCrawlScopeManager
 {
+    internal Exception? SaveAllException { get; set; }
+    internal int SaveAllCallCount { get; set; }
+
     public virtual void AddDefaultScopeRule(string pszUrl, int fInclude, uint fFollowFlags) => throw new NotImplementedException();
     public virtual void AddRoot(CSearchRoot pSearchRoot) => throw new NotImplementedException();
     public virtual void RemoveRoot(string pszUrl) => throw new NotImplementedException();
@@ -17,7 +25,12 @@ public class MockCrawlScopeManager : ISearchCrawlScopeManager // TODO
     public virtual int IncludedInCrawlScope(string pszUrl) => throw new NotImplementedException();
     public virtual void IncludedInCrawlScopeEx(string pszUrl, out int pfIsIncluded, out CLUSION_REASON pReason) => throw new NotImplementedException();
     public virtual void RevertToDefaultScopes() => throw new NotImplementedException();
-    public virtual void SaveAll() => throw new NotImplementedException();
+    public virtual void SaveAll()
+    {
+        SaveAllCallCount++;
+        if (SaveAllException != null) throw SaveAllException;
+    }
+
     public virtual int GetParentScopeVersionId(string pszUrl) => throw new NotImplementedException();
     public virtual void RemoveDefaultScopeRule(string pszUrl) => throw new NotImplementedException();
 }

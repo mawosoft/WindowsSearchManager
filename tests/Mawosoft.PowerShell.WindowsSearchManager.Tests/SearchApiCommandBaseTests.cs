@@ -43,20 +43,14 @@ public class SearchApiCommandBaseTests
             => SaveCrawlScopeManager(scopeManager);
     }
 
-    [Fact]
-    public void EnsureNotNull_NullArgument_Throws()
+    private class Exception_TheoryData : TheoryData<Exception, bool>
     {
-        COMException ex = Assert.Throws<COMException>(() => MockCommand.TestEnsureNotNull((ISearchManager)null!));
-        Assert.Equal(0, ex.HResult); // special case
-        Assert.Contains(nameof(ISearchManager), ex.Message);
-    }
-
-    [Fact]
-    public void EnsureNotNull_NonNullArgument_Succeeds()
-    {
-        MockSearchManager manager = new();
-        Assert.NotNull(manager); // Paranoid
-        Assert.Equal(manager, MockCommand.TestEnsureNotNull(manager));
+        public Exception_TheoryData()
+        {
+            Add(new Exception(), false);
+            Add(new COMException(), false);
+            Add(new COMException(null, unchecked((int)0x80042103)), true); // custom COM message
+        }
     }
 
     public static IEnumerable<object[]> InterfaceChainCollectionForFailures(Type interfaceType, bool noParents)
@@ -72,14 +66,31 @@ public class SearchApiCommandBaseTests
             yield return new object[] { new MockInterfaceChain().WithNullReference(i) };
         }
 
+        Exception_TheoryData exceptions = new();
         for (int i = noParents ? chainIndex : 1; i <= chainIndex; i++)
         {
-            yield return new object[] { new MockInterfaceChain().WithException(i, new Exception(), false) };
-            yield return new object[] { new MockInterfaceChain().WithException(i, new COMException(), false) };
-            yield return new object[] { new MockInterfaceChain().WithException(i, new COMException(null, unchecked((int)0x80042103)), true) }; // custom COM message
+            foreach (object[]? e in exceptions)
+            {
+                yield return new object[] { new MockInterfaceChain().WithException(i, (Exception)e[0], (bool)e[1]) };
+            }
         }
     }
 
+    [Fact]
+    public void EnsureNotNull_NullArgument_Throws()
+    {
+        COMException ex = Assert.Throws<COMException>(() => MockCommand.TestEnsureNotNull((ISearchManager)null!));
+        Assert.Equal(0, ex.HResult); // special case
+        Assert.Contains(nameof(ISearchManager), ex.Message);
+    }
+
+    [Fact]
+    public void EnsureNotNull_NonNullArgument_Succeeds()
+    {
+        MockSearchManager manager = new();
+        Assert.NotNull(manager); // Paranoid
+        Assert.Equal(manager, MockCommand.TestEnsureNotNull(manager));
+    }
 
     [Theory]
     [MemberData(nameof(InterfaceChainCollectionForFailures), typeof(ISearchManager), false)]
@@ -271,21 +282,44 @@ public class SearchApiCommandBaseTests
         Assert.Same(chain.ScopeManager, command.TestGetCrawlScopeManager(chain.CatalogManager));
     }
 
-    // TODO SaveCrawlScopeManager Tests 
     [Theory]
-    [InlineData(false)]
-    public void SaveCrawlScopeManager_HandlesFailures(bool dummy)
+    [ClassData(typeof(Exception_TheoryData))]
+    public void SaveCrawlScopeManager_HandlesFailures(Exception exception, bool shouldHaveErrorRecord)
     {
-        _ = dummy;
+        MockCommandRuntime runtime = new();
+        MockInterfaceChain chain = new();
+        MockCommand command = new(runtime, chain.Factory);
+        chain.ScopeManager.SaveAllException = exception;
+        Exception ex = Assert.Throws(exception.GetType(), () => command.TestSaveCrawlScopeManager(chain.ScopeManager));
+        Assert.Same(exception, ex);
+        if (shouldHaveErrorRecord)
+        {
+            ErrorRecord rec = Assert.Single(runtime.Errors);
+            Assert.Same(ex, rec.Exception);
+        }
+        else
+        {
+            Assert.Empty(runtime.Errors);
+        }
     }
 
     [Fact]
     public void SaveCrawlScopeManager_NullArgument_Succeeds()
     {
+        MockCommandRuntime runtime = new();
+        MockInterfaceChain chain = new();
+        MockCommand command = new(runtime, chain.Factory);
+        command.TestSaveCrawlScopeManager(null);
+        Assert.Equal(0, chain.ScopeManager.SaveAllCallCount);
     }
 
     [Fact]
     public void SaveCrawlScopeManager_Succeeds()
     {
+        MockCommandRuntime runtime = new();
+        MockInterfaceChain chain = new();
+        MockCommand command = new(runtime, chain.Factory);
+        command.TestSaveCrawlScopeManager(chain.ScopeManager);
+        Assert.Equal(1, chain.ScopeManager.SaveAllCallCount);
     }
 }
