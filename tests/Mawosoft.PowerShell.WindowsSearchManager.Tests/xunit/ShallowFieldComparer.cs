@@ -1,12 +1,10 @@
 ﻿// Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
-using System.Reflection;
-
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
-internal class ShallowFieldComparer : IEqualityComparer, IEqualityComparer<object>
+public class ShallowFieldComparer : IEqualityComparer, IEqualityComparer<object>
 {
-    public static ShallowFieldComparer Instance = new();
+    public static readonly ShallowFieldComparer Instance = new();
 
     private ShallowFieldComparer() { }
 

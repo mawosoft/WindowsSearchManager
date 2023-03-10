@@ -7,10 +7,20 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 //
 // Internal members are used to setup mock behavior.
 
-internal class MockCatalogManager : ISearchCatalogManager
+public class MockCatalogManager : ISearchCatalogManager
 {
+    internal ISearchCrawlScopeManager? ScopeManager { get; set; }
+    internal Exception? ScopeManagerException { get; set; }
     // If true will throw if member access requires admin rights.
     internal bool NoAdmin { get; set; }
+
+    internal MockCatalogManager() : this(new MockCrawlScopeManager()) { }
+    internal MockCatalogManager(ISearchCrawlScopeManager? scopeManager) => ScopeManager = scopeManager;
+    internal MockCatalogManager(string name, ISearchCrawlScopeManager? scopeManager)
+    {
+        Name = name;
+        ScopeManager = scopeManager;
+    }
 
     // Simple properties representing data accessed via the public interface.
 
@@ -29,6 +39,7 @@ internal class MockCatalogManager : ISearchCatalogManager
         pStatus = Status;
         pPausedReason = PausedReason;
     }
+
     public virtual void Reset() => throw new NotImplementedException();
     public virtual void Reindex() => throw new NotImplementedException();
     public virtual void ReindexMatchingURLs(string pszPattern) => throw new NotImplementedException();
@@ -51,7 +62,8 @@ internal class MockCatalogManager : ISearchCatalogManager
     public virtual void SetExtensionClusion(string pszExtension, int fExclude) => throw new NotSupportedException();
     public virtual IEnumString EnumerateExcludedExtensions() => throw new NotSupportedException();
     public virtual ISearchQueryHelper GetQueryHelper() => throw new NotImplementedException();
-    public virtual ISearchCrawlScopeManager GetCrawlScopeManager() => throw new NotImplementedException();
+    public virtual ISearchCrawlScopeManager GetCrawlScopeManager()
+        => ScopeManagerException == null ? ScopeManager! : throw ScopeManagerException;
 
     public virtual string Name { get; internal set; } = "SystemIndex";
     public virtual uint ConnectTimeout { get; set; }

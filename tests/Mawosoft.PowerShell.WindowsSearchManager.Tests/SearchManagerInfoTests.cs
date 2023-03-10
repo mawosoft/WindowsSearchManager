@@ -8,6 +8,7 @@ public class SearchManagerInfoTests
     public void ctor_Defaults()
     {
         SearchManagerInfo info = new();
+        Assert.Equal(9, info.GetType().GetProperties().Length);
         Assert.Null(info.Version);
         Assert.Equal(0u, info.MajorVersion);
         Assert.Equal(0u, info.MinorVersion);
@@ -20,7 +21,7 @@ public class SearchManagerInfoTests
     }
 
     [Fact]
-    public void ctor_NullArguments_Throws()
+    public void ctor_NullArgument_Throws()
     {
         Assert.Throws<ArgumentNullException>("searchManager", () => new SearchManagerInfo(null!));
     }

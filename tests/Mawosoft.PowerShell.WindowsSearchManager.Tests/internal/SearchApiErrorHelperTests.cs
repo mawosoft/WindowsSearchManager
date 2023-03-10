@@ -26,11 +26,11 @@ public class SearchApiErrorHelperTests
 
     [Theory]
     [ClassData(typeof(Exception_TheoryData))]
-    public void TryGetCOMExceptionMessage_Succeeds(Exception exception, bool expected, string comment)
+    public void TryGetCOMExceptionMessage_Succeeds(Exception exception, bool shouldSucceed, string comment)
     {
         _ = comment;
         bool success = SearchApiErrorHelper.TryGetCOMExceptionMessage(exception, out string message);
-        Assert.Equal(expected, success);
+        Assert.Equal(shouldSucceed, success);
         if (success)
         {
             Assert.NotNull(message);
@@ -44,11 +44,11 @@ public class SearchApiErrorHelperTests
 
     [Theory]
     [ClassData(typeof(Exception_TheoryData))]
-    public void TryWrapCOMException_Succeeds(Exception exception, bool expected, string comment)
+    public void TryWrapCOMException_Succeeds(Exception exception, bool shouldSucceed, string comment)
     {
         _ = comment;
         bool success = SearchApiErrorHelper.TryWrapCOMException(exception, out ErrorRecord errorRecord);
-        Assert.Equal(expected, success);
+        Assert.Equal(shouldSucceed, success);
         if (success)
         {
             Assert.NotNull(errorRecord);
@@ -63,13 +63,13 @@ public class SearchApiErrorHelperTests
 
     [Theory]
     [ClassData(typeof(Exception_TheoryData))]
-    public void TrySetErrorDetails_Succeeds(Exception exception, bool expected, string comment)
+    public void TrySetErrorDetails_Succeeds(Exception exception, bool shouldSucceed, string comment)
     {
         _ = comment;
         if (exception == null) return; // Cannot create ErrorRecord w/o exception
         ErrorRecord errorRecord = new(exception, string.Empty, ErrorCategory.NotSpecified, null);
         bool success = SearchApiErrorHelper.TrySetErrorDetails(errorRecord);
-        Assert.Equal(expected, success);
+        Assert.Equal(shouldSucceed, success);
         if (success)
         {
             Assert.NotEqual(exception.Message, errorRecord.ErrorDetails.Message);

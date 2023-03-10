@@ -9,9 +9,9 @@ internal class DefaultSearchManagerFactory : ISearchManagerFactory
 {
     public static ISearchManagerFactory Instance = new DefaultSearchManagerFactory();
 
-    private static readonly bool s_isNetFramework = 
+    private static readonly bool s_isNetFramework =
         RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework", StringComparison.Ordinal);
-    
+
     private DefaultSearchManagerFactory() { }
 
     public ISearchManager CreateSearchManager() => new CSearchManager();
