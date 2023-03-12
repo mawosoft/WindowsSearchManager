@@ -32,11 +32,7 @@ public class SearchRuleInfoTests
             IsDefault = 1
         };
         SearchRuleInfo info = new(mock);
-        Assert.Equal(mock.PatternOrURL, info.Path);
-        Assert.Equal(mock.IsIncluded == 0 ? SearchRuleInfo.SearchRuleType.Exclude : SearchRuleInfo.SearchRuleType.Include, info.RuleType);
-        Assert.Equal(mock.IsDefault == 0 ? SearchRuleInfo.SearchRuleSet.User : SearchRuleInfo.SearchRuleSet.Default, info.RuleSet);
-        Assert.Equal(SearchRuleInfo._FOLLOW_FLAGS.FF_INDEXCOMPLEXURLS, info.FollowFlags);
-        Assert.False(info.OverrideChildren);
+        Assert.Equal(mock, info, SearchRuleInfoToMockComparer.Instance);
     }
 
     [Fact]
