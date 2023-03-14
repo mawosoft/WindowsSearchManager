@@ -11,8 +11,7 @@ public class MockSearchManager : ISearchManager
 {
     internal ISearchCatalogManager? CatalogManager { get; set; }
     internal Exception? CatalogManagerException { get; set; }
-    // If true will throw if member access requires admin rights.
-    internal bool NoAdmin { get; set; }
+    internal bool NoAdmin { get; set; } // Throw if member access requires admin rights.
 
     internal MockSearchManager() : this(new MockCatalogManager()) { }
     internal MockSearchManager(ISearchCatalogManager? catalogManager) => CatalogManager = catalogManager;
@@ -32,6 +31,7 @@ public class MockSearchManager : ISearchManager
 
     public virtual void GetIndexerVersionStr(out string ppszVersionString) => ppszVersionString = IndexerVersionStr;
     public virtual void GetIndexerVersion(out uint pdwMajor, out uint pdwMinor) => (pdwMajor, pdwMinor) = Version;
+    
     public virtual void SetProxy(_PROXY_ACCESS sUseProxy, int fLocalByPassProxy, uint dwPortNumber, string pszProxyName, string pszByPassList)
     {
         if (NoAdmin) throw new UnauthorizedAccessException();

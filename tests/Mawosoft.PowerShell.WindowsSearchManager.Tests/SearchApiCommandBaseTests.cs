@@ -69,7 +69,7 @@ public class SearchApiCommandBaseTests
         Exception_TheoryData exceptions = new();
         for (int i = noParents ? chainIndex : 1; i <= chainIndex; i++)
         {
-            foreach (object[]? e in exceptions)
+            foreach (object[] e in exceptions)
             {
                 yield return new object[] { new MockInterfaceChain().WithException(i, ((ExceptionParam)e[0]).Value, (bool)e[1]) };
             }

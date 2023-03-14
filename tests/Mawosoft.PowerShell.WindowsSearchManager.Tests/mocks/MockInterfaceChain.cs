@@ -41,6 +41,7 @@ public class MockInterfaceChain
 
     public MockInterfaceChain WithScopeManager(MockCrawlScopeManager scopeManager)
     {
+        ScopeManager = scopeManager;
         CatalogManager.ScopeManager = ScopeManager;
         return this;
     }
