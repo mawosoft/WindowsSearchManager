@@ -6,17 +6,28 @@ public class SearchManagerCommandsTests : CommandTestBase
 {
     private class MockSearchManagerWithGetSetException : MockSearchManager2
     {
-        internal Exception GetSetException { get; set; }
-        internal MockSearchManagerWithGetSetException(Exception getsetException) : base()
-            => GetSetException = getsetException;
+        internal Exception? GetException { get; set; }
+        internal Exception? SetException { get; set; }
+        internal MockSearchManagerWithGetSetException(Exception? getException, Exception? setException) : base()
+        {
+            GetException = getException;
+            SetException = setException;
+        }
 
         public override void SetProxy(_PROXY_ACCESS sUseProxy, int fLocalByPassProxy, uint dwPortNumber, string pszProxyName, string pszByPassList)
-            => throw GetSetException;
-        public override string ProxyName => throw GetSetException;
+        {
+            if (SetException == null) base.SetProxy(sUseProxy, fLocalByPassProxy, dwPortNumber, pszProxyName, pszByPassList);
+            else throw SetException;
+        }
+        public override string ProxyName => GetException == null ? base.ProxyName : throw GetException;
         public override string UserAgent
         {
-            get => throw GetSetException;
-            set => throw GetSetException;
+            get => GetException == null ? base.UserAgent : throw GetException;
+            set
+            {
+                if (SetException == null) base.UserAgent = value;
+                else throw SetException;
+            }
         }
     }
 
@@ -55,7 +66,7 @@ public class SearchManagerCommandsTests : CommandTestBase
     public void GetSearchManager_HandlesFailures(ExceptionParam exceptionParam, bool shouldHaveCustomDetails)
     {
         Exception exception = exceptionParam.Value;
-        InterfaceChain.WithSearchManager(new MockSearchManagerWithGetSetException(exception));
+        InterfaceChain.WithSearchManager(new MockSearchManagerWithGetSetException(exception, exception));
         PowerShell.AddScript("Get-SearchManager");
         Collection<PSObject> results = PowerShell.Invoke();
         Assert.Empty(results);
@@ -121,10 +132,22 @@ public class SearchManagerCommandsTests : CommandTestBase
 
     [Theory]
     [ClassData(typeof(Exception_TheoryData))]
-    public void SetSearchManager_HandlesFailures(ExceptionParam exceptionParam, bool shouldHaveCustomDetails)
+    public void SetSearchManager_HandlesGetFailures(ExceptionParam exceptionParam, bool shouldHaveCustomDetails)
     {
         Exception exception = exceptionParam.Value;
-        InterfaceChain.WithSearchManager(new MockSearchManagerWithGetSetException(exception));
+        InterfaceChain.WithSearchManager(new MockSearchManagerWithGetSetException(exception, null));
+        PowerShell.AddScript("Set-SearchManager -ProxyAccess PROXY_ACCESS_DIRECT ");
+        Collection<PSObject> results = PowerShell.Invoke();
+        Assert.Empty(results);
+        AssertSingleErrorRecord(exception, shouldHaveCustomDetails);
+    }
+
+    [Theory]
+    [ClassData(typeof(Exception_TheoryData))]
+    public void SetSearchManager_HandlessetFailures(ExceptionParam exceptionParam, bool shouldHaveCustomDetails)
+    {
+        Exception exception = exceptionParam.Value;
+        InterfaceChain.WithSearchManager(new MockSearchManagerWithGetSetException(null, exception));
         PowerShell.AddScript("Set-SearchManager -ProxyAccess PROXY_ACCESS_DIRECT ");
         Collection<PSObject> results = PowerShell.Invoke();
         Assert.Empty(results);

@@ -40,6 +40,9 @@ public class CommandTestBase
         // ...or explicitly set in the Runspace.
         //     PowerShell.Runspace.SessionStateProxy.SetVariable("ConfirmPreference", ConfirmImpact.High);
         PowerShell.Runspace.ResetRunspaceState();
+        // Avoid accidental issues with confirmation. We use -WhatIf for ShouldProcess() testing and assert
+        // the ConfirmImpact property of the CmdletAttribute for selected commands.
+        PowerShell.Runspace.SessionStateProxy.SetVariable("ConfirmPreference", ConfirmImpact.None);
     }
 
     protected readonly MockInterfaceChain InterfaceChain;
@@ -50,7 +53,6 @@ public class CommandTestBase
         SearchApiCommandBase.SearchManagerFactory = InterfaceChain.Factory;
         PowerShell.Streams.ClearStreams();
         PowerShell.Commands.Clear();
-        // TODO? PowerShell.Runspace.SessionStateProxy.SetVariable("ConfirmPreference", ConfirmImpact.High);
     }
 
     protected void AssertShouldProcess(Type commandType, ConfirmImpact confirmImpact)
