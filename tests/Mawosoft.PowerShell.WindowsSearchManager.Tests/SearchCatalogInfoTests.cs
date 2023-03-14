@@ -38,24 +38,7 @@ public class SearchCatalogInfoTests
             NoAdmin = noAdmin
         };
         SearchCatalogInfo info = new(mock);
-        Assert.Equal(mock.Name, info.Catalog);
-        Assert.Equal(mock.ConnectTimeout, info.ConnectTimeout);
-        Assert.Equal(mock.DataTimeout, info.DataTimeout);
-        Assert.Equal(mock.DiacriticSensitivity != 0, info.DiacriticSensitivity);
-        Assert.Equal(mock.Status, info.Status);
-        Assert.Equal(mock.PausedReason, info.PausedReason);
-        Assert.Equal(mock.NumberOfItemsInternal, info.ItemCount);
-        Assert.Equal(mock.NumberOfItemsToIndexInternal.Items, info.ItemsToIndexCount);
-        Assert.Equal(mock.NumberOfItemsToIndexInternal.Notifications, info.NotificationQueueCount);
-        Assert.Equal(mock.NumberOfItemsToIndexInternal.HighPrio, info.HighPriorityQueueCount);
-        if (noAdmin)
-        {
-            Assert.StartsWith("N/A", info.PathBeingIndexed);
-        }
-        else
-        {
-            Assert.Equal(mock.URLBeingIndexedInternal, info.PathBeingIndexed);
-        }
+        Assert.Equal(mock, info, SearchCatalogInfoToMockComparer.Instance);
     }
 
     [Fact]

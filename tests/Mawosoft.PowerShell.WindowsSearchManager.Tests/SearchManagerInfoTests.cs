@@ -38,15 +38,7 @@ public class SearchManagerInfoTests
             ByPassListInternal = "bar,baz"
         };
         SearchManagerInfo info = new(mock);
-        Assert.Equal(mock.IndexerVersionStr, info.Version);
-        Assert.Equal(mock.Version.Major, info.MajorVersion);
-        Assert.Equal(mock.Version.Minor, info.MinorVersion);
-        Assert.Equal(mock.UserAgent, info.UserAgent);
-        Assert.Equal(mock.UseProxyInternal, info.ProxyAccess);
-        Assert.Equal(mock.ProxyNameInternal, info.ProxyName);
-        Assert.Equal(mock.PortNumberInternal, info.ProxyPortNumber);
-        Assert.Equal(mock.LocalByPassInternal != 0, info.ProxyBypassLocal);
-        Assert.Equal(mock.ByPassListInternal, info.ProxyBypassList);
+        Assert.Equal(mock, info, SearchManagerInfoToMockComparer.Instance);
     }
 
     [Fact]

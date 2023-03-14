@@ -11,8 +11,7 @@ public class MockCatalogManager : ISearchCatalogManager
 {
     internal ISearchCrawlScopeManager? ScopeManager { get; set; }
     internal Exception? ScopeManagerException { get; set; }
-    // If true will throw if member access requires admin rights.
-    internal bool NoAdmin { get; set; }
+    internal bool NoAdmin { get; set; } // Throw if member access requires admin rights.
 
     internal MockCatalogManager() : this(new MockCrawlScopeManager()) { }
     internal MockCatalogManager(ISearchCrawlScopeManager? scopeManager) => ScopeManager = scopeManager;

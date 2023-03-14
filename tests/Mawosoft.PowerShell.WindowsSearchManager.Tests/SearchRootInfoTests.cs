@@ -41,17 +41,7 @@ public class SearchRootInfoTests
             AuthenticationType = _AUTH_TYPE.eAUTH_TYPE_BASIC
         };
         SearchRootInfo info = new(mock);
-        Assert.Null(info.Schedule);
-        Assert.Equal(mock.RootURL, info.Path);
-        Assert.Equal(mock.IsHierarchical != 0, info.IsHierarchical);
-        Assert.Equal(mock.ProvidesNotifications != 0, info.ProvidesNotifications);
-        Assert.Equal(mock.UseNotificationsOnly != 0, info.UseNotificationsOnly);
-        Assert.Equal(mock.EnumerationDepth, info.EnumerationDepth);
-        Assert.Equal(mock.HostDepth, info.HostDepth);
-        Assert.Equal(mock.FollowDirectories != 0, info.FollowDirectories);
-        Assert.Equal(mock.AuthenticationType, info.AuthenticationType);
-        Assert.Null(info.User);
-        Assert.Null(info.Password);
+        Assert.Equal(mock, info, SearchRootInfoToMockComparer.Instance);
     }
 
     [Fact]

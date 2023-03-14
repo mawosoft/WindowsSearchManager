@@ -2,7 +2,9 @@
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
-internal class MockSearchRegistryProvider : ISearchRegistryProvider // TODO
+// Internal members are used to setup mock behavior.
+internal class MockSearchRegistryProvider : ISearchRegistryProvider
 {
-    public virtual IReadOnlyList<string> GetCatalogNames() => throw new NotImplementedException();
+    internal List<string> CatalogNames { get; set; } = new() { "SystemIndex" };
+    public virtual IReadOnlyList<string> GetCatalogNames() => CatalogNames;
 }

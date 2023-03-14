@@ -43,13 +43,13 @@ public class SearchApiCommandBaseTests
             => SaveCrawlScopeManager(scopeManager);
     }
 
-    private class Exception_TheoryData : TheoryData<Exception, bool>
+    private class Exception_TheoryData : TheoryData<ExceptionParam, bool>
     {
         public Exception_TheoryData()
         {
-            Add(new Exception(), false);
-            Add(new COMException(), false);
-            Add(new COMException(null, unchecked((int)0x80042103)), true); // custom COM message
+            Add(new ExceptionParam(new Exception()), false);
+            Add(new ExceptionParam(new COMException()), false);
+            Add(new ExceptionParam(new COMException(null, unchecked((int)0x80042103))), true);
         }
     }
 
@@ -69,9 +69,9 @@ public class SearchApiCommandBaseTests
         Exception_TheoryData exceptions = new();
         for (int i = noParents ? chainIndex : 1; i <= chainIndex; i++)
         {
-            foreach (object[]? e in exceptions)
+            foreach (object[] e in exceptions)
             {
-                yield return new object[] { new MockInterfaceChain().WithException(i, (Exception)e[0], (bool)e[1]) };
+                yield return new object[] { new MockInterfaceChain().WithException(i, ((ExceptionParam)e[0]).Value, (bool)e[1]) };
             }
         }
     }
@@ -122,7 +122,7 @@ public class SearchApiCommandBaseTests
     internal void GetSearchManager2_MissingInterface_Throws()
     {
         MockCommandRuntime runtime = new();
-        MockInterfaceChain chain = new(withoutISearchManager2: true);
+        MockInterfaceChain chain = new MockInterfaceChain().WithSearchManager(new MockSearchManager());
         MockCommand command = new(runtime, chain.Factory);
         InvalidCastException ex = Assert.Throws<InvalidCastException>(command.TestGetSearchManager2);
         Assert.Contains(nameof(ISearchManager2), ex.Message);
@@ -149,7 +149,7 @@ public class SearchApiCommandBaseTests
     internal void GetSearchManager2_ISearchManager_MissingInterface_Throws()
     {
         MockCommandRuntime runtime = new();
-        MockInterfaceChain chain = new(withoutISearchManager2: true);
+        MockInterfaceChain chain = new MockInterfaceChain().WithSearchManager(new MockSearchManager());
         MockCommand command = new(runtime, chain.Factory);
         InvalidCastException ex = Assert.Throws<InvalidCastException>(() => command.TestGetSearchManager2(chain.SearchManager));
         Assert.Contains(nameof(ISearchManager2), ex.Message);
@@ -284,8 +284,9 @@ public class SearchApiCommandBaseTests
 
     [Theory]
     [ClassData(typeof(Exception_TheoryData))]
-    public void SaveCrawlScopeManager_HandlesFailures(Exception exception, bool shouldHaveErrorRecord)
+    public void SaveCrawlScopeManager_HandlesFailures(ExceptionParam exceptionParam, bool shouldHaveErrorRecord)
     {
+        Exception exception = exceptionParam.Value;
         MockCommandRuntime runtime = new();
         MockInterfaceChain chain = new();
         MockCommand command = new(runtime, chain.Factory);
