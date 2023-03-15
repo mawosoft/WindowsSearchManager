@@ -16,7 +16,7 @@
     remains loaded until PowerShell exits.
 
     Current behavior of platyPS (as of v0.14.2) for full vs. short type names (String vs. System.String):
-    - Syntax: **Always** uses short type name.
+    - Syntax: **Always** uses short type name. (But **only** in markdown, MAML/Get-Help has full type name)
     - Parameters: Controlled by -UseFullTypeName
     - Inputs/Outputs: **Always uses full type name.
     As long as the Syntax section keeps the short name, we should use the -UseFullTypeName switch
