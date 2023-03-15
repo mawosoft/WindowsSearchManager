@@ -5,40 +5,59 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 public class MockInterfaceChain
 {
     internal MockSearchManagerFactory Factory { get; private set; }
-    public MockSearchManager SearchManager { get; }
-    public MockCatalogManager CatalogManager { get; }
-    public MockCrawlScopeManager ScopeManager { get; }
-    public string CatalogName { get; }
+    public MockSearchManager SearchManager { get; private set; }
+    public MockCatalogManager CatalogManager { get; private set; }
+    public MockCrawlScopeManager ScopeManager { get; private set; }
+    public string CatalogName { get => CatalogManager.Name; }
     public Exception? Exception { get; private set; }
     public Type? ExceptionType { get; private set; }
     public bool ShouldHaveErrorRecord { get; private set; }
     public int NullReferenceIndex { get; private set; } = -1;
     public int ExceptionIndex { get; private set; } = -1;
 
-    public MockInterfaceChain() : this(false, null) { }
-    public MockInterfaceChain(bool withoutISearchManager2) : this(withoutISearchManager2, null) { }
-    public MockInterfaceChain(bool withoutISearchManager2, string? catalogName)
+    public MockInterfaceChain()
     {
-        CatalogName = catalogName ?? SearchApiCommandBase.DefaultCatalogName;
         ScopeManager = new();
-        CatalogManager = new(CatalogName, ScopeManager);
-        SearchManager = withoutISearchManager2 ? new MockSearchManager(CatalogManager) : new MockSearchManager2(CatalogManager);
+        CatalogManager = new(ScopeManager);
+        SearchManager = new MockSearchManager2(CatalogManager);
         Factory = new(SearchManager);
+    }
+
+    public MockInterfaceChain WithSearchManager(MockSearchManager searchManager)
+    {
+        searchManager.CatalogManager = CatalogManager;
+        SearchManager = searchManager;
+        Factory.SearchManager = SearchManager;
+        return this;
+    }
+
+    public MockInterfaceChain WithCatalogManager(MockCatalogManager catalogManager)
+    {
+        catalogManager.ScopeManager = ScopeManager;
+        CatalogManager = catalogManager;
+        SearchManager.CatalogManager = CatalogManager;
+        return this;
+    }
+
+    public MockInterfaceChain WithScopeManager(MockCrawlScopeManager scopeManager)
+    {
+        ScopeManager = scopeManager;
+        CatalogManager.ScopeManager = ScopeManager;
+        return this;
     }
 
     public MockInterfaceChain WithNullReference(int chainIndex)
     {
-        if (NullReferenceIndex >= 0 || ExceptionIndex >= 0)
+        if (ExceptionType != null)
         {
             throw new InvalidOperationException("NullReference or Exception already initialized");
         }
-        ExceptionType = typeof(COMException);
         switch (chainIndex)
         {
             case 0: Factory = null!; ExceptionType = typeof(NullReferenceException); break;
-            case 1: Factory.SearchManager = null; break;
-            case 2: SearchManager.CatalogManager = null; break;
-            case 3: CatalogManager.ScopeManager = null; break;
+            case 1: Factory.SearchManager = null; ExceptionType = typeof(COMException); break;
+            case 2: SearchManager.CatalogManager = null; ExceptionType = typeof(COMException); break;
+            case 3: CatalogManager.ScopeManager = null; ExceptionType = typeof(COMException); break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(chainIndex), chainIndex,
                                                       "Expected: 0 <= value <= 3");
@@ -49,7 +68,7 @@ public class MockInterfaceChain
 
     public MockInterfaceChain WithException(int chainIndex, Exception exception, bool shouldHaveErrorRecord)
     {
-        if (NullReferenceIndex >= 0 || ExceptionIndex >= 0)
+        if (ExceptionType != null)
         {
             throw new InvalidOperationException("NullReference or Exception already initialized");
         }
@@ -68,6 +87,7 @@ public class MockInterfaceChain
                                                            "Expected: 1 <= value <= 3");
         }
         Exception = exception;
+        ExceptionType = exception.GetType();
         ShouldHaveErrorRecord = shouldHaveErrorRecord;
         ExceptionIndex = chainIndex;
         return this;
@@ -82,7 +102,7 @@ public class MockInterfaceChain
         return -1;
     }
 
-    public static Type? IndexToType(int chainIndex) => chainIndex switch
+    public static Type? IndexToInterface(int chainIndex) => chainIndex switch
     {
         0 => typeof(ISearchManagerFactory),
         1 => typeof(ISearchManager),
@@ -93,15 +113,23 @@ public class MockInterfaceChain
 
     public override string ToString()
     {
-        int index = Math.Max(NullReferenceIndex, ExceptionIndex);
-        if (index < 0)
+        List<string> nondefaultMocks = new();
+        Type t;
+        if (Factory != null && (t = Factory.GetType()) != typeof(MockSearchManagerFactory)) nondefaultMocks.Add(t.Name);
+        if ((t = SearchManager.GetType()) != typeof(MockSearchManager2)) nondefaultMocks.Add(t.Name);
+        if ((t = CatalogManager.GetType()) != typeof(MockCatalogManager)) nondefaultMocks.Add(t.Name);
+        if ((t = ScopeManager.GetType()) != typeof(MockCrawlScopeManager)) nondefaultMocks.Add(t.Name);
+        string s = GetType().Name;
+        if (nondefaultMocks.Count > 0) s += $" [{string.Join(",", nondefaultMocks)}]";
+        if (ExceptionType != null)
         {
-            return SearchManager is ISearchManager2 ? "default" : "default w/o ISearchManager2";
+            s += $" {ExceptionType.Name}";
+            if (Exception != null) s += $"(0x{Exception.HResult:X8})";
+            if (ShouldHaveErrorRecord) s += " [ErrorRecord]";
+            string? f = IndexToInterface(Math.Max(NullReferenceIndex, ExceptionIndex))?.Name;
+            if (f != null) s += $" for {f}";
         }
-        else
-        {
-            return $"{IndexToType(index)?.Name} {ExceptionType?.Name ?? Exception?.GetType().Name}{(ShouldHaveErrorRecord ? " (wrapped)" : "")}";
-        }
+        return s;
     }
 
     public void AssertThrows(Action action, MockCommandRuntime runtime)
@@ -114,7 +142,7 @@ public class MockInterfaceChain
         }
         else if (NullReferenceIndex >= 0 && ex is COMException comException && comException.HResult == 0)
         {
-            Assert.Contains(IndexToType(NullReferenceIndex)!.Name, ex.Message);
+            Assert.Contains(IndexToInterface(NullReferenceIndex)!.Name, ex.Message);
         }
         if (ShouldHaveErrorRecord)
         {

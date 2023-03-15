@@ -3,6 +3,7 @@
 global using System;
 global using System.Collections;
 global using System.Collections.Generic;
+global using System.Collections.ObjectModel;
 global using System.Management.Automation;
 global using System.Management.Automation.Runspaces;
 global using System.Reflection;

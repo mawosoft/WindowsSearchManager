@@ -4,7 +4,7 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 public class SearchApiErrorHelperTests
 {
-    private class Exception_TheoryData : TheoryData<Exception, bool, string>
+    private class Exception_TheoryData : TheoryData<ExceptionParam, bool>
     {
         private const uint MSS_E_CATALOGNOTFOUND = 0x80042103;
         private const uint OLEDB_BINDER_CUSTOM_ERROR = 0x80042500;
@@ -14,21 +14,21 @@ public class SearchApiErrorHelperTests
 
         public Exception_TheoryData()
         {
-            Add(null!, false, "null");
-            Add(new ExternalException(null, unchecked((int)MSS_E_CATALOGNOTFOUND)), false, "not COMException");
-            Add(new COMException(null, unchecked((int)E_INVALIDARG)), false, "E_INVALIDARG");
-            Add(new COMException(null, unchecked((int)MSS_E_CATALOGNOTFOUND_notITF)), false, "not facility ITF");
-            Add(new COMException(null, unchecked((int)MSS_E_CATALOGNOTFOUND)), true, "existing msg");
-            Add(new COMException(null, unchecked((int)OLEDB_BINDER_CUSTOM_ERROR)), true, "existing msg with inserts");
-            Add(new COMException(null, unchecked((int)GTHR_E_SINGLE_THREADED_EMBEDDING)), true, "existing msg long (290 ch)");
+            Add(new ExceptionParam(null!), false);
+            Add(new ExceptionParam(new ExternalException(null, unchecked((int)MSS_E_CATALOGNOTFOUND)), "not COMException"), false);
+            Add(new ExceptionParam(new COMException(null, unchecked((int)E_INVALIDARG)), "E_INVALIDARG"), false);
+            Add(new ExceptionParam(new COMException(null, unchecked((int)MSS_E_CATALOGNOTFOUND_notITF)), "not facility ITF"), false);
+            Add(new ExceptionParam(new COMException(null, unchecked((int)MSS_E_CATALOGNOTFOUND)), "existing msg"), true);
+            Add(new ExceptionParam(new COMException(null, unchecked((int)OLEDB_BINDER_CUSTOM_ERROR)), "existing msg with inserts"), true);
+            Add(new ExceptionParam(new COMException(null, unchecked((int)GTHR_E_SINGLE_THREADED_EMBEDDING)), "existing msg long (290 ch)"), true);
         }
     }
 
     [Theory]
     [ClassData(typeof(Exception_TheoryData))]
-    public void TryGetCOMExceptionMessage_Succeeds(Exception exception, bool shouldSucceed, string comment)
+    public void TryGetCOMExceptionMessage_Succeeds(ExceptionParam exceptionParam, bool shouldSucceed)
     {
-        _ = comment;
+        Exception exception = exceptionParam.Value;
         bool success = SearchApiErrorHelper.TryGetCOMExceptionMessage(exception, out string message);
         Assert.Equal(shouldSucceed, success);
         if (success)
@@ -44,9 +44,9 @@ public class SearchApiErrorHelperTests
 
     [Theory]
     [ClassData(typeof(Exception_TheoryData))]
-    public void TryWrapCOMException_Succeeds(Exception exception, bool shouldSucceed, string comment)
+    public void TryWrapCOMException_Succeeds(ExceptionParam exceptionParam, bool shouldSucceed)
     {
-        _ = comment;
+        Exception exception = exceptionParam.Value;
         bool success = SearchApiErrorHelper.TryWrapCOMException(exception, out ErrorRecord errorRecord);
         Assert.Equal(shouldSucceed, success);
         if (success)
@@ -63,9 +63,9 @@ public class SearchApiErrorHelperTests
 
     [Theory]
     [ClassData(typeof(Exception_TheoryData))]
-    public void TrySetErrorDetails_Succeeds(Exception exception, bool shouldSucceed, string comment)
+    public void TrySetErrorDetails_Succeeds(ExceptionParam exceptionParam, bool shouldSucceed)
     {
-        _ = comment;
+        Exception exception = exceptionParam.Value;
         if (exception == null) return; // Cannot create ErrorRecord w/o exception
         ErrorRecord errorRecord = new(exception, string.Empty, ErrorCategory.NotSpecified, null);
         bool success = SearchApiErrorHelper.TrySetErrorDetails(errorRecord);

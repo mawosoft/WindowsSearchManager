@@ -11,6 +11,7 @@ public class MockSearchManager : ISearchManager
 {
     internal ISearchCatalogManager? CatalogManager { get; set; }
     internal Exception? CatalogManagerException { get; set; }
+    internal bool NoAdmin { get; set; } // Throw if member access requires admin rights.
 
     internal MockSearchManager() : this(new MockCatalogManager()) { }
     internal MockSearchManager(ISearchCatalogManager? catalogManager) => CatalogManager = catalogManager;
@@ -19,6 +20,7 @@ public class MockSearchManager : ISearchManager
 
     internal string IndexerVersionStr { get; set; } = "10.0.1.2";
     internal (uint Major, uint Minor) Version { get; set; } = (10, 0);
+    internal string UserAgentInternal { get; set; } = "Mozilla";
     internal _PROXY_ACCESS UseProxyInternal { get; set; } = _PROXY_ACCESS.PROXY_ACCESS_PRECONFIG;
     internal int LocalByPassInternal { get; set; } = 0;
     internal uint PortNumberInternal { get; set; } = 0;
@@ -29,10 +31,10 @@ public class MockSearchManager : ISearchManager
 
     public virtual void GetIndexerVersionStr(out string ppszVersionString) => ppszVersionString = IndexerVersionStr;
     public virtual void GetIndexerVersion(out uint pdwMajor, out uint pdwMinor) => (pdwMajor, pdwMinor) = Version;
-    public virtual IntPtr GetParameter(string pszName) => throw new NotSupportedException();
-    public virtual void SetParameter(string pszName, ref tag_inner_PROPVARIANT pValue) => throw new NotSupportedException();
+    
     public virtual void SetProxy(_PROXY_ACCESS sUseProxy, int fLocalByPassProxy, uint dwPortNumber, string pszProxyName, string pszByPassList)
     {
+        if (NoAdmin) throw new UnauthorizedAccessException();
         UseProxyInternal = sUseProxy;
         LocalByPassInternal = fLocalByPassProxy;
         PortNumberInternal = dwPortNumber;
@@ -43,17 +45,24 @@ public class MockSearchManager : ISearchManager
     public virtual ISearchCatalogManager GetCatalog(string pszCatalog)
         => CatalogManagerException == null ? CatalogManager! : throw CatalogManagerException;
 
-    public virtual string ProxyName => ProxyNameInternal;
+    public virtual string ProxyName => !NoAdmin ? ProxyNameInternal : throw new UnauthorizedAccessException();
 
-    public virtual string BypassList => ByPassListInternal;
+    public virtual string BypassList => !NoAdmin ? ByPassListInternal : throw new UnauthorizedAccessException();
 
-    public virtual string UserAgent { get; set; } = "Mozilla";
+    public virtual string UserAgent
+    {
+        get => !NoAdmin ? UserAgentInternal : throw new UnauthorizedAccessException();
+        set => UserAgentInternal = !NoAdmin ? value : throw new UnauthorizedAccessException();
+    }
 
-    public virtual _PROXY_ACCESS UseProxy => UseProxyInternal;
+    public virtual _PROXY_ACCESS UseProxy => !NoAdmin ? UseProxyInternal : throw new UnauthorizedAccessException();
 
-    public virtual int LocalBypass => LocalByPassInternal;
+    public virtual int LocalBypass => !NoAdmin ? LocalByPassInternal : throw new UnauthorizedAccessException();
 
-    public virtual uint PortNumber => PortNumberInternal;
+    public virtual uint PortNumber => !NoAdmin ? PortNumberInternal : throw new UnauthorizedAccessException();
+
+    public virtual IntPtr GetParameter(string pszName) => throw new NotSupportedException();
+    public virtual void SetParameter(string pszName, ref tag_inner_PROPVARIANT pValue) => throw new NotSupportedException();
 }
 
 internal class MockSearchManager2 : MockSearchManager, ISearchManager2
