@@ -54,11 +54,7 @@ public class SearchManagerCommandsTests : CommandTestBase
         PowerShell.AddScript("Get-SearchManager");
         Collection<PSObject> results = PowerShell.Invoke();
         Assert.Empty(results);
-        Assert.True(PowerShell.HadErrors);
-        ErrorRecord errorRecord = Assert.Single(PowerShell.Streams.Error);
-        Assert.IsType<UnauthorizedAccessException>(errorRecord.Exception);
-        Assert.Equal(ErrorCategory.PermissionDenied, errorRecord.CategoryInfo.Category);
-        Assert.NotEqual(errorRecord.Exception.Message, errorRecord.ErrorDetails.Message);
+        AssertUnauthorizedAccess();
     }
 
     [Theory]
@@ -77,23 +73,23 @@ public class SearchManagerCommandsTests : CommandTestBase
     {
         public SetSearchManager_TheoryData()
         {
-            Add("Set-SearchManager -UserAgent foo-agent ",
+            Add("-UserAgent foo-agent ",
                 new SearchManagerInfo(new MockSearchManager2())
                 {
                     UserAgent = "foo-agent"
                 });
-            Add("Set-SearchManager -ProxyAccess PROXY_ACCESS_DIRECT ",
+            Add("-ProxyAccess PROXY_ACCESS_DIRECT ",
                 new SearchManagerInfo(new MockSearchManager2())
                 {
                     ProxyAccess = _PROXY_ACCESS.PROXY_ACCESS_DIRECT
                 });
-            Add("Set-SearchManager -UserAgent foo-agent -ProxyAccess PROXY_ACCESS_DIRECT ",
+            Add("-UserAgent foo-agent -ProxyAccess PROXY_ACCESS_DIRECT ",
                 new SearchManagerInfo(new MockSearchManager2())
                 {
                     UserAgent = "foo-agent",
                     ProxyAccess = _PROXY_ACCESS.PROXY_ACCESS_DIRECT
                 });
-            Add("Set-SearchManager -ProxyAccess PROXY_ACCESS_PROXY -ProxyName bar.com -ProxyPortNumber 0x8080 -ProxyBypassLocal -ProxyBypassList buzz.com,baz.org",
+            Add("-ProxyAccess PROXY_ACCESS_PROXY -ProxyName bar.com -ProxyPortNumber 0x8080 -ProxyBypassLocal -ProxyBypassList buzz.com,baz.org",
                 new SearchManagerInfo(new MockSearchManager2())
                 {
                     ProxyAccess = _PROXY_ACCESS.PROXY_ACCESS_PROXY,
@@ -107,9 +103,9 @@ public class SearchManagerCommandsTests : CommandTestBase
 
     [Theory]
     [ClassData(typeof(SetSearchManager_TheoryData))]
-    public void SetSearchManager_Succeeds(string script, SearchManagerInfo expectedInfo)
+    public void SetSearchManager_Succeeds(string arguments, SearchManagerInfo expectedInfo)
     {
-        PowerShell.AddScript(script);
+        PowerShell.AddScript("Set-SearchManager " + arguments);
         Collection<PSObject> results = PowerShell.Invoke();
         Assert.Empty(results);
         Assert.False(PowerShell.HadErrors);
@@ -123,11 +119,7 @@ public class SearchManagerCommandsTests : CommandTestBase
         PowerShell.AddScript("Set-SearchManager -UserAgent foo ");
         Collection<PSObject> results = PowerShell.Invoke();
         Assert.Empty(results);
-        Assert.True(PowerShell.HadErrors);
-        ErrorRecord errorRecord = Assert.Single(PowerShell.Streams.Error);
-        Assert.IsType<UnauthorizedAccessException>(errorRecord.Exception);
-        Assert.Equal(ErrorCategory.PermissionDenied, errorRecord.CategoryInfo.Category);
-        Assert.NotEqual(errorRecord.Exception.Message, errorRecord.ErrorDetails.Message);
+        AssertUnauthorizedAccess();
     }
 
     [Theory]
@@ -144,7 +136,7 @@ public class SearchManagerCommandsTests : CommandTestBase
 
     [Theory]
     [ClassData(typeof(Exception_TheoryData))]
-    public void SetSearchManager_HandlessetFailures(ExceptionParam exceptionParam, bool shouldHaveCustomDetails)
+    public void SetSearchManager_HandlesSetFailures(ExceptionParam exceptionParam, bool shouldHaveCustomDetails)
     {
         Exception exception = exceptionParam.Value;
         InterfaceChain.WithSearchManager(new MockSearchManagerWithGetSetException(null, exception));
@@ -157,26 +149,31 @@ public class SearchManagerCommandsTests : CommandTestBase
     [Fact]
     public void SetSearchManager_ConfirmImpact_Medium()
     {
-        AssertShouldProcess(typeof(SetSearchManagerCommand), ConfirmImpact.Medium);
+        AssertConfirmImpact(typeof(SetSearchManagerCommand), ConfirmImpact.Medium);
     }
 
     [Theory]
-    [InlineData("Set-SearchManager -UserAgent $null ")]
-    // TODO add more
-    public void SetSearchManager_ParameterValidation_Succeeds(string script)
+    [InlineData("-UserAgent ")]
+    [InlineData("-UserAgent '' ")]
+    [InlineData("-ProxyAccess 3 ")]
+    [InlineData("-ProxyName ")]
+    [InlineData("-ProxyPortNumber -1 ")]
+    [InlineData("-ProxyPortNumber 65536 ")]
+    [InlineData("-ProxyBypassList ")]
+    public void SetSearchManager_ParameterValidation_Succeeds(string arguments)
     {
-        AssertParameterValidation(script);
+        AssertParameterValidation("Set-SearchManager " + arguments);
     }
 
     [Theory]
-    [InlineData("Set-SearchManager -UserAgent foo-agent ")]
-    [InlineData("Set-SearchManager -ProxyAccess PROXY_ACCESS_DIRECT ")]
-    [InlineData("Set-SearchManager -UserAgent foo-agent -ProxyAccess PROXY_ACCESS_DIRECT ")]
-    [InlineData("Set-SearchManager -ProxyAccess PROXY_ACCESS_PROXY -ProxyName bar.com -ProxyPortNumber 0x8080 -ProxyBypassLocal -ProxyBypassList buzz.com,baz.org")]
-    public void SetSearchManager_WhatIf_Succeeds(string script)
+    [InlineData("-UserAgent foo-agent ")]
+    [InlineData("-ProxyAccess PROXY_ACCESS_DIRECT ")]
+    [InlineData("-UserAgent foo-agent -ProxyAccess PROXY_ACCESS_DIRECT ")]
+    [InlineData("-ProxyAccess PROXY_ACCESS_PROXY -ProxyName bar.com -ProxyPortNumber 0x8080 -ProxyBypassLocal -ProxyBypassList buzz.com,baz.org")]
+    public void SetSearchManager_WhatIf_Succeeds(string arguments)
     {
         SearchManagerInfo expectedInfo = new(InterfaceChain.SearchManager);
-        PowerShell.AddScript(script + " -WhatIf");
+        PowerShell.AddScript("Set-SearchManager " + arguments + " -WhatIf ");
         Collection<PSObject> results = PowerShell.Invoke();
         Assert.Empty(results);
         Assert.False(PowerShell.HadErrors);

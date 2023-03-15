@@ -55,7 +55,7 @@ public class CommandTestBase
         PowerShell.Commands.Clear();
     }
 
-    protected void AssertShouldProcess(Type commandType, ConfirmImpact confirmImpact)
+    protected void AssertConfirmImpact(Type commandType, ConfirmImpact confirmImpact)
     {
         CmdletAttribute a = commandType.GetCustomAttribute<CmdletAttribute>()!;
         Assert.NotNull(a);
@@ -77,6 +77,16 @@ public class CommandTestBase
         {
             Assert.Null(errorRecord.ErrorDetails);
         }
+        return errorRecord;
+    }
+
+    protected ErrorRecord AssertUnauthorizedAccess()
+    {
+        Assert.True(PowerShell.HadErrors);
+        ErrorRecord errorRecord = Assert.Single(PowerShell.Streams.Error);
+        Assert.IsType<UnauthorizedAccessException>(errorRecord.Exception);
+        Assert.Equal(ErrorCategory.PermissionDenied, errorRecord.CategoryInfo.Category);
+        Assert.NotEqual(errorRecord.Exception.Message, errorRecord.ErrorDetails.Message);
         return errorRecord;
     }
 
