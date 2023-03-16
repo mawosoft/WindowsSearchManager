@@ -66,16 +66,17 @@ public class MockInterfaceChain
         return this;
     }
 
-    public MockInterfaceChain WithException(int chainIndex, Exception exception, bool shouldHaveErrorRecord)
+    public MockInterfaceChain WithException(int chainIndex, ExceptionParam exceptionParam)
     {
         if (ExceptionType != null)
         {
             throw new InvalidOperationException("NullReference or Exception already initialized");
         }
-        if (exception == null)
+        if (exceptionParam == null)
         {
-            throw new ArgumentNullException(nameof(exception));
+            throw new ArgumentNullException(nameof(exceptionParam));
         }
+        (Exception exception, bool isCustom) = exceptionParam.Value;
 
         switch (chainIndex)
         {
@@ -88,7 +89,7 @@ public class MockInterfaceChain
         }
         Exception = exception;
         ExceptionType = exception.GetType();
-        ShouldHaveErrorRecord = shouldHaveErrorRecord;
+        ShouldHaveErrorRecord = isCustom;
         ExceptionIndex = chainIndex;
         return this;
     }

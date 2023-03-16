@@ -59,14 +59,13 @@ public class SearchManagerCommandsTests : CommandTestBase
 
     [Theory]
     [ClassData(typeof(Exception_TheoryData))]
-    public void GetSearchManager_HandlesFailures(ExceptionParam exceptionParam, bool shouldHaveCustomDetails)
+    public void GetSearchManager_HandlesFailures(ExceptionParam exceptionParam)
     {
-        Exception exception = exceptionParam.Value;
-        InterfaceChain.WithSearchManager(new MockSearchManagerWithGetSetException(exception, exception));
+        InterfaceChain.WithSearchManager(new MockSearchManagerWithGetSetException(exceptionParam.Value.Exception, exceptionParam.Value.Exception));
         PowerShell.AddScript("Get-SearchManager");
         Collection<PSObject> results = PowerShell.Invoke();
         Assert.Empty(results);
-        AssertSingleErrorRecord(exception, shouldHaveCustomDetails);
+        AssertSingleErrorRecord(exceptionParam);
     }
 
     private class SetSearchManager_TheoryData : TheoryData<string, SearchManagerInfo>
@@ -124,26 +123,24 @@ public class SearchManagerCommandsTests : CommandTestBase
 
     [Theory]
     [ClassData(typeof(Exception_TheoryData))]
-    public void SetSearchManager_HandlesGetFailures(ExceptionParam exceptionParam, bool shouldHaveCustomDetails)
+    public void SetSearchManager_HandlesGetFailures(ExceptionParam exceptionParam)
     {
-        Exception exception = exceptionParam.Value;
-        InterfaceChain.WithSearchManager(new MockSearchManagerWithGetSetException(exception, null));
+        InterfaceChain.WithSearchManager(new MockSearchManagerWithGetSetException(exceptionParam.Value.Exception, null));
         PowerShell.AddScript("Set-SearchManager -ProxyAccess PROXY_ACCESS_DIRECT ");
         Collection<PSObject> results = PowerShell.Invoke();
         Assert.Empty(results);
-        AssertSingleErrorRecord(exception, shouldHaveCustomDetails);
+        AssertSingleErrorRecord(exceptionParam);
     }
 
     [Theory]
     [ClassData(typeof(Exception_TheoryData))]
-    public void SetSearchManager_HandlesSetFailures(ExceptionParam exceptionParam, bool shouldHaveCustomDetails)
+    public void SetSearchManager_HandlesSetFailures(ExceptionParam exceptionParam)
     {
-        Exception exception = exceptionParam.Value;
-        InterfaceChain.WithSearchManager(new MockSearchManagerWithGetSetException(null, exception));
+        InterfaceChain.WithSearchManager(new MockSearchManagerWithGetSetException(null, exceptionParam.Value.Exception));
         PowerShell.AddScript("Set-SearchManager -ProxyAccess PROXY_ACCESS_DIRECT ");
         Collection<PSObject> results = PowerShell.Invoke();
         Assert.Empty(results);
-        AssertSingleErrorRecord(exception, shouldHaveCustomDetails);
+        AssertSingleErrorRecord(exceptionParam);
     }
 
     [Fact]
