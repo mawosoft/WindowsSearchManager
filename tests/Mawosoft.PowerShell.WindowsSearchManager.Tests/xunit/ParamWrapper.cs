@@ -18,13 +18,8 @@ public class ParamWrapper<T> : IDisposable
     // on the test method for display, not the type of the argument (parameter source).
     // public static implicit operator T(ParamWrapper<T> @this) => @this != null ? @this.Value : default!;
 
+#if !NETFRAMEWORK
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA1816:Dispose methods should call SuppressFinalize", Justification = "Just forwarding")]
+#endif
     public void Dispose() => (Value as IDisposable)?.Dispose();
-}
-
-public class ExceptionParam : ParamWrapper<Exception>
-{
-    public ExceptionParam(Exception value) : this(value, null) { }
-    public ExceptionParam(Exception value, string? displayText)
-        : base(value, value == null ? null : $"{value.GetType().Name}(0x{value.HResult:X8}){(displayText == null ? "" : $" [{displayText}]")}") { }
 }

@@ -63,12 +63,12 @@ public class CommandTestBase
         Assert.Equal(confirmImpact, a.ConfirmImpact);
     }
 
-    protected ErrorRecord AssertSingleErrorRecord(Exception exception, bool shouldHaveCustomDetails)
+    protected ErrorRecord AssertSingleErrorRecord(ExceptionParam exceptionParam)
     {
         Assert.True(PowerShell.HadErrors);
         ErrorRecord errorRecord = Assert.Single(PowerShell.Streams.Error);
-        Assert.Same(exception, errorRecord.Exception);
-        if (shouldHaveCustomDetails)
+        Assert.Same(exceptionParam.Value.Exception, errorRecord.Exception);
+        if (exceptionParam.Value.IsCustom)
         {
             Assert.NotNull(errorRecord.ErrorDetails);
             Assert.NotEqual(errorRecord.Exception.Message, errorRecord.ErrorDetails.Message);
@@ -101,13 +101,13 @@ public class CommandTestBase
         return errorRecord;
     }
 
-    protected class Exception_TheoryData : TheoryData<ExceptionParam, bool>
+    protected class Exception_TheoryData : TheoryData<ExceptionParam>
     {
         public Exception_TheoryData()
         {
-            Add(new ExceptionParam(new Exception()), false);
-            Add(new ExceptionParam(new COMException()), false);
-            Add(new ExceptionParam(new COMException(null, unchecked((int)0x80042103))), true);
+            Add(new ExceptionParam(new Exception()));
+            Add(new ExceptionParam(new COMException()));
+            Add(new ExceptionParam(new COMException(null, unchecked((int)0x80042103)), isCustom: true));
         }
     }
 }

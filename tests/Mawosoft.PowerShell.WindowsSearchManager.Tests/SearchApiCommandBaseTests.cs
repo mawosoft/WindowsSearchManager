@@ -43,13 +43,13 @@ public class SearchApiCommandBaseTests
             => SaveCrawlScopeManager(scopeManager);
     }
 
-    private class Exception_TheoryData : TheoryData<ExceptionParam, bool>
+    private class Exception_TheoryData : TheoryData<ExceptionParam>
     {
         public Exception_TheoryData()
         {
-            Add(new ExceptionParam(new Exception()), false);
-            Add(new ExceptionParam(new COMException()), false);
-            Add(new ExceptionParam(new COMException(null, unchecked((int)0x80042103))), true);
+            Add(new ExceptionParam(new Exception()));
+            Add(new ExceptionParam(new COMException()));
+            Add(new ExceptionParam(new COMException(null, unchecked((int)0x80042103)), isCustom: true));
         }
     }
 
@@ -71,7 +71,7 @@ public class SearchApiCommandBaseTests
         {
             foreach (object[] e in exceptions)
             {
-                yield return new object[] { new MockInterfaceChain().WithException(i, ((ExceptionParam)e[0]).Value, (bool)e[1]) };
+                yield return new object[] { new MockInterfaceChain().WithException(i, (ExceptionParam)e[0]) };
             }
         }
     }
@@ -284,16 +284,16 @@ public class SearchApiCommandBaseTests
 
     [Theory]
     [ClassData(typeof(Exception_TheoryData))]
-    public void SaveCrawlScopeManager_HandlesFailures(ExceptionParam exceptionParam, bool shouldHaveErrorRecord)
+    public void SaveCrawlScopeManager_HandlesFailures(ExceptionParam exceptionParam)
     {
-        Exception exception = exceptionParam.Value;
+        Exception exception = exceptionParam.Value.Exception;
         MockCommandRuntime runtime = new();
         MockInterfaceChain chain = new();
         MockCommand command = new(runtime, chain.Factory);
         chain.ScopeManager.SaveAllException = exception;
         Exception ex = Assert.Throws(exception.GetType(), () => command.TestSaveCrawlScopeManager(chain.ScopeManager));
         Assert.Same(exception, ex);
-        if (shouldHaveErrorRecord)
+        if (exceptionParam.Value.IsCustom)
         {
             ErrorRecord rec = Assert.Single(runtime.Errors);
             Assert.Same(ex, rec.Exception);
