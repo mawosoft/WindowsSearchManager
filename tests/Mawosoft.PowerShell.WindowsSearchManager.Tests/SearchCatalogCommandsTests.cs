@@ -12,14 +12,14 @@ public class SearchCatalogCommandsTests : CommandTestBase
         {
             CatalogManagers = new()
             {
-                new MockCatalogManagerWithGetSetException(),
-                new MockCatalogManagerWithGetSetException()
+                new MockCatalogManager(),
+                new MockCatalogManager()
                 {
                     Name = "FooCatalog",
                     Status = _CatalogStatus.CATALOG_STATUS_INCREMENTAL_CRAWL,
                     PausedReason = _CatalogPausedReason.CATALOG_PAUSED_REASON_NONE
                 },
-                new MockCatalogManagerWithGetSetException()
+                new MockCatalogManager()
                 {
                     Name = "BarCatalog",
                     NumberOfItemsInternal = 2222,
@@ -125,7 +125,7 @@ public class SearchCatalogCommandsTests : CommandTestBase
 
     [Theory]
     [ClassData(typeof(Exception_TheoryData))]
-    public void GetCatalogManager_HandlesFailures(ExceptionParam exceptionParam)
+    public void GetSearchCatalog_HandlesFailures(ExceptionParam exceptionParam)
     {
         InterfaceChain.WithCatalogManager(new MockCatalogManagerWithGetSetException()
         {
@@ -136,5 +136,106 @@ public class SearchCatalogCommandsTests : CommandTestBase
         Collection<PSObject> results = PowerShell.Invoke();
         Assert.Empty(results);
         AssertSingleErrorRecord(exceptionParam);
+    }
+
+    [Theory]
+    [InlineData("-Catalog ")]
+    [InlineData("-Catalog '' ")]
+    [InlineData("$null ")]
+    [InlineData("'' ")]
+    public void GetSearchCatalog_ParameterValidation_Succeeds(string arguments)
+    {
+        AssertParameterValidation("Get-SearchCatalog " + arguments);
+    }
+
+    private class SetSearchCatalog_TheoryData : TheoryData<string, SearchCatalogInfo>
+    {
+        public SetSearchCatalog_TheoryData()
+        {
+            Add("-DiacriticSensitivity ",
+                new SearchCatalogInfo(new MockCatalogManager())
+                {
+                    DiacriticSensitivity = true
+                });
+            Add("-ConnectTimeout 111 -DataTimeout 333 -Catalog FooCatalog ",
+                new SearchCatalogInfo(new MockCatalogManager())
+                {
+                    Catalog = "FooCatalog",
+                    ConnectTimeout = 111,
+                    DataTimeout = 333
+                });
+        }
+    }
+
+    [Theory]
+    [ClassData(typeof(SetSearchCatalog_TheoryData))]
+    public void SetSearchCatalog_Succeeds(string arguments, SearchCatalogInfo expectedInfo)
+    {
+        MockSearchManagerWithMultipleCatalogs searchManager = new()
+        {
+            CatalogManagers = new()
+            {
+                new MockCatalogManager(),
+                new MockCatalogManager() { Name = "FooCatalog"}
+            }
+        };
+        InterfaceChain.WithSearchManager(searchManager);
+        ISearchCatalogManager? catalogManager = searchManager.CatalogManagers.Find(c => c.Name == expectedInfo.Catalog);
+        if (catalogManager == null)
+        {
+            catalogManager = new MockCatalogManager() { Name = expectedInfo.Catalog! };
+            searchManager.CatalogManagers.Add(catalogManager);
+        }
+        PowerShell.AddScript("Set-SearchCatalog " + arguments);
+        Collection<PSObject> results = PowerShell.Invoke();
+        Assert.Empty(results);
+        Assert.False(PowerShell.HadErrors);
+        Assert.Equal(expectedInfo, catalogManager, SearchCatalogInfoToMockComparer.Instance);
+    }
+
+    [Theory]
+    [ClassData(typeof(Exception_TheoryData))]
+    public void SetSearchCatalog_HandlesFailures(ExceptionParam exceptionParam)
+    {
+        InterfaceChain.WithCatalogManager(new MockCatalogManagerWithGetSetException()
+        {
+            SetException = exceptionParam.Value.Exception
+        });
+        PowerShell.AddScript("Set-SearchCatalog -DiacriticSensitivity ");
+        Collection<PSObject> results = PowerShell.Invoke();
+        Assert.Empty(results);
+        AssertSingleErrorRecord(exceptionParam);
+    }
+
+
+    [Fact]
+    public void SetSearchCatalog_ConfirmImpact_Medium()
+    {
+        AssertConfirmImpact(typeof(SetSearchCatalogCommand), ConfirmImpact.Medium);
+    }
+
+    [Theory]
+    [InlineData("-Catalog ")]
+    [InlineData("-Catalog '' ")]
+    [InlineData("-ConnectTimeout -1 ")]
+    [InlineData("-DataTimeout -1 ")]
+    public void SetSearchCatalog_ParameterValidation_Succeeds(string arguments)
+    {
+        AssertParameterValidation("Set-SearchCatalog " + arguments);
+    }
+
+    [Theory]
+    [InlineData("-ConnectTimeout 100 ")]
+    [InlineData("-DataTimeout 100 ")]
+    [InlineData("-DiacriticSensitivity ")]
+    [InlineData("-ConnectTimeout 100 -DataTimeout 100 -DiacriticSensitivity ")]
+    public void SetSearchCatalog_WhatIf_Succeeds(string arguments)
+    {
+        SearchCatalogInfo expectedInfo = new(InterfaceChain.CatalogManager);
+        PowerShell.AddScript("Set-SearchCatalog " + arguments + " -WhatIf ");
+        Collection<PSObject> results = PowerShell.Invoke();
+        Assert.Empty(results);
+        Assert.False(PowerShell.HadErrors);
+        Assert.Equal(expectedInfo, InterfaceChain.CatalogManager, SearchCatalogInfoToMockComparer.Instance);
     }
 }
