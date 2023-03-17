@@ -43,6 +43,8 @@ public class CommandTestBase
         // Avoid accidental issues with confirmation. We use -WhatIf for ShouldProcess() testing and assert
         // the ConfirmImpact property of the CmdletAttribute for selected commands.
         PowerShell.Runspace.SessionStateProxy.SetVariable("ConfirmPreference", ConfirmImpact.None);
+        // 'Continue' is default, but make it explicit.
+        PowerShell.Runspace.SessionStateProxy.SetVariable("ErrorActionPreference", ActionPreference.Continue);
     }
 
     protected readonly MockInterfaceChain InterfaceChain;

@@ -55,7 +55,7 @@ public class MockInterfaceChain
         switch (chainIndex)
         {
             case 0: Factory = null!; ExceptionType = typeof(NullReferenceException); break;
-            case 1: Factory.SearchManager = null; ExceptionType = typeof(COMException); break;
+            case 1: Factory.SearchManager = null!; ExceptionType = typeof(COMException); break;
             case 2: SearchManager.CatalogManager = null; ExceptionType = typeof(COMException); break;
             case 3: CatalogManager.ScopeManager = null; ExceptionType = typeof(COMException); break;
             default:
