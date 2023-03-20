@@ -1,7 +1,5 @@
 ﻿// Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
-using System;
-
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 [Collection(nameof(NoParallelTests))]

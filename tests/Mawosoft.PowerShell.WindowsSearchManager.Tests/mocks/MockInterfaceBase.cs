@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
@@ -60,6 +61,11 @@ public abstract class MockInterfaceBase
     // To be called from each interface method (and property getters/setters) whose calls should be recorded and/or which should throw an exception.
     // The method name itself is taken from the stack frame, but parameter values need to be passed. If the parameter value is not a string or value type,
     // consider passing a string representing the current value instead.
+    // Note:
+    // This is trickier than expected. The method name on the stackframe can be wrong with tail call optimization. The attribute [CallerMemberName]
+    // would work in such a situation, but a) doesn't distinguish between property getters and setters, and b) doesn't work with 'params' parameters.
+    // We could probably live with b) and drop 'params', but losing the getter/setter info is a no-go.
+    // Solution: If calling Record() is the last/only call, follow it with a call to TailCall();
     protected void Record(params object?[] parameters)
     {
         if (RecordingDisabled) return;
@@ -77,6 +83,12 @@ public abstract class MockInterfaceBase
             throw new UnauthorizedAccessException();
         }
     }
+
+    // Call to avoid misleading stack frame for Record() due to tail call optimization.
+    // Seems to also work w/o the NoInlining option, resulting in 'call Record' followed by 'nop', but
+    // just to be on the save side...
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    protected void TailCall() { }
 
     protected object? GetChildInterface()
     {

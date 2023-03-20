@@ -167,5 +167,9 @@ internal class MockSearchManager2 : MockSearchManager, ISearchManager2
         };
     }
 
-    public virtual void DeleteCatalog(string pszCatalog) => Record(pszCatalog);
+    public virtual void DeleteCatalog(string pszCatalog)
+    {
+        Record(pszCatalog);
+        TailCall();
+    }
 }

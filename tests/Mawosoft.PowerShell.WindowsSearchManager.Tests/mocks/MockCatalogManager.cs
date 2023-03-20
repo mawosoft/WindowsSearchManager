@@ -89,10 +89,29 @@ public class MockCatalogManager : MockInterfaceBase, ISearchCatalogManager
         pPausedReason = PausedReasonInternal;
     }
 
-    public virtual void Reset() => Record();
-    public virtual void Reindex() => Record();
-    public virtual void ReindexMatchingURLs(string pszPattern) => Record(pszPattern);
-    public virtual void ReindexSearchRoot(string pszRootURL) => Record(pszRootURL);
+    public virtual void Reset()
+    {
+        Record();
+        TailCall();
+    }
+
+    public virtual void Reindex()
+    {
+        Record();
+        TailCall();
+    }
+
+    public virtual void ReindexMatchingURLs(string pszPattern)
+    {
+        Record(pszPattern);
+        TailCall();
+    }
+
+    public virtual void ReindexSearchRoot(string pszRootURL)
+    {
+        Record(pszRootURL);
+        TailCall();
+    }
 
     public virtual int NumberOfItems()
     {
