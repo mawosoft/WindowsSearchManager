@@ -2,18 +2,22 @@
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
-// Internal members are used to setup mock behavior.
-internal class MockSearchManagerFactory : ISearchManagerFactory
+internal class MockSearchManagerFactory : MockInterfaceBase, ISearchManagerFactory
 {
-    internal MockSearchManager SearchManager { get; set; }
-    internal Exception? SearchManagerException { get; set; }
     internal MockSearchRegistryProvider SearchRegistryProvider { get; set; } = new MockSearchRegistryProvider();
 
     internal MockSearchManagerFactory() : this(new MockSearchManager2()) { }
-    internal MockSearchManagerFactory(MockSearchManager searchManager) => SearchManager = searchManager;
+    internal MockSearchManagerFactory(MockSearchManager searchManager) => ChildInterface = searchManager;
 
     public virtual ISearchManager CreateSearchManager()
-        => SearchManagerException == null ? SearchManager! : throw SearchManagerException;
+    {
+        Record();
+        return (GetChildInterface() as ISearchManager)!;
+    }
 
-    public virtual ISearchRegistryProvider CreateSearchRegistryProvider() => SearchRegistryProvider;
+    public virtual ISearchRegistryProvider CreateSearchRegistryProvider()
+    {
+        Record();
+        return SearchRegistryProvider;
+    }
 }

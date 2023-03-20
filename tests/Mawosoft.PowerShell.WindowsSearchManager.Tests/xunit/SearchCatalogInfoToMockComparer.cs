@@ -26,24 +26,24 @@ public class SearchCatalogInfoToMockComparer : IEqualityComparer, IEqualityCompa
         }
         if (mock == null) return x.Equals(y);
 
-        if (mock.Name != info.Catalog) return false;
-        if (mock.ConnectTimeout != info.ConnectTimeout) return false;
-        if (mock.DataTimeout != info.DataTimeout) return false;
-        if (mock.DiacriticSensitivity != 0 != info.DiacriticSensitivity) return false;
-        if (mock.Status != info.Status) return false;
-        if (mock.PausedReason != info.PausedReason) return false;
+        if (mock.NameInternal != info.Catalog) return false;
+        if (mock.ConnectTimeoutInternal != info.ConnectTimeout) return false;
+        if (mock.DataTimeoutInternal != info.DataTimeout) return false;
+        if (mock.DiacriticSensitivityInternal != 0 != info.DiacriticSensitivity) return false;
+        if (mock.StatusInternal != info.Status) return false;
+        if (mock.PausedReasonInternal != info.PausedReason) return false;
         if (mock.NumberOfItemsInternal != info.ItemCount) return false;
         if (mock.NumberOfItemsToIndexInternal.Items != info.ItemsToIndexCount) return false;
         if (mock.NumberOfItemsToIndexInternal.Notifications != info.NotificationQueueCount) return false;
         if (mock.NumberOfItemsToIndexInternal.HighPrio != info.HighPriorityQueueCount) return false;
-        if (mock.NoAdmin)
+        if (mock.AdminMode)
         {
-            if (info.PathBeingIndexed == null
-                || !info.PathBeingIndexed.StartsWith("N/A", StringComparison.Ordinal)) return false;
+            if (mock.URLBeingIndexedInternal != info.PathBeingIndexed) return false;
         }
         else
         {
-            if (mock.URLBeingIndexedInternal != info.PathBeingIndexed) return false;
+            if (info.PathBeingIndexed == null
+                || !info.PathBeingIndexed.StartsWith("N/A", StringComparison.Ordinal)) return false;
         }
         return true;
     }

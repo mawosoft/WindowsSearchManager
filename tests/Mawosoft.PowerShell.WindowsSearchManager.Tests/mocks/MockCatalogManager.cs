@@ -2,70 +2,149 @@
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
-// NotSupportedException: the original COM class does not support this member.
-// NotImplementedException: the Mock is missing a implementation for this member.
-//
-// Internal members are used to setup mock behavior.
-
-public class MockCatalogManager : ISearchCatalogManager
+public class MockCatalogManager : MockInterfaceBase, ISearchCatalogManager
 {
-    internal ISearchCrawlScopeManager? ScopeManager { get; set; }
-    internal Exception? ScopeManagerException { get; set; }
-    internal bool NoAdmin { get; set; } // Throw if member access requires admin rights.
-
     internal MockCatalogManager() : this(new MockCrawlScopeManager()) { }
-    internal MockCatalogManager(ISearchCrawlScopeManager? scopeManager) => ScopeManager = scopeManager;
-    internal MockCatalogManager(string name, ISearchCrawlScopeManager? scopeManager)
+    internal MockCatalogManager(ISearchCrawlScopeManager scopeManager) : base()
     {
-        Name = name;
-        ScopeManager = scopeManager;
+        ChildInterface = scopeManager;
+        AdminMethodRegex = "^Reindex$|^Reset$|^URLBeingIndexed$";
     }
 
     // Simple properties representing data accessed via the public interface.
 
-    internal _CatalogStatus Status { get; set; } = _CatalogStatus.CATALOG_STATUS_PAUSED;
-    internal _CatalogPausedReason PausedReason { get; set; } = _CatalogPausedReason.CATALOG_PAUSED_REASON_USER_ACTIVE;
+    internal string NameInternal { get; set; } = "SystemIndex";
+    internal uint ConnectTimeoutInternal { get; set; }
+    internal uint DataTimeoutInternal { get; set; }
+    internal int DiacriticSensitivityInternal { get; set; }
+    internal _CatalogStatus StatusInternal { get; set; } = _CatalogStatus.CATALOG_STATUS_PAUSED;
+    internal _CatalogPausedReason PausedReasonInternal { get; set; } = _CatalogPausedReason.CATALOG_PAUSED_REASON_USER_ACTIVE;
     internal int NumberOfItemsInternal { get; set; } = 1000;
     internal (int Items, int Notifications, int HighPrio) NumberOfItemsToIndexInternal { get; set; } = (100, 300, 1);
     internal string URLBeingIndexedInternal { get; set; } = @"C:\foo\bar";
 
     // ISearchCatalogManager
 
-    public virtual IntPtr GetParameter(string pszName) => throw new NotSupportedException();
-    public virtual void SetParameter(string pszName, ref tag_inner_PROPVARIANT pValue) => throw new NotSupportedException();
-    public virtual void GetCatalogStatus(out _CatalogStatus pStatus, out _CatalogPausedReason pPausedReason)
+    public virtual ISearchCrawlScopeManager GetCrawlScopeManager()
     {
-        pStatus = Status;
-        pPausedReason = PausedReason;
+        Record();
+        return (GetChildInterface() as ISearchCrawlScopeManager)!;
     }
 
-    public virtual void Reset() => throw new NotImplementedException();
-    public virtual void Reindex() => throw new NotImplementedException();
-    public virtual void ReindexMatchingURLs(string pszPattern) => throw new NotImplementedException();
-    public virtual void ReindexSearchRoot(string pszRootURL) => throw new NotImplementedException();
-    public virtual int NumberOfItems() => NumberOfItemsInternal;
+    public virtual string Name
+    {
+        get
+        {
+            Record();
+            return NameInternal;
+        }
+    }
+
+    public virtual uint ConnectTimeout
+    {
+        get
+        {
+            Record();
+            return ConnectTimeoutInternal;
+        }
+        set
+        {
+            Record(value);
+            ConnectTimeoutInternal = value;
+        }
+    }
+
+    public virtual uint DataTimeout
+    {
+        get
+        {
+            Record();
+            return DataTimeoutInternal;
+        }
+        set
+        {
+            Record(value);
+            DataTimeoutInternal = value;
+        }
+    }
+
+    public virtual int DiacriticSensitivity
+    {
+        get
+        {
+            Record();
+            return DiacriticSensitivityInternal;
+        }
+        set
+        {
+            Record(value);
+            DiacriticSensitivityInternal = value;
+        }
+    }
+
+    public virtual void GetCatalogStatus(out _CatalogStatus pStatus, out _CatalogPausedReason pPausedReason)
+    {
+        Record();
+        pStatus = StatusInternal;
+        pPausedReason = PausedReasonInternal;
+    }
+
+    public virtual void Reset()
+    {
+        Record();
+        TailCall();
+    }
+
+    public virtual void Reindex()
+    {
+        Record();
+        TailCall();
+    }
+
+    public virtual void ReindexMatchingURLs(string pszPattern)
+    {
+        Record(pszPattern);
+        TailCall();
+    }
+
+    public virtual void ReindexSearchRoot(string pszRootURL)
+    {
+        Record(pszRootURL);
+        TailCall();
+    }
+
+    public virtual int NumberOfItems()
+    {
+        Record();
+        return NumberOfItemsInternal;
+    }
+
     public virtual void NumberOfItemsToIndex(out int plIncrementalCount,
         out int plNotificationQueue, out int plHighPriorityQueue)
-        => (plIncrementalCount, plNotificationQueue, plHighPriorityQueue) = NumberOfItemsToIndexInternal;
+    {
+        Record();
+        (plIncrementalCount, plNotificationQueue, plHighPriorityQueue) = NumberOfItemsToIndexInternal;
+    }
+
     public virtual string URLBeingIndexed()
     {
-        if (NoAdmin) throw new UnauthorizedAccessException();
+        Record();
         return URLBeingIndexedInternal;
     }
 
-    public virtual uint GetURLIndexingState(string pszUrl) => throw new NotSupportedException();
+    // Unused ISearchCatalogManager members.
+
     public virtual ISearchPersistentItemsChangedSink GetPersistentItemsChangedSink() => throw new NotImplementedException();
-    public virtual void RegisterViewForNotification(string pszView, ISearchViewChangedSink pViewChangedSink, out uint pdwCookie) => throw new NotSupportedException();
     public virtual void GetItemsChangedSink(ISearchNotifyInlineSite pISearchNotifyInlineSite, ref Guid riid, out IntPtr ppv, out Guid pGUIDCatalogResetSignature, out Guid pGUIDCheckPointSignature, out uint pdwLastCheckPointNumber) => throw new NotImplementedException();
+    public virtual ISearchQueryHelper GetQueryHelper() => throw new NotImplementedException();
+
+    // ISearchCatalogManager members not supported by the original COM class.
+
+    public virtual IntPtr GetParameter(string pszName) => throw new NotSupportedException();
+    public virtual void SetParameter(string pszName, ref tag_inner_PROPVARIANT pValue) => throw new NotSupportedException();
+    public virtual uint GetURLIndexingState(string pszUrl) => throw new NotSupportedException();
+    public virtual void RegisterViewForNotification(string pszView, ISearchViewChangedSink pViewChangedSink, out uint pdwCookie) => throw new NotSupportedException();
     public virtual void UnregisterViewForNotification(uint dwCookie) => throw new NotSupportedException();
     public virtual void SetExtensionClusion(string pszExtension, int fExclude) => throw new NotSupportedException();
     public virtual IEnumString EnumerateExcludedExtensions() => throw new NotSupportedException();
-    public virtual ISearchQueryHelper GetQueryHelper() => throw new NotImplementedException();
-    public virtual ISearchCrawlScopeManager GetCrawlScopeManager()
-        => ScopeManagerException == null ? ScopeManager! : throw ScopeManagerException;
-
-    public virtual string Name { get; internal set; } = "SystemIndex";
-    public virtual uint ConnectTimeout { get; set; }
-    public virtual uint DataTimeout { get; set; }
-    public virtual int DiacriticSensitivity { get; set; }
 }
