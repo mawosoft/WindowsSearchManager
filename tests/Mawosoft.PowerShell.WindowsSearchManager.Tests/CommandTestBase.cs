@@ -69,8 +69,8 @@ public class CommandTestBase
     {
         Assert.True(PowerShell.HadErrors);
         ErrorRecord errorRecord = Assert.Single(PowerShell.Streams.Error);
-        Assert.Same(exceptionParam.Value.Exception, errorRecord.Exception);
-        if (exceptionParam.Value.IsCustom)
+        Assert.Same(exceptionParam.Exception, errorRecord.Exception);
+        if (exceptionParam.IsSearchApi)
         {
             Assert.NotNull(errorRecord.ErrorDetails);
             Assert.NotEqual(errorRecord.Exception.Message, errorRecord.ErrorDetails.Message);
@@ -94,13 +94,28 @@ public class CommandTestBase
 
     protected ErrorRecord AssertParameterValidation(string script)
     {
-        PowerShell.AddScript(script);
-        Collection<PSObject> results = PowerShell.Invoke();
+        Collection<PSObject> results = InvokeScript(script);
         Assert.Empty(results);
         Assert.True(PowerShell.HadErrors);
         ErrorRecord errorRecord = Assert.Single(PowerShell.Streams.Error);
         Assert.IsAssignableFrom<ParameterBindingException>(errorRecord.Exception);
         return errorRecord;
+    }
+
+    protected Collection<PSObject> InvokeScript(string script) => InvokeScript(script, null);
+    protected Collection<PSObject> InvokeScript(string script, IEnumerable? input)
+    {
+        try
+        {
+            Assert.Empty(PowerShell.Commands.Commands);
+            PowerShell.AddScript(script);
+            Assert.False(InterfaceChain.HasRecordings());
+            return PowerShell.Invoke(input);
+        }
+        finally
+        {
+            InterfaceChain.EnableRecording(false);
+        }
     }
 
     protected class Exception_TheoryData : TheoryData<ExceptionParam>
@@ -109,7 +124,7 @@ public class CommandTestBase
         {
             Add(new ExceptionParam(new Exception()));
             Add(new ExceptionParam(new COMException()));
-            Add(new ExceptionParam(new COMException(null, unchecked((int)0x80042103)), isCustom: true));
+            Add(new ExceptionParam(new COMException(null, ExceptionParam.MSS_E_CATALOGNOTFOUND)));
         }
     }
 }

@@ -26,9 +26,9 @@ public class SearchManagerInfoToMockComparer : IEqualityComparer, IEqualityCompa
         }
         if (mock == null) return x.Equals(y);
 
-        if (mock.IndexerVersionStr != info.Version) return false;
-        if (mock.Version.Major != info.MajorVersion) return false;
-        if (mock.Version.Minor != info.MinorVersion) return false;
+        if (mock.IndexerVersionStrInternal != info.Version) return false;
+        if (mock.VersionInternal.Major != info.MajorVersion) return false;
+        if (mock.VersionInternal.Minor != info.MinorVersion) return false;
         if (mock.UserAgentInternal != info.UserAgent) return false;
         if (mock.UseProxyInternal != info.ProxyAccess) return false;
         if (mock.ProxyNameInternal != info.ProxyName) return false;

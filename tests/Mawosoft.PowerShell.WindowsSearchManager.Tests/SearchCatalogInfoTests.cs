@@ -31,11 +31,11 @@ public class SearchCatalogInfoTests
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public void ctor_ISearchCatalogManager_Succeeds(bool noAdmin)
+    public void ctor_ISearchCatalogManager_Succeeds(bool adminMode)
     {
         MockCatalogManager mock = new()
         {
-            NoAdmin = noAdmin
+            AdminMode = adminMode
         };
         SearchCatalogInfo info = new(mock);
         Assert.Equal(mock, info, SearchCatalogInfoToMockComparer.Instance);
