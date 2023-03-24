@@ -1,8 +1,5 @@
 ﻿// Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
-using System.Diagnostics.CodeAnalysis;
-using System.Management.Automation.Host;
-
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 // NotImplementedException: the Mock is missing a implementation for this member.
@@ -18,7 +15,7 @@ public class MockCommandRuntime : ICommandRuntime
 #endif
     public void ThrowTerminatingError(ErrorRecord errorRecord)
     {
-        Assert.NotNull(errorRecord);
+        if (errorRecord == null) throw new ArgumentNullException(nameof(errorRecord));
         Errors.Add(errorRecord);
         throw errorRecord.Exception ?? new InvalidOperationException(errorRecord.ToString());
     }

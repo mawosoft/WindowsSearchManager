@@ -16,8 +16,9 @@ public abstract class SearchApiCommandBase : PSCmdlet
     internal static ISearchManagerFactory SearchManagerFactory { get; set; } = DefaultSearchManagerFactory.Instance;
 
     // Ensure returned COM object is not null.
+    [SuppressMessage("Usage", "CA2201:Do not raise reserved exception types", Justification = "Asserting returned COM object.")]
     protected static T EnsureNotNull<T>(T value) where T : class
-        => value ?? throw new COMException(string.Format(SR.ReturnedCOMObjectIsNull, typeof(T).Name), 0);
+        => value ?? throw new COMException(string.Format(SR.Culture, SR.ReturnedCOMObjectIsNull, typeof(T).Name), 0);
 
     // Various helpers to get instances of the SearchAPI management main interfaces.
     // On failure, all of these either throw an Exception or an ErrorRecord (via ThrowTerminatingError),
@@ -40,7 +41,7 @@ public abstract class SearchApiCommandBase : PSCmdlet
 
     protected ISearchManager2 GetSearchManager2(ISearchManager searchManager)
         => (searchManager ?? throw new ArgumentNullException(nameof(searchManager))) as ISearchManager2
-           ?? throw new InvalidCastException(string.Format(SR.InterfaceNotAvailable, nameof(ISearchManager2)));
+           ?? throw new InvalidCastException(string.Format(SR.Culture, SR.InterfaceNotAvailable, nameof(ISearchManager2)));
 
     protected ISearchCatalogManager GetCatalogManager(string catalogName)
         => GetCatalogManager(CreateSearchManager(), catalogName);

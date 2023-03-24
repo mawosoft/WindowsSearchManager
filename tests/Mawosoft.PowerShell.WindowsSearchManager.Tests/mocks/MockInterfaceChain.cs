@@ -32,7 +32,7 @@ public class MockInterfaceChain
         Factory = new(SearchManager);
     }
 
-    public int Count => 4;
+    public static int Count => 4;
 
     public MockInterfaceBase this[int index] => index switch
     {
@@ -49,6 +49,7 @@ public class MockInterfaceChain
 
     public MockInterfaceChain WithSearchManager(MockSearchManager searchManager)
     {
+        if (searchManager == null) throw new ArgumentNullException(nameof(searchManager));
         searchManager.ChildInterface = CatalogManager;
         SearchManager = searchManager;
         Factory.ChildInterface = SearchManager;
@@ -57,6 +58,7 @@ public class MockInterfaceChain
 
     public MockInterfaceChain WithCatalogManager(MockCatalogManager catalogManager)
     {
+        if (catalogManager == null) throw new ArgumentNullException(nameof(catalogManager));
         catalogManager.ChildInterface = ScopeManager;
         CatalogManager = catalogManager;
         SearchManager.ChildInterface = CatalogManager;

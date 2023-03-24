@@ -240,6 +240,7 @@ public sealed class TestSearchRuleCommand : SearchApiCommandBase
     [ValidateNotNullOrEmpty()]
     public string Catalog { get; set; } = DefaultCatalogName;
 
+    [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Continue after WriteError.")]
     protected override void ProcessRecord()
     {
         if (!(Path?.Length > 0)) return;

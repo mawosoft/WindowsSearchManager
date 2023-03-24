@@ -2,6 +2,9 @@
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
+#pragma warning disable CA1054 // URI-like parameters should not be strings
+#pragma warning disable CA1055 // URI-like return values should not be strings
+
 public class MockCatalogManager : MockInterfaceBase, ISearchCatalogManager
 {
     internal MockCatalogManager() : this(new MockCrawlScopeManager()) { }

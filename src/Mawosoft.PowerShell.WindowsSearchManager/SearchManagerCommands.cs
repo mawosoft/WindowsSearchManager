@@ -128,11 +128,11 @@ public sealed class SetSearchManagerCommand : SearchApiCommandBase
         if (UserAgent != null)
         {
             setUserAgent = true;
-            target += string.Format(SR.SetUserAgent, UserAgent);
+            target += string.Format(SR.Culture, SR.SetUserAgent, UserAgent);
         }
         if (setProxy)
         {
-            target += string.Format(SR.SetProxy, info.ProxyAccess, info.ProxyName, info.ProxyPortNumber, info.ProxyBypassLocal, info.ProxyBypassList);
+            target += string.Format(SR.Culture, SR.SetProxy, info.ProxyAccess, info.ProxyName, info.ProxyPortNumber, info.ProxyBypassLocal, info.ProxyBypassList);
         }
 
         if ((setProxy || setUserAgent) && ShouldProcess(target))

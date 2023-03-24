@@ -13,6 +13,7 @@ public sealed class GetSearchCatalogCommand : SearchApiCommandBase
     [ValidateNotNullOrEmpty()]
     public string? Catalog { get; set; }
 
+    [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Continue after WriteError.")]
     protected override void EndProcessing()
     {
         ISearchManager manager = CreateSearchManager();
@@ -163,6 +164,7 @@ public sealed class UpdateSearchCatalogCommand : SearchApiCommandBase
     private ISearchCatalogManager? _catalogManager;
     private ISearchCatalogManager CatalogManager { get => _catalogManager ??= GetCatalogManager(Catalog); }
 
+    [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Continue after WriteError.")]
     protected override void ProcessRecord()
     {
         if (ParameterSetName == AllParameterSet)

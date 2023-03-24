@@ -1,7 +1,5 @@
 // Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
-using System.ServiceProcess;
-
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 internal static class SkipCondition
@@ -37,7 +35,7 @@ internal static class SkipCondition
                 WSearchEnabled => IsWSearchEnabled(),
                 WSearchDisabled => !IsWSearchEnabled(),
                 IsCIandWSearchDisabled => s_isCI && !IsWSearchEnabled(),
-                _ => throw new ArgumentException(null, nameof(skipcondition)),
+                _ => throw new ArgumentException(null, nameof(skipconditions)),
             };
             if (skip)
             {
@@ -48,11 +46,11 @@ internal static class SkipCondition
     }
 
 #if !NETFRAMEWORK
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
 #endif
     private static bool IsWSearchEnabled()
     {
-        using ServiceController sc = new("WSearch");
-        return sc.StartType != ServiceStartMode.Disabled;
+        using System.ServiceProcess.ServiceController sc = new("WSearch");
+        return sc.StartType != System.ServiceProcess.ServiceStartMode.Disabled;
     }
 }

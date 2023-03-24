@@ -42,8 +42,8 @@ public class MockSearchManager : MockInterfaceBase, ISearchManager
     internal (uint Major, uint Minor) VersionInternal { get; set; } = (10, 0);
     internal string UserAgentInternal { get; set; } = "Mozilla";
     internal _PROXY_ACCESS UseProxyInternal { get; set; } = _PROXY_ACCESS.PROXY_ACCESS_PRECONFIG;
-    internal int LocalByPassInternal { get; set; } = 0;
-    internal uint PortNumberInternal { get; set; } = 0;
+    internal int LocalByPassInternal { get; set; }
+    internal uint PortNumberInternal { get; set; }
     internal string ProxyNameInternal { get; set; } = string.Empty;
     internal string ByPassListInternal { get; set; } = string.Empty;
 

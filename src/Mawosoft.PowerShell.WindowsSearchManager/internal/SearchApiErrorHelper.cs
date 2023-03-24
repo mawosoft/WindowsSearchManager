@@ -22,12 +22,15 @@ internal static class SearchApiErrorHelper
     private const string TQueryDll = "tquery.dll";
 
     [DllImport(Kernel32, ExactSpelling = true, SetLastError = true)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     private static extern bool FreeLibrary(IntPtr hModule);
 
     [DllImport(Kernel32, CharSet = CharSet.Unicode, SetLastError = true)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     private static extern IntPtr LoadLibraryEx([In] string lpLibFileName, IntPtr hFile, uint dwFlags);
 
     [DllImport(Kernel32, CharSet = CharSet.Unicode, SetLastError = true)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     private static extern int FormatMessage(uint dwFlags, IntPtr lpSource, uint dwMessageId, uint dwLanguageId,
                                             [Out] char[] lpBuffer, int nSize, IntPtr arguments);
 

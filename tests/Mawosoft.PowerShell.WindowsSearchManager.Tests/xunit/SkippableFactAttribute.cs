@@ -2,8 +2,9 @@
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
-public class SkippableFactAttribute : FactAttribute
+public sealed class SkippableFactAttribute : FactAttribute
 {
+    [SuppressMessage("Design", "CA1019:Define accessors for attribute arguments", Justification = "Arguments become Skip property.")]
     public SkippableFactAttribute(params string[] skipconditions)
     {
         string? s = SkipCondition.Evaluate(skipconditions);

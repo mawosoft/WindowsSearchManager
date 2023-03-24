@@ -20,6 +20,20 @@
     <ContinuousIntegrationBuild>$(CI)</ContinuousIntegrationBuild>
     <Deterministic>$(CI)</Deterministic>
     <TreatWarningsAsErrors>$(CI)</TreatWarningsAsErrors>
+    <!-- This is defined in xunit.core.props and Microsoft.NET.Test.Sdk.props, but not yet they are not yet imported. -->
+    <IsTestProject Condition="$(MSBuildProjectName.EndsWith('.Tests'))">true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
+    <EditorConfigFiles Condition="'$(IsTestProject)' != 'true'" Include="$(MSBuildThisFileDirectory)CodeAnalysis.src.globalconfig" />
+    <EditorConfigFiles Condition="'$(IsTestProject)' == 'true'"  Include="$(MSBuildThisFileDirectory)CodeAnalysis.test.globalconfig" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
+    <!-- Enable all latest analyzers and all warning waves -->
+    <AnalysisLevel>latest-all</AnalysisLevel>
+    <WarningLevel>9999</WarningLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
   <PropertyGroup>

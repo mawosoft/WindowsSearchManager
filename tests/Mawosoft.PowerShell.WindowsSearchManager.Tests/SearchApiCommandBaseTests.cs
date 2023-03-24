@@ -2,6 +2,9 @@
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
+// For theory data parameter MockInterfaceChain.
+#pragma warning disable CA1062 // Validate arguments of public methods
+
 [Collection(nameof(NoParallelTests))]
 public class SearchApiCommandBaseTests : CommandTestBase
 {
@@ -26,7 +29,7 @@ public class SearchApiCommandBaseTests : CommandTestBase
             {
                 COMException ex = Assert.Throws<COMException>(action);
                 Assert.Equal(0, ex.HResult);
-                Assert.Contains(MockInterfaceChain.InterfaceNames[chain.NullReferenceIndex], ex.Message);
+                Assert.Contains(MockInterfaceChain.InterfaceNames[chain.NullReferenceIndex], ex.Message, StringComparison.Ordinal);
             }
         }
         else if (chain.ExceptionIndex >= 0)
@@ -73,7 +76,7 @@ public class SearchApiCommandBaseTests : CommandTestBase
     {
         COMException ex = Assert.Throws<COMException>(() => MockCommand.TestEnsureNotNull((ISearchManager)null!));
         Assert.Equal(0, ex.HResult); // special case
-        Assert.Contains(nameof(ISearchManager), ex.Message);
+        Assert.Contains(nameof(ISearchManager), ex.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -109,7 +112,7 @@ public class SearchApiCommandBaseTests : CommandTestBase
     {
         InterfaceChain.WithSearchManager(new MockSearchManager());
         InvalidCastException ex = Assert.Throws<InvalidCastException>(Command.TestGetSearchManager2);
-        Assert.Contains(nameof(ISearchManager2), ex.Message);
+        Assert.Contains(nameof(ISearchManager2), ex.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -129,7 +132,7 @@ public class SearchApiCommandBaseTests : CommandTestBase
     {
         InterfaceChain.WithSearchManager(new MockSearchManager());
         InvalidCastException ex = Assert.Throws<InvalidCastException>(() => Command.TestGetSearchManager2(InterfaceChain.SearchManager));
-        Assert.Contains(nameof(ISearchManager2), ex.Message);
+        Assert.Contains(nameof(ISearchManager2), ex.Message, StringComparison.Ordinal);
     }
 
     [Fact]

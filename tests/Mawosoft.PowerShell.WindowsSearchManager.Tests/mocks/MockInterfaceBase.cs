@@ -1,7 +1,5 @@
 ﻿// Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
@@ -13,7 +11,7 @@ public abstract class MockInterfaceBase
     public class CallInfo
     {
         public string MethodName { get; }
-        public object?[] Parameters { get; }
+        public IReadOnlyCollection<object?> Parameters { get; }
         public CallInfo(string methodName, object?[] parameters)
         {
             MethodName = methodName;
@@ -42,7 +40,7 @@ public abstract class MockInterfaceBase
 
     // Either the default instance of the child interface, null, or an exception to throw if the caller requests a child interface instance.
     // This means the interface method returning the child interface instance (e.g. ISearchManager.GetCatalog) doesn't need to be added to
-    // ExceptionsToThrow and it is possible to force a null value to be returned. The Interface methodt should call GetChildInterface, to
+    // ExceptionsToThrow and it is possible to force a null value to be returned. The Interface method should call GetChildInterface, to
     // obtain the value or trigger an exception.
     internal object? ChildInterface { get; set; }
 
@@ -70,7 +68,7 @@ public abstract class MockInterfaceBase
     {
         if (RecordingDisabled) return;
         parameters ??= new object?[] { null };
-        StackFrame frame = new(1);
+        System.Diagnostics.StackFrame frame = new(1);
         string methodName = frame.GetMethod()?.Name ?? string.Empty;
         RecordedCalls.Add(new CallInfo(methodName, parameters));
         ExceptionInfo? info = ExceptionsToThrow.Find(e => Regex.IsMatch(methodName, e.MethodRegex));
@@ -87,9 +85,10 @@ public abstract class MockInterfaceBase
     // Call to avoid misleading stack frame for Record() due to tail call optimization.
     // Seems to also work w/o the NoInlining option, resulting in 'call Record' followed by 'nop', but
     // just to be on the save side...
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    protected void TailCall() { }
+    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    protected static void TailCall() { }
 
+    [SuppressMessage("Design", "CA1024:Use properties where appropriate", Justification = "Triggers exception.")]
     protected object? GetChildInterface()
     {
         if (ChildInterface is Exception ex) throw ex;
