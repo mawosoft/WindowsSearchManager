@@ -30,8 +30,10 @@
   </ItemGroup>
 
   <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
-    <!-- Enable all latest analyzers and all warning waves -->
+    <!-- Enable all latest analyzers and all warning waves
+         See https://github.com/dotnet/roslyn/issues/63036 -->
     <AnalysisLevel>latest-all</AnalysisLevel>
+    <AnalysisLevelStyle>all</AnalysisLevelStyle>
     <WarningLevel>9999</WarningLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>

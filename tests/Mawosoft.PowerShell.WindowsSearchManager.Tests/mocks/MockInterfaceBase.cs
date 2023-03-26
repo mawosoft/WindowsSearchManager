@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023 Matthias Wolf, Mawosoft.
+// Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
 using System.Text.RegularExpressions;
 
@@ -89,9 +89,5 @@ public abstract class MockInterfaceBase
     protected static void TailCall() { }
 
     [SuppressMessage("Design", "CA1024:Use properties where appropriate", Justification = "Triggers exception.")]
-    protected object? GetChildInterface()
-    {
-        if (ChildInterface is Exception ex) throw ex;
-        return ChildInterface;
-    }
+    protected object? GetChildInterface() => ChildInterface is Exception ex ? throw ex : ChildInterface;
 }

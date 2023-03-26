@@ -12,4 +12,3 @@ global using System.Reflection;
 global using System.Runtime.InteropServices;
 global using SearchAPI;
 global using Xunit;
-global using Xunit.Abstractions;

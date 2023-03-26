@@ -1,11 +1,11 @@
-﻿// Copyright (c) 2023 Matthias Wolf, Mawosoft.
+// Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 public class SearchRootInfoTests
 {
     [Fact]
-    public void ctor_Defaults()
+    public void Ctor_Defaults()
     {
         SearchRootInfo info = new();
         Assert.Equal(8, info.GetType().GetProperties().Length); // + 3x internal
@@ -23,13 +23,13 @@ public class SearchRootInfoTests
     }
 
     [Fact]
-    public void ctor_NullArgument_Throws()
+    public void Ctor_NullArgument_Throws()
     {
         Assert.Throws<ArgumentNullException>("searchRoot", () => new SearchRootInfo(null!));
     }
 
     [Fact]
-    public void ctor_ISearchRoot_Succeeds()
+    public void Ctor_ISearchRoot_Succeeds()
     {
         MockSearchRoot mock = new()
         {

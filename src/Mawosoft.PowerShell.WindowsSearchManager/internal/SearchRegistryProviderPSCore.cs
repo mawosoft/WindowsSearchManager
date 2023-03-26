@@ -12,9 +12,7 @@ internal class SearchRegistryProviderPSCore : SearchRegistryProviderBase, ISearc
     /// <inheritdoc/>
     public IReadOnlyList<string> GetCatalogNames()
     {
-        using (RegistryKey? subkey = Registry.LocalMachine.OpenSubKey(CatalogListWindowsCatalogs))
-        {
-            return subkey?.GetSubKeyNames() ?? Array.Empty<string>();
-        }
+        using RegistryKey? subkey = Registry.LocalMachine.OpenSubKey(CatalogListWindowsCatalogs);
+        return subkey?.GetSubKeyNames() ?? Array.Empty<string>();
     }
 }

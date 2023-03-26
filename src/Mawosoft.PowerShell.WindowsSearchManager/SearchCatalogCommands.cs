@@ -162,7 +162,7 @@ public sealed class UpdateSearchCatalogCommand : SearchApiCommandBase
     public string Catalog { get; set; } = DefaultCatalogName;
 
     private ISearchCatalogManager? _catalogManager;
-    private ISearchCatalogManager CatalogManager { get => _catalogManager ??= GetCatalogManager(Catalog); }
+    private ISearchCatalogManager CatalogManager => _catalogManager ??= GetCatalogManager(Catalog);
 
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Continue after WriteError.")]
     protected override void ProcessRecord()

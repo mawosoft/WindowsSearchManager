@@ -1,54 +1,54 @@
 {
-    "metadata": [
+  "metadata": [
+    {
+      "src": [
         {
-            "src": [
-                {
-                    "files": [ "*.csproj" ],
-                    "src": "../src/Mawosoft.PowerShell.WindowsSearchManager"
-                }
-            ],
-            "dest": "api",
-            "filter": "filter.yml",
-            "noRestore": true
+          "files": [ "*.csproj" ],
+          "src": "../src/Mawosoft.PowerShell.WindowsSearchManager"
         }
       ],
-    "build": {
-        "content": [
-            {
-                "files": [
-                    "reference/*.md",
-                    "reference/toc.yml",
-                    "api/*",
-                    "toc.yml",
-                    "index.md"
-                ],
-                "exclude": [ "api/toc.yml" ]
-            }
-        ],
-        "dest": "_site",
-        "globalMetadata": {
-            "_appTitle": "Windows Search Manager",
-            "_appFooter": "Copyright &copy; 2023 Matthias Wolf, Mawosoft",
-            "_enableSearch": true,
-            "_enableNewTab": true,
-            "_disableBreadcrumb": true,
-            "_disableContribution": true
-        },
-        "globalMetadataFiles": [],
-        "fileMetadataFiles": [],
-        "template": [
-            "default",
-            "templates/custom"
-        ],
-        "xref": [ "xrefmap-SearchAPI.yml" ],
-        "xrefService": [
-            "https://xref.docs.microsoft.com/query?uid={uid}"
-        ],
-        "postProcessors": [],
-        "markdownEngineName": "markdig",
-        "noLangKeyword": false,
-        "keepFileLink": false,
-        "cleanupCacheHistory": true,
-        "disableGitFeatures": false
+      "dest": "api",
+      "filter": "filter.yml",
+      "noRestore": true
     }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "reference/*.md",
+          "reference/toc.yml",
+          "api/*",
+          "toc.yml",
+          "index.md"
+        ],
+        "exclude": [ "api/toc.yml" ]
+      }
+    ],
+    "dest": "_site",
+    "globalMetadata": {
+      "_appTitle": "Windows Search Manager",
+      "_appFooter": "Copyright &copy; 2023 Matthias Wolf, Mawosoft",
+      "_enableSearch": true,
+      "_enableNewTab": true,
+      "_disableBreadcrumb": true,
+      "_disableContribution": true
+    },
+    "globalMetadataFiles": [],
+    "fileMetadataFiles": [],
+    "template": [
+      "default",
+      "templates/custom"
+    ],
+    "xref": [ "xrefmap-SearchAPI.yml" ],
+    "xrefService": [
+      "https://xref.docs.microsoft.com/query?uid={uid}"
+    ],
+    "postProcessors": [],
+    "markdownEngineName": "markdig",
+    "noLangKeyword": false,
+    "keepFileLink": false,
+    "cleanupCacheHistory": true,
+    "disableGitFeatures": false
+  }
 }

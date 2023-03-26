@@ -1,36 +1,25 @@
-# editorconfig.org
-# https://github.com/dotnet/runtime/blob/master/.editorconfig
-# last commit 23.03.2021
-# Customized: file_header_template (line ~176)
-# Customized: notes on max_line_length added
-
-# max_line_length for common use cases:
-#   - VStudio 2 side-by-side: 115
-#   - GitHub:                 175
-#   - .NET Source Browser:    150
-
-# top-most EditorConfig file
+# top-most .editorconfig file
 root = true
 
-# Default settings:
-# A newline ending every file
-# Use 4 spaces as indentation
+# Defaults
 [*]
-insert_final_newline = true
 indent_style = space
 indent_size = 4
 trim_trailing_whitespace = true
-
-[project.json]
-indent_size = 2
+insert_final_newline = true
+end_of_line = crlf
+charset = utf-8
 
 # Generated code
-[*{_AssemblyInfo.cs,.notsupported.cs}]
+[*{_AssemblyInfo.cs,.notsupported.cs,AsmOffsets.cs}]
 generated_code = true
 
 # C# files
 [*.cs]
-# New line preferences
+# IDE0073 file header
+file_header_template = Copyright (c) 2023 Matthias Wolf, Mawosoft.
+
+# IDE0055 New line preferences
 csharp_new_line_before_open_brace = all
 csharp_new_line_before_else = true
 csharp_new_line_before_catch = true
@@ -39,7 +28,7 @@ csharp_new_line_before_members_in_object_initializers = true
 csharp_new_line_before_members_in_anonymous_types = true
 csharp_new_line_between_query_expression_clauses = true
 
-# Indentation preferences
+# IDE0055 Indentation preferences
 csharp_indent_block_contents = true
 csharp_indent_braces = false
 csharp_indent_case_contents = true
@@ -47,21 +36,168 @@ csharp_indent_case_contents_when_block = true
 csharp_indent_switch_labels = true
 csharp_indent_labels = one_less_than_current
 
+# IDE0055 Space preferences
+csharp_space_after_cast = false
+csharp_space_after_colon_in_inheritance_clause = true
+csharp_space_after_comma = true
+csharp_space_after_dot = false
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_after_semicolon_in_for_statement = true
+csharp_space_around_binary_operators = before_and_after
+# TODO vstudio and doc has false as default, do_not_ignore is not documented
+csharp_space_around_declaration_statements = do_not_ignore
+csharp_space_before_colon_in_inheritance_clause = true
+csharp_space_before_comma = false
+csharp_space_before_dot = false
+csharp_space_before_open_square_brackets = false
+csharp_space_before_semicolon_in_for_statement = false
+csharp_space_between_empty_square_brackets = false
+csharp_space_between_method_call_empty_parameter_list_parentheses = false
+csharp_space_between_method_call_name_and_opening_parenthesis = false
+csharp_space_between_method_call_parameter_list_parentheses = false
+csharp_space_between_method_declaration_empty_parameter_list_parentheses = false
+csharp_space_between_method_declaration_name_and_open_parenthesis = false
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+csharp_space_between_parentheses = false
+csharp_space_between_square_brackets = false
+
+# IDE0055 Wrapping preferences
+# TODO default is true for both
+# TODO runtime has them as true:none, false:none
+# (:none is not supported here and probably falls back to default)
+csharp_preserve_single_line_blocks = true
+csharp_preserve_single_line_statements = true
+
+# (IDE0055) Organize usings
+# Docs list them as IDE0055, but they are not affected by severity.
+dotnet_separate_import_directive_groups = false
+dotnet_sort_system_directives_first = true
+
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/
+# Some IDE rules are *never* enforced during build, but severity will affect VStudio. See:
+# https://github.com/dotnet/roslyn/blob/87b5be1d9314398c2db4029580281d62be71fdba/src/Analyzers/Core/Analyzers/EnforceOnBuildValues.cs#L120
+# We will use the colon notation <value>:<severity> for these cases only.
+
+# TODO we may want to move severity into the src/test configs?
+# If severity is not specified here, the default global style setting is used (warning).
+# TODO also PERF editorconfig is evaluated per document, globalconfig once per project.
+
+# Language rules
+
+# IDE0003/IDE0009 this. and Me. preferences
+dotnet_style_qualification_for_event = false:warning
+dotnet_style_qualification_for_field = false:warning
+dotnet_style_qualification_for_method = false:warning
+dotnet_style_qualification_for_property = false:warning
+
+# IDE0049 Language keywords vs BCL types preferences
+dotnet_style_predefined_type_for_locals_parameters_members = true:warning
+dotnet_style_predefined_type_for_member_access = true:warning
+
 # Modifier preferences
-csharp_preferred_modifier_order = public,private,protected,internal,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,volatile,async:suggestion
+# IDE0036,IDE0040,IDE0044,IDE0062,IDE0064
+csharp_preferred_modifier_order = public,private,protected,internal,file,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,required,volatile,async
+dotnet_style_require_accessibility_modifiers = for_non_interface_members
+dotnet_style_readonly_field = true
+csharp_prefer_static_local_function = true
 
-# avoid this. unless absolutely necessary
-dotnet_style_qualification_for_field = false:suggestion
-dotnet_style_qualification_for_property = false:suggestion
-dotnet_style_qualification_for_method = false:suggestion
-dotnet_style_qualification_for_event = false:suggestion
+# IDE0047/IDE0048 Parentheses preferences
+dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity
+dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity
+dotnet_style_parentheses_in_other_binary_operators = always_for_clarity
+dotnet_style_parentheses_in_other_operators = never_if_unnecessary
 
-# Types: use keywords instead of BCL types, and permit var only when the type is clear
-csharp_style_var_for_built_in_types = false:suggestion
-csharp_style_var_when_type_is_apparent = false:none
-csharp_style_var_elsewhere = false:suggestion
-dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
-dotnet_style_predefined_type_for_member_access = true:suggestion
+# Expression-level preferences
+# IDE0010,IDE0017,IDE0018,IDE0028,IDE0032,IDE0033,IDE0037,IDE0039,IDE0042,IDE0045,IDE0046,IDE0054,
+# IDE0056,IDE0057,IDE0070,IDE0071,IDE0072,IDE0074,IDE0075,IDE0082,IDE0090
+dotnet_style_object_initializer = true
+csharp_style_inlined_variable_declaration = true
+dotnet_style_collection_initializer = true
+dotnet_style_prefer_auto_properties = true
+dotnet_style_explicit_tuple_names = true
+csharp_prefer_simple_default_expression = true
+dotnet_style_prefer_inferred_tuple_names = true
+dotnet_style_prefer_inferred_anonymous_type_member_names = true
+csharp_style_prefer_local_over_anonymous_function = true
+csharp_style_deconstructed_variable_declaration = true
+dotnet_style_prefer_conditional_expression_over_assignment = true
+dotnet_style_prefer_conditional_expression_over_return = true
+dotnet_style_prefer_compound_assignment = true
+csharp_style_prefer_index_operator = true
+csharp_style_prefer_range_operator = true
+dotnet_style_prefer_simplified_interpolation = true
+dotnet_style_prefer_simplified_boolean_expressions = true
+csharp_style_implicit_object_creation_when_type_is_apparent = true
+csharp_style_prefer_tuple_swap = true
+
+# IDE0160/IDE0161 Namespace preferences
+csharp_style_namespace_declarations = file_scoped
+
+# Null-checking preference
+# IDE0016,IDE0029/IDE0030,IDE0031,IDE0041,IDE0150,IDE1005
+csharp_style_throw_expression = true
+dotnet_style_coalesce_expression = true
+dotnet_style_null_propagation = true
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true
+csharp_style_prefer_null_check_over_type_check = true
+csharp_style_conditional_delegate_call = true
+
+# IDE0007/IDE0008 var preferences
+csharp_style_var_for_built_in_types = false
+csharp_style_var_when_type_is_apparent = false
+csharp_style_var_elsewhere = false
+
+# Expression-bodied-members
+# IDE0021-IDE0027,IDE0053,IDE0061
+csharp_style_expression_bodied_constructors = true
+csharp_style_expression_bodied_methods = true
+csharp_style_expression_bodied_operators = true
+csharp_style_expression_bodied_properties = true
+csharp_style_expression_bodied_indexers = true
+csharp_style_expression_bodied_accessors = true
+csharp_style_expression_bodied_lambdas = true
+csharp_style_expression_bodied_local_functions = true
+
+# Pattern matching preferences
+# IDE0019,IDE0020/IDE0038,IDE0066,IDE0078,IDE0170
+csharp_style_pattern_matching_over_as_with_null_check = true
+csharp_style_pattern_matching_over_is_with_cast_check = true
+csharp_style_prefer_switch_expression = true
+csharp_style_prefer_pattern_matching = true
+csharp_style_prefer_not_pattern = true
+csharp_style_prefer_extended_property_pattern = true
+
+# IDE0011,IDE0063 Code block preferences
+csharp_prefer_braces = true
+csharp_prefer_simple_using_statement = true
+
+# IDE0065 using directive placement
+csharp_using_directive_placement = outside_namespace
+
+# IDE0130 Namespace does not match folder structure
+dotnet_style_namespace_match_folder = true
+dotnet_diagnostic.IDE0130.severity = silent
+
+# Unnecessary code rules
+# IDE0001,IDE0002,IDE0004,IDE0005,(IDE0035),(IDE0051),IDE0052,IDE0058,IDE0059,IDE0060,IDE0079,
+# IDE0080,IDE0100,IDE0110
+csharp_style_unused_value_expression_statement_preference = discard_variable
+csharp_style_unused_value_assignment_preference = discard_variable
+dotnet_code_quality_unused_parameters = all
+dotnet_remove_unnecessary_suppression_exclusions = none
+
+# IDE0076, IDE0077 Miscellaneous rules
+# (only via rule severity)
+
+# TODO Not properly documented rules
+
+
+# TODO IDE1006 Naming rules
+# The global default is warning in 'all' and 'recommended' configs. This overides all values on
+# dotnet_naming_rule.<rulename>.severity. Individual values only have an effect if IDE1006.severity
+# is *not* defined at all.
+
+## from dotnet/runtime
 
 # name all constant fields using PascalCase
 dotnet_naming_rule.constant_fields_should_be_pascal_case.severity = suggestion
@@ -90,102 +226,64 @@ dotnet_naming_symbols.private_internal_fields.applicable_accessibilities = priva
 dotnet_naming_style.camel_case_underscore_style.required_prefix = _
 dotnet_naming_style.camel_case_underscore_style.capitalization = camel_case
 
-# Code style defaults
-csharp_using_directive_placement = outside_namespace:suggestion
-dotnet_sort_system_directives_first = true
-csharp_prefer_braces = true:silent
-csharp_preserve_single_line_blocks = true:none
-csharp_preserve_single_line_statements = false:none
-csharp_prefer_static_local_function = true:suggestion
-csharp_prefer_simple_using_statement = false:none
-csharp_style_prefer_switch_expression = true:suggestion
+## from vstudio exported
 
-# Code quality
-dotnet_style_readonly_field = true:suggestion
-dotnet_code_quality_unused_parameters = non_public:suggestion
+# Naming rules
 
-# Expression-level preferences
-dotnet_style_object_initializer = true:suggestion
-dotnet_style_collection_initializer = true:suggestion
-dotnet_style_explicit_tuple_names = true:suggestion
-dotnet_style_coalesce_expression = true:suggestion
-dotnet_style_null_propagation = true:suggestion
-dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
-dotnet_style_prefer_inferred_tuple_names = true:suggestion
-dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
-dotnet_style_prefer_auto_properties = true:suggestion
-dotnet_style_prefer_conditional_expression_over_assignment = true:silent
-dotnet_style_prefer_conditional_expression_over_return = true:silent
-csharp_prefer_simple_default_expression = true:suggestion
+dotnet_naming_rule.interface_should_be_begins_with_i.severity = suggestion
+dotnet_naming_rule.interface_should_be_begins_with_i.symbols = interface
+dotnet_naming_rule.interface_should_be_begins_with_i.style = begins_with_i
 
-# Expression-bodied members
-csharp_style_expression_bodied_methods = true:silent
-csharp_style_expression_bodied_constructors = true:silent
-csharp_style_expression_bodied_operators = true:silent
-csharp_style_expression_bodied_properties = true:silent
-csharp_style_expression_bodied_indexers = true:silent
-csharp_style_expression_bodied_accessors = true:silent
-csharp_style_expression_bodied_lambdas = true:silent
-csharp_style_expression_bodied_local_functions = true:silent
+dotnet_naming_rule.types_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.types_should_be_pascal_case.symbols = types
+dotnet_naming_rule.types_should_be_pascal_case.style = pascal_case
 
-# Pattern matching
-csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
-csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
-csharp_style_inlined_variable_declaration = true:suggestion
+dotnet_naming_rule.non_field_members_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.non_field_members_should_be_pascal_case.symbols = non_field_members
+dotnet_naming_rule.non_field_members_should_be_pascal_case.style = pascal_case
 
-# Null checking preferences
-csharp_style_throw_expression = true:suggestion
-csharp_style_conditional_delegate_call = true:suggestion
+# Symbol specifications
 
-# Other features
-csharp_style_prefer_index_operator = false:none
-csharp_style_prefer_range_operator = false:none
-csharp_style_pattern_local_over_anonymous_function = false:none
+dotnet_naming_symbols.interface.applicable_kinds = interface
+dotnet_naming_symbols.interface.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.interface.required_modifiers = 
 
-# Space preferences
-csharp_space_after_cast = false
-csharp_space_after_colon_in_inheritance_clause = true
-csharp_space_after_comma = true
-csharp_space_after_dot = false
-csharp_space_after_keywords_in_control_flow_statements = true
-csharp_space_after_semicolon_in_for_statement = true
-csharp_space_around_binary_operators = before_and_after
-csharp_space_around_declaration_statements = do_not_ignore
-csharp_space_before_colon_in_inheritance_clause = true
-csharp_space_before_comma = false
-csharp_space_before_dot = false
-csharp_space_before_open_square_brackets = false
-csharp_space_before_semicolon_in_for_statement = false
-csharp_space_between_empty_square_brackets = false
-csharp_space_between_method_call_empty_parameter_list_parentheses = false
-csharp_space_between_method_call_name_and_opening_parenthesis = false
-csharp_space_between_method_call_parameter_list_parentheses = false
-csharp_space_between_method_declaration_empty_parameter_list_parentheses = false
-csharp_space_between_method_declaration_name_and_open_parenthesis = false
-csharp_space_between_method_declaration_parameter_list_parentheses = false
-csharp_space_between_parentheses = false
-csharp_space_between_square_brackets = false
+dotnet_naming_symbols.types.applicable_kinds = class, struct, interface, enum
+dotnet_naming_symbols.types.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.types.required_modifiers = 
 
-# Analyzers
-dotnet_code_quality.CA1052.api_surface = private, internal
-dotnet_code_quality.CA1802.api_surface = private, internal
-dotnet_code_quality.CA1822.api_surface = private, internal
-dotnet_code_quality.CA2208.api_surface = public
+dotnet_naming_symbols.non_field_members.applicable_kinds = property, event, method
+dotnet_naming_symbols.non_field_members.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.non_field_members.required_modifiers = 
 
-# License header
-file_header_template = Copyright (c) 2023 Matthias Wolf, Mawosoft.
+# Naming styles
 
-# C++ Files
+dotnet_naming_style.pascal_case.required_prefix = 
+dotnet_naming_style.pascal_case.required_suffix = 
+dotnet_naming_style.pascal_case.word_separator = 
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+
+dotnet_naming_style.begins_with_i.required_prefix = I
+dotnet_naming_style.begins_with_i.required_suffix = 
+dotnet_naming_style.begins_with_i.word_separator = 
+dotnet_naming_style.begins_with_i.capitalization = pascal_case
+
+# C++ files
 [*.{cpp,h,in}]
 curly_bracket_next_line = true
 indent_brace_style = Allman
 
-# Xml project files
-[*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,nativeproj,locproj}]
+# Json files
+[*.json]
 indent_size = 2
 
-[*.{csproj,vbproj,proj,nativeproj,locproj}]
-charset = utf-8
+# Markdown files
+[*.md]
+indent_size = 2
+
+# Xml project files
+[*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,msbuildproj,nativeproj,locproj}]
+indent_size = 2
 
 # Xml build files
 [*.builds]
@@ -206,5 +304,3 @@ indent_size = 2
 # Shell scripts
 [*.sh]
 end_of_line = lf
-[*.{cmd,bat}]
-end_of_line = crlf

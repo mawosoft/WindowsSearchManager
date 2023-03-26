@@ -1,11 +1,11 @@
-﻿// Copyright (c) 2023 Matthias Wolf, Mawosoft.
+// Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 public class SearchCatalogInfoTests
 {
     [Fact]
-    public void ctor_Defaults()
+    public void Ctor_Defaults()
     {
         SearchCatalogInfo info = new();
         Assert.Equal(11, info.GetType().GetProperties().Length);
@@ -23,7 +23,7 @@ public class SearchCatalogInfoTests
     }
 
     [Fact]
-    public void ctor_NullArgument_Throws()
+    public void Ctor_NullArgument_Throws()
     {
         Assert.Throws<ArgumentNullException>("searchCatalog", () => new SearchCatalogInfo(null!));
     }
@@ -31,7 +31,7 @@ public class SearchCatalogInfoTests
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public void ctor_ISearchCatalogManager_Succeeds(bool adminMode)
+    public void Ctor_ISearchCatalogManager_Succeeds(bool adminMode)
     {
         MockCatalogManager mock = new()
         {

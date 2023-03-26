@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023 Matthias Wolf, Mawosoft.
+// Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
@@ -17,7 +17,7 @@ public class MockInterfaceChain
     public MockCatalogManager CatalogManager { get; private set; }
     public MockCrawlScopeManager ScopeManager { get; private set; }
 
-    public string CatalogName { get => CatalogManager.NameInternal; }
+    public string CatalogName => CatalogManager.NameInternal;
 
     public ExceptionParam ExceptionParam { get; private set; }
 
