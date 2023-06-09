@@ -11,16 +11,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageVersion Include="coverlet.collector" Version="3.2.0" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.0" />
     <PackageVersion Include="docfx" Version="2.63.1" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
     <PackageVersion Include="Microsoft.PowerShell.5.1.ReferenceAssemblies" Version="1.0.0" />
-    <PackageVersion Include="Microsoft.PowerShell.SDK" Version="7.2.10" />
+    <PackageVersion Include="Microsoft.PowerShell.SDK" Version="7.2.11" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     <PackageVersion Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageVersion Include="platyPS" Version="0.14.2" />
     <PackageVersion Include="PowerShellStandard.Library" Version="5.1.1" />
-    <PackageVersion Include="System.Management.Automation" Version="7.2.10" />
+    <PackageVersion Include="System.Management.Automation" Version="7.2.11" />
     <PackageVersion Include="System.ServiceProcess.ServiceController" Version="7.0.0" />
     <PackageVersion Include="xunit" Version="2.4.2" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.5" />
