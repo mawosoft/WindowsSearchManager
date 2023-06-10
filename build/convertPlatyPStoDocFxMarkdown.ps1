@@ -120,7 +120,7 @@ class HelpConverter {
         while ($lines.Count -gt 0 -and -not $lines.Peek().StartsWith('# ', [StringComparison]::Ordinal)) {
             $lines.Dequeue()
         }
-        if ($lines.Count -eq 0) { throw "Level 1 header not found" }
+        if ($lines.Count -eq 0) { throw 'Level 1 header not found' }
         $this.DocfxMarkdown.AppendLine($lines.Dequeue()).AppendLine()
         # Convert help sections. Each section starts with a level 2 header
         for (; ; ) {
@@ -475,11 +475,15 @@ if ($cmdlets -and $cmdlets[0].ModuleName) {
     $moduleName = $cmdlets[0].ModuleName
 }
 [ArrayList]$lines = @(
-    "- name: $moduleName", '  href: index.md', '  items:',
+    '### YamlMime:TableOfContent'
+    'items:'
+    "- name: $moduleName"
+    '  href: index.md'
+    '  items:'
     ($cmdlets | Sort-Object Name).TocItem
 )
 foreach ($toc in $AdditionalTocPath) {
-    $lines.AddRange((Get-Content $toc))
+    $lines.AddRange((Get-Content $toc).Where({ $_[0] -ceq '-' -or $_[0] -ceq ' ' }))
 }
 $lines | Update-Content -Path (Join-Path $Destination 'toc.yml')
 
