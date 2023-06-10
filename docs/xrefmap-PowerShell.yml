@@ -1,0 +1,11 @@
+### YamlMime:XRefMap
+# This should work automatically even with xrefservice dropped, but doesn't.
+baseUrl: https://learn.microsoft.com/dotnet/api/
+sorted: false # if true and not exactly sorted as DocFx expects, some xrefs will not resolve.
+references:
+- uid: System.Management.Automation.SwitchParameter
+  name: SwitchParameter
+  href: System.Management.Automation.SwitchParameter
+  commentId: T:System.Management.Automation.SwitchParameter
+  fullName: System.Management.Automation.SwitchParameter
+  nameWithType: SwitchParameter
