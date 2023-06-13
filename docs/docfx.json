@@ -3,7 +3,9 @@
     {
       "src": [
         {
-          "files": [ "*.csproj" ],
+          "files": [
+            "*.csproj"
+          ],
           "src": "../src/Mawosoft.PowerShell.WindowsSearchManager"
         }
       ],
@@ -22,7 +24,9 @@
           "toc.yml",
           "index.md"
         ],
-        "exclude": [ "api/toc.yml" ]
+        "exclude": [
+          "api/toc.yml"
+        ]
       }
     ],
     "dest": "_site",
@@ -40,9 +44,9 @@
       "default",
       "templates/custom"
     ],
-    "xref": [ "xrefmap-SearchAPI.yml" ],
-    "xrefService": [
-      "https://xref.docs.microsoft.com/query?uid={uid}"
+    "xref": [
+      "xrefmap-SearchAPI.yml",
+      "xrefmap-PowerShell.yml"
     ],
     "postProcessors": [],
     "markdownEngineName": "markdig",
