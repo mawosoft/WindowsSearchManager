@@ -27,8 +27,8 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
-    <PackageReference Update="Microsoft.PowerShell.SDK" VersionOverride="7.3.4" />
-    <PackageReference Update="System.Management.Automation" VersionOverride="7.3.4" />
+    <PackageReference Update="Microsoft.PowerShell.SDK" VersionOverride="7.3.6" />
+    <PackageReference Update="System.Management.Automation" VersionOverride="7.3.6" />
   </ItemGroup>
 
   <ItemGroup>
