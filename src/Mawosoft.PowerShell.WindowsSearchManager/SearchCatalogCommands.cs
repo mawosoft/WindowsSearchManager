@@ -18,7 +18,7 @@ public sealed class GetSearchCatalogCommand : SearchApiCommandBase
     {
         ISearchManager manager = CreateSearchManager();
         IEnumerable<string> catalogs;
-        if (Catalog != null)
+        if (Catalog is not null)
         {
             catalogs = new[] { Catalog };
         }
@@ -247,7 +247,7 @@ public sealed class NewSearchCatalogCommand : SearchApiCommandBase
 
     protected override void EndProcessing()
     {
-        if (Catalog != null && ShouldProcess(Catalog))
+        if (Catalog is not null && ShouldProcess(Catalog))
         {
             ISearchManager2 manager = GetSearchManager2();
             try
@@ -275,7 +275,7 @@ public sealed class RemoveSearchCatalogCommand : SearchApiCommandBase
 
     protected override void EndProcessing()
     {
-        if (Catalog != null && ShouldProcess(Catalog))
+        if (Catalog is not null && ShouldProcess(Catalog))
         {
             ISearchManager2 manager = GetSearchManager2();
             try

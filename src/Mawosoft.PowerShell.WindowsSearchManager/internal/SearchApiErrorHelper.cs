@@ -77,7 +77,7 @@ internal static class SearchApiErrorHelper
         // Don't bother if the facility code isn't FACILITY_ITF (4).
         if ((comException.HResult >> 16 & 0x1FFF) != 4) return false;
         message = GetMessageFromHResult(comException.HResult)!;
-        return message != null;
+        return message is not null;
     }
 
     /// <summary>

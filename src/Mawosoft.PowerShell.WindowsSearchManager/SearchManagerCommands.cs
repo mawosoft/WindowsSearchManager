@@ -103,7 +103,7 @@ public sealed class SetSearchManagerCommand : SearchApiCommandBase
             info.ProxyAccess = ProxyAccess;
             setProxy = true;
         }
-        if (ProxyName != null)
+        if (ProxyName is not null)
         {
             info.ProxyName = ProxyName;
             setProxy = true;
@@ -118,14 +118,14 @@ public sealed class SetSearchManagerCommand : SearchApiCommandBase
             info.ProxyBypassLocal = ProxyBypassLocal;
             setProxy = true;
         }
-        if (ProxyBypassList != null)
+        if (ProxyBypassList is not null)
         {
             info.ProxyBypassList = string.Join(",", ProxyBypassList);
             setProxy = true;
         }
 
         string target = string.Empty;
-        if (UserAgent != null)
+        if (UserAgent is not null)
         {
             setUserAgent = true;
             target += string.Format(SR.Culture, SR.SetUserAgent, UserAgent);

@@ -26,7 +26,7 @@ public class CommandTestBase
         foreach (Type t in typeof(SearchApiCommandBase).Assembly.GetTypes())
         {
             CmdletAttribute? a = t.GetCustomAttribute<CmdletAttribute>();
-            if (a != null)
+            if (a is not null)
             {
                 iss.Commands.Add(new SessionStateCmdletEntry($"{a.VerbName}-{a.NounName}", t, null));
             }

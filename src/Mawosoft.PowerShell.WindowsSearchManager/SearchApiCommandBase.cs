@@ -48,7 +48,7 @@ public abstract class SearchApiCommandBase : PSCmdlet
 
     protected ISearchCatalogManager GetCatalogManager(ISearchManager searchManager, string catalogName)
     {
-        if (searchManager == null) throw new ArgumentNullException(nameof(searchManager));
+        if (searchManager is null) throw new ArgumentNullException(nameof(searchManager));
         if (string.IsNullOrWhiteSpace(catalogName)) throw new ArgumentException(null, nameof(catalogName));
         try
         {
@@ -66,7 +66,7 @@ public abstract class SearchApiCommandBase : PSCmdlet
 
     protected ISearchCrawlScopeManager GetCrawlScopeManager(ISearchCatalogManager catalogManager)
     {
-        if (catalogManager == null) throw new ArgumentNullException(nameof(catalogManager));
+        if (catalogManager is null) throw new ArgumentNullException(nameof(catalogManager));
         try
         {
             return EnsureNotNull(catalogManager.GetCrawlScopeManager());
@@ -81,7 +81,7 @@ public abstract class SearchApiCommandBase : PSCmdlet
     // Helper for commands that modify the scope manager.
     protected void SaveCrawlScopeManager(ISearchCrawlScopeManager? scopeManager)
     {
-        if (scopeManager == null) return;
+        if (scopeManager is null) return;
         try
         {
             scopeManager.SaveAll();

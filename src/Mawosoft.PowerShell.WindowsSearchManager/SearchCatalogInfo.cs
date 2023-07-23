@@ -25,7 +25,7 @@ public sealed class SearchCatalogInfo : ICloneable
 
     internal SearchCatalogInfo(ISearchCatalogManager searchCatalog)
     {
-        if (searchCatalog == null) throw new ArgumentNullException(nameof(searchCatalog));
+        if (searchCatalog is null) throw new ArgumentNullException(nameof(searchCatalog));
 
         Catalog = searchCatalog.Name;
         ConnectTimeout = searchCatalog.ConnectTimeout;

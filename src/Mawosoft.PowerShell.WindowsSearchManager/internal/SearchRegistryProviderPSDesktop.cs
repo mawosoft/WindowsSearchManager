@@ -51,7 +51,7 @@ internal class SearchRegistryProviderPSDesktop : SearchRegistryProviderBase, ISe
         object? subkey = r.OpenSubKey.Invoke(r.LocalMachine, r.CatalogListWindowsCatalogs);
         try
         {
-            if (subkey != null && r.GetSubKeyNames.Invoke(subkey, null) is IReadOnlyList<string> names)
+            if (subkey is not null && r.GetSubKeyNames.Invoke(subkey, null) is IReadOnlyList<string> names)
             {
                 return names;
             }

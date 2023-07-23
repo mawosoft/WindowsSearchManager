@@ -43,7 +43,7 @@ public class MockInterfaceChain
         _ => throw new ArgumentOutOfRangeException(nameof(index), index, "Expected: 0 <= index <= 3")
     };
 
-    public override string? ToString() => ExceptionParam.Exception == null
+    public override string? ToString() => ExceptionParam.Exception is null
             ? nameof(MockInterfaceChain)
             : $"{nameof(MockInterfaceChain)} with {ExceptionParam} for {InterfaceNames[Math.Max(NullReferenceIndex, ExceptionIndex)]}";
 
@@ -72,7 +72,7 @@ public class MockInterfaceChain
 
     public MockInterfaceChain WithNullReference(int index)
     {
-        if (ExceptionParam.Exception != null)
+        if (ExceptionParam.Exception is not null)
         {
             throw new InvalidOperationException("NullReference or Exception already initialized");
         }
@@ -92,7 +92,7 @@ public class MockInterfaceChain
 
     public MockInterfaceChain WithException(int index, ExceptionParam exceptionParam)
     {
-        if (ExceptionParam.Exception != null)
+        if (ExceptionParam.Exception is not null)
         {
             throw new InvalidOperationException("NullReference or Exception already initialized");
         }
@@ -105,15 +105,15 @@ public class MockInterfaceChain
     public void EnableRecording(bool enable)
     {
         bool disabled = !enable;
-        if (Factory != null) Factory.RecordingDisabled = disabled;
+        if (Factory is not null) Factory.RecordingDisabled = disabled;
         for (int i = 1; i < Count; i++) this[i].RecordingDisabled = disabled;
         SearchManager.CatalogManagers.ForEach(c => c.RecordingDisabled = disabled);
     }
 
     public bool HasRecordings()
     {
-        if (Factory != null && Factory.RecordedCalls.Count > 0) return true;
+        if (Factory is not null && Factory.RecordedCalls.Count > 0) return true;
         for (int i = 1; i < Count; i++) if (this[i].RecordedCalls.Count > 0) return true;
-        return SearchManager.CatalogManagers.Find(c => c.RecordedCalls.Count > 0) != null;
+        return SearchManager.CatalogManagers.Find(c => c.RecordedCalls.Count > 0) is not null;
     }
 }

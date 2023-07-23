@@ -53,7 +53,7 @@ public class MockSearchManager : MockInterfaceBase, ISearchManager
     {
         Record(pszCatalog);
         object? catalog = GetChildInterface();
-        if (catalog == null || CatalogManagers.Count == 0)
+        if (catalog is null || CatalogManagers.Count == 0)
         {
             return (catalog as ISearchCatalogManager)!;
         }

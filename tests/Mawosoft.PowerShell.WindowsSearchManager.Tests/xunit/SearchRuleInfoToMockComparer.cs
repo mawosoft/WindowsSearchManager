@@ -12,19 +12,19 @@ public class SearchRuleInfoToMockComparer : IEqualityComparer, IEqualityComparer
     public new bool Equals(object? x, object? y)
     {
         if (ReferenceEquals(x, y)) return true;
-        if (x == null || y == null) return false;
+        if (x is null || y is null) return false;
         SearchRuleInfo? info;
         MockSearchScopeRule? mock;
-        if ((info = x as SearchRuleInfo) == null)
+        if ((info = x as SearchRuleInfo) is null)
         {
-            if ((info = y as SearchRuleInfo) == null) return x.Equals(y);
+            if ((info = y as SearchRuleInfo) is null) return x.Equals(y);
             mock = x as MockSearchScopeRule;
         }
         else
         {
             mock = y as MockSearchScopeRule;
         }
-        if (mock == null) return x.Equals(y);
+        if (mock is null) return x.Equals(y);
 
         if (mock.PatternOrURL != info.Path) return false;
         if ((mock.IsIncluded == 0 ? SearchRuleInfo.SearchRuleType.Exclude : SearchRuleInfo.SearchRuleType.Include) != info.RuleType) return false;

@@ -22,12 +22,12 @@ public sealed class GetSearchRootCommand : SearchApiCommandBase
         try
         {
             IEnumSearchRoots? roots = scope.EnumerateRoots();
-            if (roots == null) return; // null -> none
+            if (roots is null) return; // null -> none
             for (; ; )
             {
                 uint fetched = 0;
                 roots.Next(1, out CSearchRoot root, ref fetched);
-                if (fetched != 1 || root == null) break;
+                if (fetched != 1 || root is null) break;
                 if (PathOnly)
                 {
                     WriteObject(root.RootURL);

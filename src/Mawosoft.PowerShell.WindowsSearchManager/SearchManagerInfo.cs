@@ -22,7 +22,7 @@ public sealed class SearchManagerInfo : ICloneable
 
     internal SearchManagerInfo(ISearchManager searchManager)
     {
-        if (searchManager == null) throw new ArgumentNullException(nameof(searchManager));
+        if (searchManager is null) throw new ArgumentNullException(nameof(searchManager));
 
         searchManager.GetIndexerVersionStr(out string version);
         Version = version;

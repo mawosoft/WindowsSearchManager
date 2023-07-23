@@ -15,7 +15,7 @@ public class SearchCatalogCommandsTests : CommandTestBase
         List<MockCatalogManager> expected = searchManager.CatalogManagers;
         InterfaceChain.Factory.SearchRegistryProvider.CatalogNames = searchManager.CatalogManagers.ConvertAll(c => c.NameInternal);
         string script = "Get-SearchCatalog ";
-        if (catalogName != null)
+        if (catalogName is not null)
         {
             if (!positional) script += "-Catalog ";
             script += $"'{catalogName}' ";

@@ -13,7 +13,7 @@ public struct ExceptionParam
     public Exception Exception { get; }
     public ExceptionParam(Exception exception) => Exception = exception;
     public bool IsSearchApi => Exception is COMException && SearchApiHResults.Contains(Exception.HResult);
-    public override string? ToString() => Exception == null
+    public override string? ToString() => Exception is null
         ? null
         : $"{Exception.GetType().Name}(0x{Exception.HResult:X8}{(IsSearchApi ? ",SearchApi" : "")})";
 }
