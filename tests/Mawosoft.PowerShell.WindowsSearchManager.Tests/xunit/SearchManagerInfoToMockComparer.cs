@@ -12,19 +12,19 @@ public class SearchManagerInfoToMockComparer : IEqualityComparer, IEqualityCompa
     public new bool Equals(object? x, object? y)
     {
         if (ReferenceEquals(x, y)) return true;
-        if (x == null || y == null) return false;
+        if (x is null || y is null) return false;
         SearchManagerInfo? info;
         MockSearchManager? mock;
-        if ((info = x as SearchManagerInfo) == null)
+        if ((info = x as SearchManagerInfo) is null)
         {
-            if ((info = y as SearchManagerInfo) == null) return x.Equals(y);
+            if ((info = y as SearchManagerInfo) is null) return x.Equals(y);
             mock = x as MockSearchManager;
         }
         else
         {
             mock = y as MockSearchManager;
         }
-        if (mock == null) return x.Equals(y);
+        if (mock is null) return x.Equals(y);
 
         if (mock.IndexerVersionStrInternal != info.Version) return false;
         if (mock.VersionInternal.Major != info.MajorVersion) return false;

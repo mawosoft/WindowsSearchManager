@@ -11,7 +11,7 @@ public class ShallowFieldComparer : IEqualityComparer, IEqualityComparer<object>
     public new bool Equals(object? x, object? y)
     {
         if (ReferenceEquals(x, y)) return true;
-        if (x == null || y == null) return false;
+        if (x is null || y is null) return false;
         Type t = x.GetType();
         if (t != y.GetType()) return false;
         FieldInfo[] fields = t.GetFields(BindingFlags.Public
@@ -21,12 +21,12 @@ public class ShallowFieldComparer : IEqualityComparer, IEqualityComparer<object>
         {
             object? fx = field.GetValue(x);
             object? fy = field.GetValue(y);
-            if (fx != null)
+            if (fx is not null)
             {
-                if (fy == null) return false;
+                if (fy is null) return false;
                 if (!fx.Equals(fy)) return false;
             }
-            else if (fy != null)
+            else if (fy is not null)
             {
                 return false;
             }

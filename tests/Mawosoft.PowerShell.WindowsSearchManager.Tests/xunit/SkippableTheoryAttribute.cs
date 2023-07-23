@@ -8,6 +8,6 @@ public class SkippableTheoryAttribute : TheoryAttribute
     {
         string? s = SkipCondition.Evaluate(skipconditions);
         // Don't overwrite user-set Skip with null.
-        if (s != null) Skip = s;
+        if (s is not null) Skip = s;
     }
 }

@@ -12,19 +12,19 @@ public class SearchCatalogInfoToMockComparer : IEqualityComparer, IEqualityCompa
     public new bool Equals(object? x, object? y)
     {
         if (ReferenceEquals(x, y)) return true;
-        if (x == null || y == null) return false;
+        if (x is null || y is null) return false;
         SearchCatalogInfo? info;
         MockCatalogManager? mock;
-        if ((info = x as SearchCatalogInfo) == null)
+        if ((info = x as SearchCatalogInfo) is null)
         {
-            if ((info = y as SearchCatalogInfo) == null) return x.Equals(y);
+            if ((info = y as SearchCatalogInfo) is null) return x.Equals(y);
             mock = x as MockCatalogManager;
         }
         else
         {
             mock = y as MockCatalogManager;
         }
-        if (mock == null) return x.Equals(y);
+        if (mock is null) return x.Equals(y);
 
         if (mock.NameInternal != info.Catalog) return false;
         if (mock.ConnectTimeoutInternal != info.ConnectTimeout) return false;
@@ -42,7 +42,7 @@ public class SearchCatalogInfoToMockComparer : IEqualityComparer, IEqualityCompa
         }
         else
         {
-            if (info.PathBeingIndexed == null
+            if (info.PathBeingIndexed is null
                 || !info.PathBeingIndexed.StartsWith("N/A", StringComparison.Ordinal)) return false;
         }
         return true;

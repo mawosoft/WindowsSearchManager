@@ -16,7 +16,7 @@ internal static class SkipCondition
     {
         foreach (string env in new[] { "CI", "TF_BUILD", "GITHUB_ACTIONS", "APPVEYOR" })
         {
-            if (Environment.GetEnvironmentVariable(env) != null)
+            if (Environment.GetEnvironmentVariable(env) is not null)
             {
                 s_isCI = true;
                 break;
@@ -26,7 +26,7 @@ internal static class SkipCondition
 
     public static string? Evaluate(params string[] skipconditions)
     {
-        if (skipconditions == null)
+        if (skipconditions is null)
         {
             throw new ArgumentNullException(nameof(skipconditions));
         }

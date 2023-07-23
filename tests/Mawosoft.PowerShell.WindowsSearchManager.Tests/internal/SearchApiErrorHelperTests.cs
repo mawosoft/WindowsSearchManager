@@ -63,7 +63,7 @@ public class SearchApiErrorHelperTests
     public void TrySetErrorDetails_Succeeds(ExceptionParam exceptionParam)
     {
         Exception exception = exceptionParam.Exception;
-        if (exception == null) return; // Cannot create ErrorRecord w/o exception
+        if (exception is null) return; // Cannot create ErrorRecord w/o exception
         ErrorRecord errorRecord = new(exception, string.Empty, ErrorCategory.NotSpecified, null);
         bool success = SearchApiErrorHelper.TrySetErrorDetails(errorRecord);
         Assert.Equal(exceptionParam.IsSearchApi, success);

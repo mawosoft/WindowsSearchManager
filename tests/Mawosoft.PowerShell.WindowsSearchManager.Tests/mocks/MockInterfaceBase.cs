@@ -74,11 +74,11 @@ public abstract class MockInterfaceBase
         string methodName = frame.GetMethod()?.Name ?? string.Empty;
         RecordedCalls.Add(new CallInfo(methodName, parameters));
         ExceptionInfo? info = ExceptionsToThrow.Find(e => Regex.IsMatch(methodName, e.MethodRegex));
-        if (info != null)
+        if (info is not null)
         {
             throw info.Exception;
         }
-        if (!AdminMode && AdminMethodRegex != null && Regex.IsMatch(methodName, AdminMethodRegex))
+        if (!AdminMode && AdminMethodRegex is not null && Regex.IsMatch(methodName, AdminMethodRegex))
         {
             throw new UnauthorizedAccessException();
         }

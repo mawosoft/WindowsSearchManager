@@ -30,7 +30,7 @@ public sealed class SearchRuleInfo : ICloneable
 
     internal SearchRuleInfo(ISearchScopeRule searchScopeRule)
     {
-        if (searchScopeRule == null) throw new ArgumentNullException(nameof(searchScopeRule));
+        if (searchScopeRule is null) throw new ArgumentNullException(nameof(searchScopeRule));
 
         Path = searchScopeRule.PatternOrURL;
         RuleType = searchScopeRule.IsIncluded == 0 ? SearchRuleType.Exclude : SearchRuleType.Include;

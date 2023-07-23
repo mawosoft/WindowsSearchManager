@@ -30,7 +30,7 @@ public sealed class SearchRootInfo : ICloneable
 
     internal SearchRootInfo(ISearchRoot searchRoot)
     {
-        if (searchRoot == null) throw new ArgumentNullException(nameof(searchRoot));
+        if (searchRoot is null) throw new ArgumentNullException(nameof(searchRoot));
 
         Path = searchRoot.RootURL;
         IsHierarchical = searchRoot.IsHierarchical != 0;

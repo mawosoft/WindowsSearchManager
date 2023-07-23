@@ -19,12 +19,12 @@ public sealed class GetSearchRuleCommand : SearchApiCommandBase
         try
         {
             IEnumSearchScopeRules? rules = scope.EnumerateScopeRules();
-            if (rules == null) return; // null -> none
+            if (rules is null) return; // null -> none
             for (; ; )
             {
                 uint fetched = 0;
                 rules.Next(1, out CSearchScopeRule rule, ref fetched);
-                if (fetched != 1 || rule == null) break;
+                if (fetched != 1 || rule is null) break;
                 WriteObject(new SearchRuleInfo(rule));
             }
         }
