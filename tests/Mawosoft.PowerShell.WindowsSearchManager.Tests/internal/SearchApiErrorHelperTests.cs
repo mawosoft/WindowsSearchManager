@@ -4,7 +4,7 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 public class SearchApiErrorHelperTests
 {
-    private class Exception_TheoryData : TheoryData<ExceptionParam>
+    private sealed class Exception_TheoryData : TheoryData<ExceptionParam>
     {
         private const int E_INVALIDARG = unchecked((int)0x8007000E);
         private const int MSS_E_CATALOGNOTFOUND_notITF = unchecked((int)0x80112103);

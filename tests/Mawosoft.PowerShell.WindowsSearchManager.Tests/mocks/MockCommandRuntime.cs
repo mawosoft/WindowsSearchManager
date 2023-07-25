@@ -1,13 +1,11 @@
 ﻿// Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
-using System.Diagnostics.CodeAnalysis;
-using System.Management.Automation.Host;
-
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 // NotImplementedException: the Mock is missing a implementation for this member.
 // Internal members are used to setup mock behavior.
 // See also https://github.com/PowerShell/PowerShell/blob/master/src/System.Management.Automation/engine/DefaultCommandRuntime.cs
+[SuppressMessage("Design", "CA1065:Do not raise exceptions in unexpected locations", Justification = "Partial interface implementation.")]
 public class MockCommandRuntime : ICommandRuntime
 {
     internal List<object?> Outputs { get; } = new();
@@ -18,7 +16,7 @@ public class MockCommandRuntime : ICommandRuntime
 #endif
     public void ThrowTerminatingError(ErrorRecord errorRecord)
     {
-        Assert.NotNull(errorRecord);
+        if (errorRecord is null) throw new ArgumentNullException(nameof(errorRecord));
         Errors.Add(errorRecord);
         throw errorRecord.Exception ?? new InvalidOperationException(errorRecord.ToString());
     }

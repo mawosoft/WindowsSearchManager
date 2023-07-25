@@ -1,7 +1,5 @@
 // Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
-using System.ServiceProcess;
-
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 internal static class SkipCondition
@@ -10,18 +8,18 @@ internal static class SkipCondition
     public const string WSearchDisabled = "WSearchDisabled";
     public const string IsCIandWSearchDisabled = "IsCIandWSearchDisabled";
 
-    private static readonly bool s_isCI;
+    private static readonly bool s_isCI = InitCI();
 
-    static SkipCondition()
+    private static bool InitCI()
     {
         foreach (string env in new[] { "CI", "TF_BUILD", "GITHUB_ACTIONS", "APPVEYOR" })
         {
             if (Environment.GetEnvironmentVariable(env) is not null)
             {
-                s_isCI = true;
-                break;
+                return true;
             }
         }
+        return false;
     }
 
     public static string? Evaluate(params string[] skipconditions)
@@ -48,11 +46,11 @@ internal static class SkipCondition
     }
 
 #if !NETFRAMEWORK
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
+    [SuppressMessage("Interoperability", "CA1416:Validate platform compatibility")]
 #endif
     private static bool IsWSearchEnabled()
     {
-        using ServiceController sc = new("WSearch");
-        return sc.StartType != ServiceStartMode.Disabled;
+        using System.ServiceProcess.ServiceController sc = new("WSearch");
+        return sc.StartType != System.ServiceProcess.ServiceStartMode.Disabled;
     }
 }

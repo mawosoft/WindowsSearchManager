@@ -10,5 +10,5 @@ public class MockSearchScopeRule : ISearchScopeRule
     public virtual string PatternOrURL { get; internal set; } = string.Empty;
     public virtual int IsIncluded { get; internal set; }
     public virtual int IsDefault { get; internal set; }
-    public virtual uint FollowFlags { get => throw new NotSupportedException(); }
+    public virtual uint FollowFlags => throw new NotSupportedException();
 }

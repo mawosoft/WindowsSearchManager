@@ -2,6 +2,8 @@
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
+#pragma warning disable CA1054 // URI-like parameters should not be strings
+
 public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager
 {
     // TODO we need roots and rules for enum and queries

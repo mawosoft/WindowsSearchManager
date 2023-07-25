@@ -5,7 +5,7 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 public class TestSearchRuleInfoTests
 {
     [Fact]
-    public void ctor_Defaults()
+    public void Ctor_Defaults()
     {
         TestSearchRuleInfo info = new();
         Assert.Equal(6, info.GetType().GetProperties().Length);

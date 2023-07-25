@@ -21,7 +21,7 @@ public class DefaultSearchManagerFactoryTests
     {
         COMException ex = Assert.Throws<COMException>(DefaultSearchManagerFactory.Instance.CreateSearchManager);
         Assert.Equal(unchecked((int)0x80070422), ex.HResult); // Service disabled
-        Assert.Contains("7D096C5F-AC08-4F1F-BEB7-5C22C517CE39", ex.Message);
+        Assert.Contains("7D096C5F-AC08-4F1F-BEB7-5C22C517CE39", ex.Message, StringComparison.Ordinal);
     }
 
     [Fact]
