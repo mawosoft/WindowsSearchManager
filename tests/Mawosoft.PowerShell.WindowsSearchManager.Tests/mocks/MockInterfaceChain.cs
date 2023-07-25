@@ -4,7 +4,7 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 public class MockInterfaceChain
 {
-    public static List<string> InterfaceNames { get; } = new()
+    internal static List<string> InterfaceNames { get; } = new()
     {
         nameof(ISearchManagerFactory),
         nameof(ISearchManager),
@@ -17,7 +17,7 @@ public class MockInterfaceChain
     public MockCatalogManager CatalogManager { get; private set; }
     public MockCrawlScopeManager ScopeManager { get; private set; }
 
-    public string CatalogName { get => CatalogManager.NameInternal; }
+    public string CatalogName => CatalogManager.NameInternal;
 
     public ExceptionParam ExceptionParam { get; private set; }
 
@@ -32,7 +32,7 @@ public class MockInterfaceChain
         Factory = new(SearchManager);
     }
 
-    public int Count => 4;
+    public static int Count => 4;
 
     public MockInterfaceBase this[int index] => index switch
     {
@@ -49,6 +49,7 @@ public class MockInterfaceChain
 
     public MockInterfaceChain WithSearchManager(MockSearchManager searchManager)
     {
+        if (searchManager is null) throw new ArgumentNullException(nameof(searchManager));
         searchManager.ChildInterface = CatalogManager;
         SearchManager = searchManager;
         Factory.ChildInterface = SearchManager;
@@ -57,6 +58,7 @@ public class MockInterfaceChain
 
     public MockInterfaceChain WithCatalogManager(MockCatalogManager catalogManager)
     {
+        if (catalogManager is null) throw new ArgumentNullException(nameof(catalogManager));
         catalogManager.ChildInterface = ScopeManager;
         CatalogManager = catalogManager;
         SearchManager.ChildInterface = CatalogManager;

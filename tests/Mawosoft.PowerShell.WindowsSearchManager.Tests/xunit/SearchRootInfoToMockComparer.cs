@@ -8,7 +8,7 @@ public class SearchRootInfoToMockComparer : IEqualityComparer, IEqualityComparer
 
     private SearchRootInfoToMockComparer() { }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0019:Use pattern matching", Justification = "Does not work for this use case.")]
+    //[SuppressMessage("Style", "IDE0019:Use pattern matching", Justification = "Does not work for this use case.")]
     public new bool Equals(object? x, object? y)
     {
         if (ReferenceEquals(x, y)) return true;

@@ -5,7 +5,7 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 [Collection(nameof(NoParallelTests))]
 public class CommandTestBase
 {
-    protected static readonly System.Management.Automation.PowerShell PowerShell;
+    protected static readonly System.Management.Automation.PowerShell PowerShell = CreatePowerShell();
 
     // We already have SearchApiCommandBase.SearchManagerFactory as a static variable and therefore
     // disabled parallel tests. So we can use a static instance of PowerShell as well.
@@ -18,8 +18,9 @@ public class CommandTestBase
     // The cmdlet can be invoked via AddScript(), but the PS parser has a few quirks. It is recommended to always
     // add an extra space at the end of the script. For example, "Set-SearchManager -UserAgent" with the actual
     // value omitted and no extra space will throw a NullReferenceException instead of a param validation error.
-    static CommandTestBase()
+    private static System.Management.Automation.PowerShell CreatePowerShell()
     {
+        System.Management.Automation.PowerShell pwsh;
         InitialSessionState iss = InitialSessionState.Create();
         iss.ThreadOptions = PSThreadOptions.UseCurrentThread;
         iss.LanguageMode = PSLanguageMode.FullLanguage;
@@ -31,7 +32,7 @@ public class CommandTestBase
                 iss.Commands.Add(new SessionStateCmdletEntry($"{a.VerbName}-{a.NounName}", t, null));
             }
         }
-        PowerShell = System.Management.Automation.PowerShell.Create(iss);
+        pwsh = System.Management.Automation.PowerShell.Create(iss);
         // This will create all the built-in variables like ConfirmPreference.
         // See PowerShell.Runspace.ExecutionContext.TopLevelSessionState.CurrentScope.Variables
         // in the debugger (all non-public below Runspace).
@@ -39,12 +40,13 @@ public class CommandTestBase
         //     iss.Variables.Add(new SessionStateVariableEntry("ConfirmPreference", ConfirmImpact.High, ""));
         // ...or explicitly set in the Runspace.
         //     PowerShell.Runspace.SessionStateProxy.SetVariable("ConfirmPreference", ConfirmImpact.High);
-        PowerShell.Runspace.ResetRunspaceState();
+        pwsh.Runspace.ResetRunspaceState();
         // Avoid accidental issues with confirmation. We use -WhatIf for ShouldProcess() testing and assert
         // the ConfirmImpact property of the CmdletAttribute for selected commands.
-        PowerShell.Runspace.SessionStateProxy.SetVariable("ConfirmPreference", ConfirmImpact.None);
+        pwsh.Runspace.SessionStateProxy.SetVariable("ConfirmPreference", ConfirmImpact.None);
         // 'Continue' is default, but make it explicit.
-        PowerShell.Runspace.SessionStateProxy.SetVariable("ErrorActionPreference", ActionPreference.Continue);
+        pwsh.Runspace.SessionStateProxy.SetVariable("ErrorActionPreference", ActionPreference.Continue);
+        return pwsh;
     }
 
     protected readonly MockInterfaceChain InterfaceChain;
@@ -57,7 +59,7 @@ public class CommandTestBase
         PowerShell.Commands.Clear();
     }
 
-    protected void AssertConfirmImpact(Type commandType, ConfirmImpact confirmImpact)
+    protected static void AssertConfirmImpact(Type commandType, ConfirmImpact confirmImpact)
     {
         CmdletAttribute a = commandType.GetCustomAttribute<CmdletAttribute>()!;
         Assert.NotNull(a);
@@ -65,7 +67,7 @@ public class CommandTestBase
         Assert.Equal(confirmImpact, a.ConfirmImpact);
     }
 
-    protected ErrorRecord AssertSingleErrorRecord(ExceptionParam exceptionParam)
+    protected static ErrorRecord AssertSingleErrorRecord(ExceptionParam exceptionParam)
     {
         Assert.True(PowerShell.HadErrors);
         ErrorRecord errorRecord = Assert.Single(PowerShell.Streams.Error);
@@ -82,7 +84,7 @@ public class CommandTestBase
         return errorRecord;
     }
 
-    protected ErrorRecord AssertUnauthorizedAccess()
+    protected static ErrorRecord AssertUnauthorizedAccess()
     {
         Assert.True(PowerShell.HadErrors);
         ErrorRecord errorRecord = Assert.Single(PowerShell.Streams.Error);

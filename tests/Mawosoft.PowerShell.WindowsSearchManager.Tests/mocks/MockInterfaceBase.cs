@@ -1,9 +1,5 @@
 ﻿// Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
-
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 // Base class for mock implementations of SearchAPI interfaces.
@@ -13,7 +9,7 @@ public abstract class MockInterfaceBase
     public class CallInfo
     {
         public string MethodName { get; }
-        public object?[] Parameters { get; }
+        public IReadOnlyCollection<object?> Parameters { get; }
         public CallInfo(string methodName, object?[] parameters)
         {
             MethodName = methodName;
@@ -42,7 +38,7 @@ public abstract class MockInterfaceBase
 
     // Either the default instance of the child interface, null, or an exception to throw if the caller requests a child interface instance.
     // This means the interface method returning the child interface instance (e.g. ISearchManager.GetCatalog) doesn't need to be added to
-    // ExceptionsToThrow and it is possible to force a null value to be returned. The Interface methodt should call GetChildInterface, to
+    // ExceptionsToThrow and it is possible to force a null value to be returned. The Interface method should call GetChildInterface, to
     // obtain the value or trigger an exception.
     internal object? ChildInterface { get; set; }
 
@@ -90,6 +86,7 @@ public abstract class MockInterfaceBase
     [MethodImpl(MethodImplOptions.NoInlining)]
     protected void TailCall() { }
 
+    [SuppressMessage("Design", "CA1024:Use properties where appropriate", Justification = "Triggers exception.")]
     protected object? GetChildInterface()
     {
         if (ChildInterface is Exception ex) throw ex;
