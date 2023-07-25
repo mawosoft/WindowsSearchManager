@@ -23,10 +23,7 @@ public sealed class SearchRuleInfo : ICloneable
     public _FOLLOW_FLAGS FollowFlags { get; set; }
     public bool OverrideChildren { get; set; }
 
-    public SearchRuleInfo()
-    {
-        FollowFlags = _FOLLOW_FLAGS.FF_INDEXCOMPLEXURLS;
-    }
+    public SearchRuleInfo() => FollowFlags = _FOLLOW_FLAGS.FF_INDEXCOMPLEXURLS;
 
     internal SearchRuleInfo(ISearchScopeRule searchScopeRule)
     {

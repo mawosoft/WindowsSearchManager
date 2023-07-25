@@ -72,7 +72,7 @@ public sealed class AddSearchRootCommand : SearchApiCommandBase
     public string Catalog { get; set; } = DefaultCatalogName;
 
     private ISearchCrawlScopeManager? _scopeManager;
-    private ISearchCrawlScopeManager ScopeManager { get => _scopeManager ??= GetCrawlScopeManager(Catalog); }
+    private ISearchCrawlScopeManager ScopeManager => _scopeManager ??= GetCrawlScopeManager(Catalog);
 
     protected override void ProcessRecord()
     {
@@ -127,7 +127,7 @@ public sealed class RemoveSearchRootCommand : SearchApiCommandBase
     public string Catalog { get; set; } = DefaultCatalogName;
 
     private ISearchCrawlScopeManager? _scopeManager;
-    private ISearchCrawlScopeManager ScopeManager { get => _scopeManager ??= GetCrawlScopeManager(Catalog); }
+    private ISearchCrawlScopeManager ScopeManager => _scopeManager ??= GetCrawlScopeManager(Catalog);
 
     protected override void ProcessRecord()
     {
