@@ -35,7 +35,7 @@ internal static class SkipCondition
                 WSearchEnabled => IsWSearchEnabled(),
                 WSearchDisabled => !IsWSearchEnabled(),
                 IsCIandWSearchDisabled => s_isCI && !IsWSearchEnabled(),
-                _ => throw new ArgumentException(null, nameof(skipcondition)),
+                _ => throw new ArgumentException(null, nameof(skipconditions)),
             };
             if (skip)
             {

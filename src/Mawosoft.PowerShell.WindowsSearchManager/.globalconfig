@@ -1,5 +1,11 @@
+# Project-specific config
+
 is_global = true
+#global_level = 100
 
 # Cmdlets use array parameters
 # CA1819: Properties should not return arrays
 dotnet_diagnostic.CA1819.severity = none
+
+# IDE0130: Namespace does not match folder structure
+dotnet_diagnostic.IDE0130.severity = none

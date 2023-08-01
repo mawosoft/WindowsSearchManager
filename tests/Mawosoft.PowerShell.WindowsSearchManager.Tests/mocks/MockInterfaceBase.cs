@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023 Matthias Wolf, Mawosoft.
+// Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
@@ -84,7 +84,7 @@ public abstract class MockInterfaceBase
     // Seems to also work w/o the NoInlining option, resulting in 'call Record' followed by 'nop', but
     // just to be on the save side...
     [MethodImpl(MethodImplOptions.NoInlining)]
-    protected void TailCall() { }
+    protected static void TailCall() { }
 
     [SuppressMessage("Design", "CA1024:Use properties where appropriate", Justification = "Triggers exception.")]
     protected object? GetChildInterface()

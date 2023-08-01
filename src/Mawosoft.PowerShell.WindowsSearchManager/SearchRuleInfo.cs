@@ -14,6 +14,7 @@ public sealed class SearchRuleInfo : ICloneable
     /// _FOLLOW_FLAGS is defined in searchapi.h, but missing from Interop.SearchAPI.
     /// </summary>
     [SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Definition from searchapi.h")]
+    [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Definition from searchapi.h")]
     [Flags]
     public enum _FOLLOW_FLAGS { FF_INDEXCOMPLEXURLS = 1, FF_SUPPRESSINDEXING = 2 }
 

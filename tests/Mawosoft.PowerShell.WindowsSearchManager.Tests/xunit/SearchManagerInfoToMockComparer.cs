@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023 Matthias Wolf, Mawosoft.
+// Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
@@ -8,7 +8,6 @@ public class SearchManagerInfoToMockComparer : IEqualityComparer, IEqualityCompa
 
     private SearchManagerInfoToMockComparer() { }
 
-    //[SuppressMessage("Style", "IDE0019:Use pattern matching", Justification = "Does not work for this use case.")]
     public new bool Equals(object? x, object? y)
     {
         if (ReferenceEquals(x, y)) return true;
