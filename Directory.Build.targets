@@ -1,5 +1,11 @@
 <Project>
 
+  <!-- Generate escalate.globalconfig via dotnet build -property:Escalate=true -->
+  <Import
+      Condition="'$(Escalate)' == 'true' and '$(MSBuildProjectExtension)' == '.csproj'"
+      Project="C:\Users\mw\Projects\Learning\netanalyzers-usagelab\EscalateHiddenDiagnostics\EscalateHiddenDiagnostics.targets"
+  />
+
   <!--
     ============================================================
 

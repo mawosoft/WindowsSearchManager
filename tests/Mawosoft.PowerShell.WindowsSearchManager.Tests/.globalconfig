@@ -1,7 +1,12 @@
-# Common config for test projects
+# Project-specific config
 
 is_global = true
 #global_level = 100
+
+# IDE0130: Namespace does not match folder structure
+dotnet_diagnostic.IDE0130.severity = none
+
+# Common settings for test projects
 
 # CA1034: Nested types should not be visible
 dotnet_diagnostic.CA1034.severity = none

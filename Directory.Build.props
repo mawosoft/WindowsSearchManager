@@ -28,8 +28,14 @@
     <AnalysisLevel>latest-all</AnalysisLevel>
     <AnalysisLevelStyle>all</AnalysisLevelStyle>
     <WarningLevel>9999</WarningLevel>
-    <!-- <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild> -->
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <GlobalAnalyzerConfigFiles Include="$(MSBuildThisFileDirectory)common.globalconfig" />
+    <!-- For temporary local use only -->
+    <!-- <GlobalAnalyzerConfigFiles Include="$(MSBuildThisFileDirectory)escalate.globalconfig" /> -->
+  </ItemGroup>
 
   <PropertyGroup>
     <Authors>Matthias Wolf, Mawosoft</Authors>

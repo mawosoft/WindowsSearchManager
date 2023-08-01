@@ -1,0 +1,119 @@
+# Common config for all projects
+# Assume analysis level latest-all and adjust from there.
+
+is_global = true
+#global_level = 0
+
+# IDE0001: Simplify Name
+dotnet_diagnostic.IDE0001.severity = warning
+
+# IDE0002: Simplify member access
+dotnet_diagnostic.IDE0002.severity = warning
+
+# IDE0003/9: Remove/Add 'this' or 'Me' qualification
+dotnet_diagnostic.IDE0003.severity = warning
+dotnet_diagnostic.IDE0009.severity = warning
+
+# IDE0007/8: Use implicit/explicit type (var)
+dotnet_diagnostic.IDE0007.severity = silent
+dotnet_diagnostic.IDE0008.severity = silent
+
+# IDE0010: Add missing cases
+dotnet_diagnostic.IDE0010.severity = silent
+
+# IDE0011: Add braces
+dotnet_diagnostic.IDE0011.severity = silent
+
+# IDE0017: Simplify object initialization
+dotnet_diagnostic.IDE0017.severity = suggestion
+
+# IDE0018: Inline variable declaration
+dotnet_diagnostic.IDE0018.severity = suggestion
+
+# IDE0019+260+78: Use pattern matching
+dotnet_diagnostic.IDE0019.severity = suggestion
+dotnet_diagnostic.IDE0260.severity = suggestion
+dotnet_diagnostic.IDE0078.severity = suggestion
+
+# IDE0020+38: Use pattern matching
+dotnet_diagnostic.IDE0020.severity = suggestion
+dotnet_diagnostic.IDE0038.severity = suggestion
+
+# IDE0021: Use expression body for constructor
+dotnet_diagnostic.IDE0021.severity = silent
+
+# IDE0022: Use expression body for method
+dotnet_diagnostic.IDE0022.severity = silent
+
+# IDE0023: Use expression body for conversion operator
+dotnet_diagnostic.IDE0023.severity = silent
+
+# IDE0024: Use expression body for operator
+dotnet_diagnostic.IDE0024.severity = silent
+
+# IDE0025: Use expression body for property
+dotnet_diagnostic.IDE0025.severity = silent
+
+# IDE0026: Use expression body for indexer
+dotnet_diagnostic.IDE0026.severity = silent
+
+# IDE0027: Use expression body for accessor
+dotnet_diagnostic.IDE0027.severity = silent
+
+# IDE0028: Simplify collection initialization
+dotnet_diagnostic.IDE0028.severity = suggestion
+
+# IDE0032: Use auto property
+dotnet_diagnostic.IDE0032.severity = silent
+
+# IDE0038 ==> IDE0020
+
+# IDE0042: Deconstruct variable declaration
+dotnet_diagnostic.IDE0042.severity = suggestion
+
+# IDE0045: Convert to conditional expression (assignment)
+dotnet_diagnostic.IDE0045.severity = silent
+
+# IDE0046: Convert to conditional expression (return)
+dotnet_diagnostic.IDE0046.severity = silent
+
+# IDE0047: Remove unnecessary parentheses
+dotnet_diagnostic.IDE0047.severity = silent
+
+# IDE0048: Add parentheses for clarity
+dotnet_diagnostic.IDE0048.severity = silent
+
+# IDE0049 Language keywords vs BCL types
+dotnet_diagnostic.IDE0049.severity = warning
+
+# IDE0053: Use expression body for lambda expression
+dotnet_diagnostic.IDE0053.severity = silent
+
+# IDE0056: Use index operator
+dotnet_diagnostic.IDE0056.severity = suggestion
+
+# IDE0057: Use range operator
+dotnet_diagnostic.IDE0057.severity = suggestion
+
+# IDE0058: Expression value is never used
+dotnet_diagnostic.IDE0058.severity = silent
+
+# IDE0061: Use expression body for local function
+dotnet_diagnostic.IDE0061.severity = silent
+
+# IDE0063: Use simple 'using' statement
+dotnet_diagnostic.IDE0063.severity = suggestion
+
+# IDE0066: Convert switch statement to expression
+dotnet_diagnostic.IDE0066.severity = suggestion
+
+# IDE0078 ==> IDE0019
+
+# IDE0083: Use pattern matching
+dotnet_diagnostic.IDE0083.severity = suggestion
+
+# IDE0210/211: Convert to top-level/Program.Main statements
+dotnet_diagnostic.IDE0210.severity = silent
+dotnet_diagnostic.IDE0211.severity = silent
+
+# IDE0260 ==> IDE0019
