@@ -70,7 +70,7 @@ public sealed class SetSearchCatalogCommand : SearchApiCommandBase
     {
         if (ShouldProcess(Catalog))
         {
-            ISearchCatalogManager catalog = GetCatalogManager(Catalog);
+            ISearchCatalogManager catalog = GetSearchCatalogManager(Catalog);
             try
             {
                 if (MyInvocation.BoundParameters.ContainsKey(nameof(ConnectTimeout)))
@@ -109,7 +109,7 @@ public sealed class ResetSearchCatalogCommand : SearchApiCommandBase
     {
         if (ShouldProcess(Catalog))
         {
-            ISearchCatalogManager catalog = GetCatalogManager(Catalog);
+            ISearchCatalogManager catalog = GetSearchCatalogManager(Catalog);
             try
             {
                 catalog.Reset();
@@ -162,7 +162,7 @@ public sealed class UpdateSearchCatalogCommand : SearchApiCommandBase
     public string Catalog { get; set; } = DefaultCatalogName;
 
     private ISearchCatalogManager? _catalogManager;
-    private ISearchCatalogManager CatalogManager => _catalogManager ??= GetCatalogManager(Catalog);
+    private ISearchCatalogManager CatalogManager => _catalogManager ??= GetSearchCatalogManager(Catalog);
 
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Continue after WriteError.")]
     protected override void ProcessRecord()

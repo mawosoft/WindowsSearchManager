@@ -143,7 +143,7 @@ public class SearchApiCommandBaseTests : CommandTestBase
     public void GetCatalogManager_HandlesFailures(MockInterfaceChain chain)
     {
         SearchApiCommandBase.SearchManagerFactory = chain.Factory;
-        AssertFailingInterfaceThrows(chain, () => Command.TestGetCatalogManager(chain.CatalogName));
+        AssertFailingInterfaceThrows(chain, () => Command.TestGetSearchCatalogManager(chain.CatalogName));
     }
 
     [Theory]
@@ -152,13 +152,13 @@ public class SearchApiCommandBaseTests : CommandTestBase
     [InlineData("  ")]
     public void GetCatalogManager_InvalidCatalogName_Throws(string catalogName)
     {
-        Assert.Throws<ArgumentException>(nameof(catalogName), () => Command.TestGetCatalogManager(catalogName));
+        Assert.Throws<ArgumentException>(nameof(catalogName), () => Command.TestGetSearchCatalogManager(catalogName));
     }
 
     [Fact]
     public void GetCatalogManager_Succeeds()
     {
-        Assert.Same(InterfaceChain.CatalogManager, Command.TestGetCatalogManager(InterfaceChain.CatalogName));
+        Assert.Same(InterfaceChain.CatalogManager, Command.TestGetSearchCatalogManager(InterfaceChain.CatalogName));
     }
 
     [Theory]
@@ -166,13 +166,13 @@ public class SearchApiCommandBaseTests : CommandTestBase
     public void GetCatalogManager_ISearchManager_HandlesFailures(MockInterfaceChain chain)
     {
         SearchApiCommandBase.SearchManagerFactory = chain.Factory;
-        AssertFailingInterfaceThrows(chain, () => Command.TestGetCatalogManager(chain.SearchManager, chain.CatalogName));
+        AssertFailingInterfaceThrows(chain, () => Command.TestGetSearchCatalogManager(chain.SearchManager, chain.CatalogName));
     }
 
     [Fact]
     public void GetCatalogManager_ISearchManager_NullSearchManager_Throws()
     {
-        Assert.Throws<ArgumentNullException>("searchManager", () => Command.TestGetCatalogManager(null!, InterfaceChain.CatalogName));
+        Assert.Throws<ArgumentNullException>("searchManager", () => Command.TestGetSearchCatalogManager(null!, InterfaceChain.CatalogName));
     }
 
     [Theory]
@@ -181,13 +181,13 @@ public class SearchApiCommandBaseTests : CommandTestBase
     [InlineData("  ")]
     public void GetCatalogManager_ISearchManager_InvalidCatalogName_Throws(string catalogName)
     {
-        Assert.Throws<ArgumentException>(nameof(catalogName), () => Command.TestGetCatalogManager(InterfaceChain.SearchManager, catalogName));
+        Assert.Throws<ArgumentException>(nameof(catalogName), () => Command.TestGetSearchCatalogManager(InterfaceChain.SearchManager, catalogName));
     }
 
     [Fact]
     public void GetCatalogManager_ISearchManager_Succeeds()
     {
-        Assert.Same(InterfaceChain.CatalogManager, Command.TestGetCatalogManager(InterfaceChain.SearchManager, InterfaceChain.CatalogName));
+        Assert.Same(InterfaceChain.CatalogManager, Command.TestGetSearchCatalogManager(InterfaceChain.SearchManager, InterfaceChain.CatalogName));
     }
 
     [Theory]

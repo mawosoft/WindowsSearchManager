@@ -43,10 +43,10 @@ public abstract class SearchApiCommandBase : PSCmdlet
         => (searchManager ?? throw new ArgumentNullException(nameof(searchManager))) as ISearchManager2
            ?? throw new InvalidCastException(string.Format(SR.Culture, SR.InterfaceNotAvailable, nameof(ISearchManager2)));
 
-    protected ISearchCatalogManager GetCatalogManager(string catalogName)
-        => GetCatalogManager(CreateSearchManager(), catalogName);
+    protected ISearchCatalogManager GetSearchCatalogManager(string catalogName)
+        => GetSearchCatalogManager(CreateSearchManager(), catalogName);
 
-    protected ISearchCatalogManager GetCatalogManager(ISearchManager searchManager, string catalogName)
+    protected ISearchCatalogManager GetSearchCatalogManager(ISearchManager searchManager, string catalogName)
     {
         if (searchManager is null) throw new ArgumentNullException(nameof(searchManager));
         if (string.IsNullOrWhiteSpace(catalogName)) throw new ArgumentException(null, nameof(catalogName));
@@ -62,7 +62,7 @@ public abstract class SearchApiCommandBase : PSCmdlet
     }
 
     protected ISearchCrawlScopeManager GetCrawlScopeManager(string catalogName)
-        => GetCrawlScopeManager(GetCatalogManager(catalogName));
+        => GetCrawlScopeManager(GetSearchCatalogManager(catalogName));
 
     protected ISearchCrawlScopeManager GetCrawlScopeManager(ISearchCatalogManager catalogManager)
     {

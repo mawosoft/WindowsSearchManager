@@ -40,6 +40,7 @@ public abstract class MockInterfaceBase
     // This means the interface method returning the child interface instance (e.g. ISearchManager.GetCatalog) doesn't need to be added to
     // ExceptionsToThrow and it is possible to force a null value to be returned. The Interface method should call GetChildInterface, to
     // obtain the value or trigger an exception.
+    [SuppressMessage("Naming", "CA1721:Property names should not match get methods", Justification = "Internal properties used for mock setup")]
     internal object? ChildInterface { get; set; }
 
     // List of exceptions the mock should throw for corresponding methods.
