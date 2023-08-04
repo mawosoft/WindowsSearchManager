@@ -27,6 +27,7 @@ internal static class SearchApiErrorHelper
 
     [DllImport(Kernel32, CharSet = CharSet.Unicode, SetLastError = true)]
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+    [SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "External name.")]
     private static extern IntPtr LoadLibraryEx([In] string lpLibFileName, IntPtr hFile, uint dwFlags);
 
     [DllImport(Kernel32, CharSet = CharSet.Unicode, SetLastError = true)]

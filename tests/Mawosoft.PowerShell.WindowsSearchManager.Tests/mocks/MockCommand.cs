@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023 Matthias Wolf, Mawosoft.
+// Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
@@ -13,10 +13,10 @@ public class MockCommand : SearchApiCommandBase
     internal ISearchManager2 TestGetSearchManager2() => GetSearchManager2();
     internal ISearchManager2 TestGetSearchManager2(ISearchManager searchManager)
         => GetSearchManager2(searchManager);
-    internal ISearchCatalogManager TestGetCatalogManager(string catalogName)
-        => GetCatalogManager(catalogName);
-    internal ISearchCatalogManager TestGetCatalogManager(ISearchManager searchManager, string catalogName)
-        => GetCatalogManager(searchManager, catalogName);
+    internal ISearchCatalogManager TestGetSearchCatalogManager(string catalogName)
+        => GetSearchCatalogManager(catalogName);
+    internal ISearchCatalogManager TestGetSearchCatalogManager(ISearchManager searchManager, string catalogName)
+        => GetSearchCatalogManager(searchManager, catalogName);
     internal ISearchCrawlScopeManager TestGetCrawlScopeManager(string catalogName)
         => GetCrawlScopeManager(catalogName);
     internal ISearchCrawlScopeManager TestGetCrawlScopeManager(ISearchCatalogManager catalogManager)
