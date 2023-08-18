@@ -75,8 +75,21 @@ public abstract class MockInterfaceBase
     // We could probably live with b) and drop 'params', but losing the getter/setter info is a no-go.
     // Solution: If calling Record() is the last/only call, follow it with a call to TailCall();
 
-    protected void RecordRead(params object?[] parameters) => Record(parameters, isReadOnly: true);
-    protected void RecordWrite(params object?[] parameters) => Record(parameters, isReadOnly: false);
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    protected void RecordRead(params object?[] parameters)
+    {
+        Record(parameters, isReadOnly: true);
+        TailCall();
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    protected void RecordWrite(params object?[] parameters)
+    {
+        Record(parameters, isReadOnly: false);
+        TailCall();
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
     private void Record(object?[] parameters, bool isReadOnly)
     {
         if (RecordingDisabled) return;
