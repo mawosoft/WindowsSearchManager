@@ -92,9 +92,8 @@ public class SearchCatalogCommandsTests : CommandTestBase
     [ClassData(typeof(SetSearchCatalog_TheoryData))]
     public void SetSearchCatalog_Succeeds(string arguments, SearchCatalogInfo expectedInfo)
     {
-        MockSearchManager searchManager = new();
-        InterfaceChain.WithSearchManager(searchManager);
-        MockCatalogManager catalogManager = Assert.Single(searchManager.CatalogManagers, c => c.NameInternal == expectedInfo.Catalog);
+        InterfaceChain.WithSearchManager(new MockSearchManager());
+        MockCatalogManager catalogManager = Assert.Single(InterfaceChain.SearchManager.CatalogManagers, c => c.NameInternal == expectedInfo.Catalog);
         Collection<PSObject> results = InvokeScript("Set-SearchCatalog " + arguments);
         Assert.Empty(results);
         Assert.False(PowerShell.HadErrors);
