@@ -39,7 +39,9 @@ public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager
     public virtual IEnumSearchRoots EnumerateRoots()
     {
         Record();
-        return (GetChildInterface() as IEnumSearchRoots)!;
+        MockEnumSearchRoots? enumerator = GetChildInterface() as MockEnumSearchRoots;
+        enumerator?.ResetInternal();
+        return enumerator!;
     }
 
     public virtual void AddUserScopeRule(string pszUrl, int fInclude, int fOverrideChildren, uint fFollowFlags)
@@ -56,7 +58,9 @@ public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager
     public virtual IEnumSearchScopeRules EnumerateScopeRules()
     {
         Record();
-        return (GetChildInterface() as IEnumSearchScopeRules)!;
+        MockEnumSearchScopeRules? enumerator = GetChildInterface() as MockEnumSearchScopeRules;
+        enumerator?.ResetInternal();
+        return enumerator!;
     }
 
     public virtual int HasParentScopeRule(string pszUrl) => throw new NotImplementedException();
