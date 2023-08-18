@@ -13,6 +13,7 @@ public class SearchManagerCommandsTests : CommandTestBase
         InterfaceChain.SearchManager.ProxyNameInternal = "fooproxy";
         InterfaceChain.SearchManager.ByPassListInternal = "barsite.com, buzzsite.com";
         Collection<PSObject> results = InvokeScript("Get-SearchManager");
+        Assert.False(InterfaceChain.HasWriteRecordings());
         Assert.False(PowerShell.HadErrors);
         PSObject result = Assert.Single(results);
         SearchManagerInfo info = Assert.IsType<SearchManagerInfo>(result.BaseObject);
@@ -24,6 +25,7 @@ public class SearchManagerCommandsTests : CommandTestBase
     {
         InterfaceChain.SearchManager.AdminMode = false;
         Collection<PSObject> results = InvokeScript("Get-SearchManager");
+        Assert.False(InterfaceChain.HasWriteRecordings());
         Assert.Empty(results);
         AssertUnauthorizedAccess();
     }
@@ -34,6 +36,7 @@ public class SearchManagerCommandsTests : CommandTestBase
     {
         InterfaceChain.SearchManager.AddException("^get_|^set_|^SetProxy$", exceptionParam.Exception);
         Collection<PSObject> results = InvokeScript("Get-SearchManager");
+        Assert.False(InterfaceChain.HasWriteRecordings());
         Assert.Empty(results);
         AssertSingleErrorRecord(exceptionParam);
     }
@@ -135,10 +138,9 @@ public class SearchManagerCommandsTests : CommandTestBase
     [InlineData("-ProxyAccess PROXY_ACCESS_PROXY -ProxyName bar.com -ProxyPortNumber 0x8080 -ProxyBypassLocal -ProxyBypassList buzz.com,baz.org")]
     public void SetSearchManager_WhatIf_Succeeds(string arguments)
     {
-        SearchManagerInfo expectedInfo = new(new MockSearchManager2());
         Collection<PSObject> results = InvokeScript("Set-SearchManager " + arguments + " -WhatIf ");
+        Assert.False(InterfaceChain.HasWriteRecordings());
         Assert.Empty(results);
         Assert.False(PowerShell.HadErrors);
-        Assert.Equal(expectedInfo, InterfaceChain.SearchManager, SearchManagerInfoToMockComparer.Instance);
     }
 }

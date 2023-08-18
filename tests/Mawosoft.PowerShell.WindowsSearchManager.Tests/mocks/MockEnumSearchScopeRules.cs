@@ -19,7 +19,7 @@ public class MockEnumSearchScopeRules : MockInterfaceBase, IEnumSearchScopeRules
             pprgelt = Items[_index++];
             pceltFetched++;
         }
-        Record(celt, pprgelt, pceltFetched);
+        RecordRead(celt, pprgelt, pceltFetched);
         TailCall();
     }
 

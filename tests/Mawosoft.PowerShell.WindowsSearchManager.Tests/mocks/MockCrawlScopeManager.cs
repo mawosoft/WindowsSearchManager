@@ -20,25 +20,25 @@ public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager
 
     public virtual void AddDefaultScopeRule(string pszUrl, int fInclude, uint fFollowFlags)
     {
-        Record(pszUrl, fInclude, fFollowFlags);
+        RecordWrite(pszUrl, fInclude, fFollowFlags);
         TailCall();
     }
 
     public virtual void AddRoot(CSearchRoot pSearchRoot)
     {
-        Record(pSearchRoot);
+        RecordWrite(pSearchRoot);
         TailCall();
     }
 
     public virtual void RemoveRoot(string pszUrl)
     {
-        Record(pszUrl);
+        RecordWrite(pszUrl);
         TailCall();
     }
 
     public virtual IEnumSearchRoots EnumerateRoots()
     {
-        Record();
+        RecordRead();
         MockEnumSearchRoots? enumerator = GetChildInterface() as MockEnumSearchRoots;
         enumerator?.ResetInternal();
         return enumerator!;
@@ -46,18 +46,18 @@ public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager
 
     public virtual void AddUserScopeRule(string pszUrl, int fInclude, int fOverrideChildren, uint fFollowFlags)
     {
-        Record(pszUrl, fInclude, fOverrideChildren, fFollowFlags);
+        RecordWrite(pszUrl, fInclude, fOverrideChildren, fFollowFlags);
         TailCall();
     }
 
     public virtual void RemoveScopeRule(string pszRule)
     {
-        Record(pszRule);
+        RecordWrite(pszRule);
         TailCall();
     }
     public virtual IEnumSearchScopeRules EnumerateScopeRules()
     {
-        Record();
+        RecordRead();
         MockEnumSearchScopeRules? enumerator = GetChildInterface() as MockEnumSearchScopeRules;
         enumerator?.ResetInternal();
         return enumerator!;
@@ -69,19 +69,19 @@ public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager
     public virtual void IncludedInCrawlScopeEx(string pszUrl, out int pfIsIncluded, out CLUSION_REASON pReason) => throw new NotImplementedException();
     public virtual void RevertToDefaultScopes()
     {
-        Record();
+        RecordWrite();
         TailCall();
     }
     public virtual void SaveAll()
     {
-        Record();
+        RecordWrite();
         TailCall();
     }
 
     public virtual int GetParentScopeVersionId(string pszUrl) => throw new NotImplementedException();
     public virtual void RemoveDefaultScopeRule(string pszUrl)
     {
-        Record(pszUrl);
+        RecordWrite(pszUrl);
         TailCall();
     }
 

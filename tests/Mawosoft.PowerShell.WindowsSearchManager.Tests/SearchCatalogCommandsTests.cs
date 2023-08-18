@@ -22,6 +22,7 @@ public class SearchCatalogCommandsTests : CommandTestBase
             expected = expected.FindAll(c => c.NameInternal == catalogName);
         }
         Collection<PSObject> results = InvokeScript(script);
+        Assert.False(InterfaceChain.HasWriteRecordings());
         Assert.All(results, (item, i) => Assert.Equal(expected[i], item.BaseObject, SearchCatalogInfoToMockComparer.Instance));
         Assert.Equal(expected.Count, results.Count);
         Assert.False(PowerShell.HadErrors);
@@ -39,6 +40,7 @@ public class SearchCatalogCommandsTests : CommandTestBase
         InterfaceChain.Factory.SearchRegistryProvider.CatalogNames = searchManager.CatalogManagers.ConvertAll(c => c.NameInternal);
         InterfaceChain.Factory.SearchRegistryProvider.CatalogNames.Insert(2, "NotFound2");
         Collection<PSObject> results = InvokeScript("Get-SearchCatalog");
+        Assert.False(InterfaceChain.HasWriteRecordings());
         Assert.All(results, (item, i) => Assert.Equal(expected[i], item.BaseObject, SearchCatalogInfoToMockComparer.Instance));
         Assert.Equal(expected.Count, results.Count);
         Assert.True(PowerShell.HadErrors);
@@ -55,6 +57,7 @@ public class SearchCatalogCommandsTests : CommandTestBase
     {
         InterfaceChain.CatalogManager.AddException("^get_|^set_", exceptionParam.Exception);
         Collection<PSObject> results = InvokeScript("Get-SearchCatalog");
+        Assert.False(InterfaceChain.HasWriteRecordings());
         Assert.Empty(results);
         AssertSingleErrorRecord(exceptionParam);
     }
@@ -134,11 +137,10 @@ public class SearchCatalogCommandsTests : CommandTestBase
     [InlineData("-ConnectTimeout 100 -DataTimeout 100 -DiacriticSensitivity ")]
     public void SetSearchCatalog_WhatIf_Succeeds(string arguments)
     {
-        SearchCatalogInfo expectedInfo = new(new MockCatalogManager());
         Collection<PSObject> results = InvokeScript("Set-SearchCatalog " + arguments + " -WhatIf ");
+        Assert.False(InterfaceChain.HasWriteRecordings());
         Assert.Empty(results);
         Assert.False(PowerShell.HadErrors);
-        Assert.Equal(expectedInfo, InterfaceChain.CatalogManager, SearchCatalogInfoToMockComparer.Instance);
     }
 
     [Theory]
@@ -203,8 +205,8 @@ public class SearchCatalogCommandsTests : CommandTestBase
     public void ResetSearchCatalog_WhatIf_Succeeds()
     {
         Collection<PSObject> results = InvokeScript("Reset-SearchCatalog  -WhatIf ");
+        Assert.False(InterfaceChain.HasWriteRecordings());
         Assert.Empty(results);
         Assert.False(PowerShell.HadErrors);
-        Assert.False(InterfaceChain.HasRecordings());
     }
 }

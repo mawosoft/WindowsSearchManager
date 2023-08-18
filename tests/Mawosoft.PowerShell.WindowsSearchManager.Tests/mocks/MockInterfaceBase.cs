@@ -10,10 +10,12 @@ public abstract class MockInterfaceBase
     {
         public string MethodName { get; }
         public IReadOnlyList<object?> Parameters { get; }
-        public CallInfo(string methodName, object?[] parameters)
+        public bool IsReadOnly { get; }
+        public CallInfo(string methodName, object?[] parameters, bool isReadOnly)
         {
             MethodName = methodName;
             Parameters = parameters;
+            IsReadOnly = isReadOnly;
         }
         public override string ToString() => $"{MethodName}({string.Join(",", Parameters)})";
     }
@@ -52,6 +54,12 @@ public abstract class MockInterfaceBase
     // Strings should be sufficient for everything except AddRoot(CSearchRoot).
     internal List<string> RecordedCalls => RecordedCallInfos.ConvertAll(c => c.ToString());
 
+    // Has any recorded calls?
+    internal bool HasRecordings => RecordedCallInfos.Count > 0;
+
+    // Has recorded writes, i.e. methods that change something.
+    internal bool HasWriteRecordings => RecordedCallInfos.Find(c => !c.IsReadOnly) is not null;
+
     // Disable recording (and exception throwing). Mostly for debugging purposes to avoid recording debugger access to variables.
     internal bool RecordingDisabled { get; set; }
 
@@ -66,13 +74,16 @@ public abstract class MockInterfaceBase
     // would work in such a situation, but a) doesn't distinguish between property getters and setters, and b) doesn't work with 'params' parameters.
     // We could probably live with b) and drop 'params', but losing the getter/setter info is a no-go.
     // Solution: If calling Record() is the last/only call, follow it with a call to TailCall();
-    protected void Record(params object?[] parameters)
+
+    protected void RecordRead(params object?[] parameters) => Record(parameters, isReadOnly: true);
+    protected void RecordWrite(params object?[] parameters) => Record(parameters, isReadOnly: false);
+    private void Record(object?[] parameters, bool isReadOnly)
     {
         if (RecordingDisabled) return;
         parameters ??= new object?[] { null };
-        StackFrame frame = new(1);
+        StackFrame frame = new(2); // 0 = Record, 1 = RecordRead/Write, 2 = caller
         string methodName = frame.GetMethod()?.Name ?? string.Empty;
-        RecordedCallInfos.Add(new CallInfo(methodName, parameters));
+        RecordedCallInfos.Add(new CallInfo(methodName, parameters, isReadOnly));
         ExceptionInfo? info = ExceptionsToThrow.Find(e => Regex.IsMatch(methodName, e.MethodRegex));
         if (info is not null)
         {

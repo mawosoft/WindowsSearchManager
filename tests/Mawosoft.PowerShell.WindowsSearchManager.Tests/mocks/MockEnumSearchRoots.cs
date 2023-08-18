@@ -19,7 +19,7 @@ public class MockEnumSearchRoots : MockInterfaceBase, IEnumSearchRoots
             rgelt = Items[_index++];
             pceltFetched++;
         }
-        Record(celt, rgelt, pceltFetched);
+        RecordRead(celt, rgelt, pceltFetched);
         TailCall();
     }
 

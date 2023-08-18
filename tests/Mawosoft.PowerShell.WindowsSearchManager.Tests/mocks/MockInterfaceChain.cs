@@ -114,8 +114,15 @@ public class MockInterfaceChain
 
     public bool HasRecordings()
     {
-        if (Factory is not null && Factory.RecordedCallInfos.Count > 0) return true;
-        for (int i = 1; i < Count; i++) if (this[i].RecordedCallInfos.Count > 0) return true;
-        return SearchManager.CatalogManagers.Find(c => c.RecordedCallInfos.Count > 0) is not null;
+        if (Factory is not null && Factory.HasRecordings) return true;
+        for (int i = 1; i < Count; i++) if (this[i].HasRecordings) return true;
+        return SearchManager.CatalogManagers.Find(c => c.HasRecordings) is not null;
+    }
+
+    public bool HasWriteRecordings()
+    {
+        if (Factory is not null && Factory.HasWriteRecordings) return true;
+        for (int i = 1; i < Count; i++) if (this[i].HasWriteRecordings) return true;
+        return SearchManager.CatalogManagers.Find(c => c.HasWriteRecordings) is not null;
     }
 }

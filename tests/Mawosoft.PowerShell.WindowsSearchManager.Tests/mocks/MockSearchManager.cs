@@ -51,7 +51,7 @@ public class MockSearchManager : MockInterfaceBase, ISearchManager
 
     public virtual ISearchCatalogManager GetCatalog(string pszCatalog)
     {
-        Record(pszCatalog);
+        RecordRead(pszCatalog);
         object? catalog = GetChildInterface();
         if (catalog is null || CatalogManagers.Count == 0)
         {
@@ -68,7 +68,7 @@ public class MockSearchManager : MockInterfaceBase, ISearchManager
     {
         get
         {
-            Record();
+            RecordRead();
             return ProxyNameInternal;
         }
     }
@@ -77,7 +77,7 @@ public class MockSearchManager : MockInterfaceBase, ISearchManager
     {
         get
         {
-            Record();
+            RecordRead();
             return ByPassListInternal;
         }
     }
@@ -86,12 +86,12 @@ public class MockSearchManager : MockInterfaceBase, ISearchManager
     {
         get
         {
-            Record();
+            RecordRead();
             return UserAgentInternal;
         }
         set
         {
-            Record(value);
+            RecordWrite(value);
             UserAgentInternal = value;
         }
     }
@@ -100,7 +100,7 @@ public class MockSearchManager : MockInterfaceBase, ISearchManager
     {
         get
         {
-            Record();
+            RecordRead();
             return UseProxyInternal;
         }
     }
@@ -109,7 +109,7 @@ public class MockSearchManager : MockInterfaceBase, ISearchManager
     {
         get
         {
-            Record();
+            RecordRead();
             return LocalByPassInternal;
         }
     }
@@ -118,26 +118,26 @@ public class MockSearchManager : MockInterfaceBase, ISearchManager
     {
         get
         {
-            Record();
+            RecordRead();
             return PortNumberInternal;
         }
     }
 
     public virtual void GetIndexerVersionStr(out string ppszVersionString)
     {
-        Record();
+        RecordRead();
         ppszVersionString = IndexerVersionStrInternal;
     }
 
     public virtual void GetIndexerVersion(out uint pdwMajor, out uint pdwMinor)
     {
-        Record();
+        RecordRead();
         (pdwMajor, pdwMinor) = VersionInternal;
     }
 
     public virtual void SetProxy(_PROXY_ACCESS sUseProxy, int fLocalByPassProxy, uint dwPortNumber, string pszProxyName, string pszByPassList)
     {
-        Record(sUseProxy, fLocalByPassProxy, dwPortNumber, pszProxyName, pszByPassList);
+        RecordWrite(sUseProxy, fLocalByPassProxy, dwPortNumber, pszProxyName, pszByPassList);
         UseProxyInternal = sUseProxy;
         LocalByPassInternal = fLocalByPassProxy;
         PortNumberInternal = dwPortNumber;
@@ -160,7 +160,7 @@ internal class MockSearchManager2 : MockSearchManager, ISearchManager2
 
     public virtual void CreateCatalog(string pszCatalog, out ISearchCatalogManager ppCatalogManager)
     {
-        Record(pszCatalog);
+        RecordWrite(pszCatalog);
         ppCatalogManager = new MockCatalogManager()
         {
             NameInternal = pszCatalog
@@ -169,7 +169,7 @@ internal class MockSearchManager2 : MockSearchManager, ISearchManager2
 
     public virtual void DeleteCatalog(string pszCatalog)
     {
-        Record(pszCatalog);
+        RecordWrite(pszCatalog);
         TailCall();
     }
 }
