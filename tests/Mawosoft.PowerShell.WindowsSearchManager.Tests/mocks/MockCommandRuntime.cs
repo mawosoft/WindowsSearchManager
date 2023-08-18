@@ -8,7 +8,6 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 [SuppressMessage("Design", "CA1065:Do not raise exceptions in unexpected locations", Justification = "Partial interface implementation.")]
 public class MockCommandRuntime : ICommandRuntime
 {
-    internal List<object?> Outputs { get; } = new();
     internal List<ErrorRecord> Errors { get; } = new();
 
 #if !NETFRAMEWORK
@@ -21,29 +20,23 @@ public class MockCommandRuntime : ICommandRuntime
         throw errorRecord.Exception ?? new InvalidOperationException(errorRecord.ToString());
     }
 
-    public void WriteError(ErrorRecord errorRecord)
-    {
-        Assert.NotNull(errorRecord);
-        Errors.Add(errorRecord);
-    }
+    [ExcludeFromCodeCoverage] public PSTransactionContext CurrentPSTransaction => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public PSHost Host => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public bool ShouldContinue(string? query, string? caption) => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public bool ShouldContinue(string? query, string? caption, ref bool yesToAll, ref bool noToAll) => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public bool ShouldProcess(string? target) => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public bool ShouldProcess(string? target, string? action) => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public bool ShouldProcess(string? verboseDescription, string? verboseWarning, string? caption) => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public bool ShouldProcess(string? verboseDescription, string? verboseWarning, string? caption, out ShouldProcessReason shouldProcessReason) => throw new NotImplementedException();
 
-    public void WriteObject(object? sendToPipeline) => Outputs.Add(sendToPipeline);
-
-    public PSTransactionContext CurrentPSTransaction => throw new NotImplementedException();
-    public PSHost Host => throw new NotImplementedException();
-    public bool ShouldContinue(string? query, string? caption) => throw new NotImplementedException();
-    public bool ShouldContinue(string? query, string? caption, ref bool yesToAll, ref bool noToAll) => throw new NotImplementedException();
-    public bool ShouldProcess(string? target) => throw new NotImplementedException();
-    public bool ShouldProcess(string? target, string? action) => throw new NotImplementedException();
-    public bool ShouldProcess(string? verboseDescription, string? verboseWarning, string? caption) => throw new NotImplementedException();
-    public bool ShouldProcess(string? verboseDescription, string? verboseWarning, string? caption, out ShouldProcessReason shouldProcessReason) => throw new NotImplementedException();
-
-    public bool TransactionAvailable() => throw new NotImplementedException();
-    public void WriteCommandDetail(string text) => throw new NotImplementedException();
-    public void WriteDebug(string text) => throw new NotImplementedException();
-    public void WriteObject(object? sendToPipeline, bool enumerateCollection) => throw new NotImplementedException();
-    public void WriteProgress(long sourceId, ProgressRecord progressRecord) => throw new NotImplementedException();
-    public void WriteProgress(ProgressRecord progressRecord) => throw new NotImplementedException();
-    public void WriteVerbose(string text) => throw new NotImplementedException();
-    public void WriteWarning(string text) => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public bool TransactionAvailable() => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public void WriteCommandDetail(string text) => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public void WriteDebug(string text) => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public void WriteError(ErrorRecord errorRecord) => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public void WriteObject(object? sendToPipeline) => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public void WriteObject(object? sendToPipeline, bool enumerateCollection) => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public void WriteProgress(long sourceId, ProgressRecord progressRecord) => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public void WriteProgress(ProgressRecord progressRecord) => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public void WriteVerbose(string text) => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public void WriteWarning(string text) => throw new NotImplementedException();
 }

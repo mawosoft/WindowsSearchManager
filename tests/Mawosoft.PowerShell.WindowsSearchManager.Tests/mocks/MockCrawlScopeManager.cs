@@ -42,12 +42,6 @@ public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager
         return (GetChildInterface() as IEnumSearchRoots)!;
     }
 
-    public virtual void AddHierarchicalScope(string pszUrl, int fInclude, int fDefault, int fOverrideChildren)
-    {
-        Record(pszUrl, fInclude, fDefault, fOverrideChildren);
-        TailCall();
-    }
-
     public virtual void AddUserScopeRule(string pszUrl, int fInclude, int fOverrideChildren, uint fFollowFlags)
     {
         Record(pszUrl, fInclude, fOverrideChildren, fFollowFlags);
@@ -86,4 +80,10 @@ public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager
         Record(pszUrl);
         TailCall();
     }
+
+    // Unused ISearchCrawlScopeManager members.
+
+    [ExcludeFromCodeCoverage] public virtual void AddHierarchicalScope(string pszUrl, int fInclude, int fDefault, int fOverrideChildren) => throw new NotImplementedException();
+
+
 }

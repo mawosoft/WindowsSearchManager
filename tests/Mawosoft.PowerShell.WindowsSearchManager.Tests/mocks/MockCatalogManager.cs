@@ -138,17 +138,17 @@ public class MockCatalogManager : MockInterfaceBase, ISearchCatalogManager
 
     // Unused ISearchCatalogManager members.
 
-    public virtual ISearchPersistentItemsChangedSink GetPersistentItemsChangedSink() => throw new NotImplementedException();
-    public virtual void GetItemsChangedSink(ISearchNotifyInlineSite pISearchNotifyInlineSite, ref Guid riid, out IntPtr ppv, out Guid pGUIDCatalogResetSignature, out Guid pGUIDCheckPointSignature, out uint pdwLastCheckPointNumber) => throw new NotImplementedException();
-    public virtual ISearchQueryHelper GetQueryHelper() => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public virtual ISearchPersistentItemsChangedSink GetPersistentItemsChangedSink() => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public virtual void GetItemsChangedSink(ISearchNotifyInlineSite pISearchNotifyInlineSite, ref Guid riid, out IntPtr ppv, out Guid pGUIDCatalogResetSignature, out Guid pGUIDCheckPointSignature, out uint pdwLastCheckPointNumber) => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public virtual ISearchQueryHelper GetQueryHelper() => throw new NotImplementedException();
 
     // ISearchCatalogManager members not supported by the original COM class.
 
-    public virtual IntPtr GetParameter(string pszName) => throw new NotSupportedException();
-    public virtual void SetParameter(string pszName, ref tag_inner_PROPVARIANT pValue) => throw new NotSupportedException();
-    public virtual uint GetURLIndexingState(string pszUrl) => throw new NotSupportedException();
-    public virtual void RegisterViewForNotification(string pszView, ISearchViewChangedSink pViewChangedSink, out uint pdwCookie) => throw new NotSupportedException();
-    public virtual void UnregisterViewForNotification(uint dwCookie) => throw new NotSupportedException();
-    public virtual void SetExtensionClusion(string pszExtension, int fExclude) => throw new NotSupportedException();
-    public virtual IEnumString EnumerateExcludedExtensions() => throw new NotSupportedException();
+    [ExcludeFromCodeCoverage] public virtual IntPtr GetParameter(string pszName) => throw new NotSupportedException();
+    [ExcludeFromCodeCoverage] public virtual void SetParameter(string pszName, ref tag_inner_PROPVARIANT pValue) => throw new NotSupportedException();
+    [ExcludeFromCodeCoverage] public virtual uint GetURLIndexingState(string pszUrl) => throw new NotSupportedException();
+    [ExcludeFromCodeCoverage] public virtual void RegisterViewForNotification(string pszView, ISearchViewChangedSink pViewChangedSink, out uint pdwCookie) => throw new NotSupportedException();
+    [ExcludeFromCodeCoverage] public virtual void UnregisterViewForNotification(uint dwCookie) => throw new NotSupportedException();
+    [ExcludeFromCodeCoverage] public virtual void SetExtensionClusion(string pszExtension, int fExclude) => throw new NotSupportedException();
+    [ExcludeFromCodeCoverage] public virtual IEnumString EnumerateExcludedExtensions() => throw new NotSupportedException();
 }

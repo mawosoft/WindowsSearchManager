@@ -25,7 +25,7 @@ public class MockEnumSearchScopeRules : MockInterfaceBase, IEnumSearchScopeRules
 
     // Unused IEnumSearchScopeRules members.
 
-    public void Skip(uint celt) => throw new NotImplementedException();
-    public void Reset() => throw new NotImplementedException();
-    public IEnumSearchScopeRules Clone() => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public void Skip(uint celt) => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public void Reset() => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public IEnumSearchScopeRules Clone() => throw new NotImplementedException();
 }

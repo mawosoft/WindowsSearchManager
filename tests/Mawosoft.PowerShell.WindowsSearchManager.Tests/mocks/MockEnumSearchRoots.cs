@@ -25,7 +25,7 @@ public class MockEnumSearchRoots : MockInterfaceBase, IEnumSearchRoots
 
     // Unused IEnumSearchRoots members.
 
-    public void Skip(uint celt) => throw new NotImplementedException();
-    public void Reset() => throw new NotImplementedException();
-    public IEnumSearchRoots Clone() => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public void Skip(uint celt) => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public void Reset() => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public IEnumSearchRoots Clone() => throw new NotImplementedException();
 }
