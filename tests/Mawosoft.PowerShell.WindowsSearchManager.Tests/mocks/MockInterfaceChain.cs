@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023 Matthias Wolf, Mawosoft.
+// Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
@@ -114,8 +114,8 @@ public class MockInterfaceChain
 
     public bool HasRecordings()
     {
-        if (Factory is not null && Factory.RecordedCalls.Count > 0) return true;
-        for (int i = 1; i < Count; i++) if (this[i].RecordedCalls.Count > 0) return true;
-        return SearchManager.CatalogManagers.Find(c => c.RecordedCalls.Count > 0) is not null;
+        if (Factory is not null && Factory.RecordedCallInfos.Count > 0) return true;
+        for (int i = 1; i < Count; i++) if (this[i].RecordedCallInfos.Count > 0) return true;
+        return SearchManager.CatalogManagers.Find(c => c.RecordedCallInfos.Count > 0) is not null;
     }
 }

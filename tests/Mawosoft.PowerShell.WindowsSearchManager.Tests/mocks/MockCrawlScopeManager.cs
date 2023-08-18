@@ -6,21 +6,42 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager
 {
-    // TODO we need roots and rules for enum and queries
+    internal MockCrawlScopeManager() { }
+
+    internal MockCrawlScopeManager(IList<CSearchRoot> roots)
+    {
+        if (roots.Count != 0) ChildInterface = new MockEnumSearchRoots(roots);
+    }
+
+    internal MockCrawlScopeManager(IList<CSearchScopeRule> rules)
+    {
+        if (rules.Count != 0) ChildInterface = new MockEnumSearchScopeRules(rules);
+    }
+
     public virtual void AddDefaultScopeRule(string pszUrl, int fInclude, uint fFollowFlags)
     {
         Record(pszUrl, fInclude, fFollowFlags);
         TailCall();
     }
 
-    public virtual void AddRoot(CSearchRoot pSearchRoot) => throw new NotImplementedException(); // TODO Record tostring
+    public virtual void AddRoot(CSearchRoot pSearchRoot)
+    {
+        Record(pSearchRoot);
+        TailCall();
+    }
+
     public virtual void RemoveRoot(string pszUrl)
     {
         Record(pszUrl);
         TailCall();
     }
 
-    public virtual IEnumSearchRoots EnumerateRoots() => throw new NotImplementedException();
+    public virtual IEnumSearchRoots EnumerateRoots()
+    {
+        Record();
+        return (GetChildInterface() as IEnumSearchRoots)!;
+    }
+
     public virtual void AddHierarchicalScope(string pszUrl, int fInclude, int fDefault, int fOverrideChildren)
     {
         Record(pszUrl, fInclude, fDefault, fOverrideChildren);
@@ -38,7 +59,12 @@ public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager
         Record(pszRule);
         TailCall();
     }
-    public virtual IEnumSearchScopeRules EnumerateScopeRules() => throw new NotImplementedException();
+    public virtual IEnumSearchScopeRules EnumerateScopeRules()
+    {
+        Record();
+        return (GetChildInterface() as IEnumSearchScopeRules)!;
+    }
+
     public virtual int HasParentScopeRule(string pszUrl) => throw new NotImplementedException();
     public virtual int HasChildScopeRule(string pszUrl) => throw new NotImplementedException();
     public virtual int IncludedInCrawlScope(string pszUrl) => throw new NotImplementedException();

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023 Matthias Wolf, Mawosoft.
+// Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
 namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
@@ -256,13 +256,13 @@ public class SearchApiCommandBaseTests : CommandTestBase
     public void SaveCrawlScopeManager_NullArgument_Succeeds()
     {
         Command.TestSaveCrawlScopeManager(null);
-        Assert.DoesNotContain(InterfaceChain.ScopeManager.RecordedCalls, c => c.MethodName == "SaveAll");
+        Assert.Empty(InterfaceChain.ScopeManager.RecordedCallInfos);
     }
 
     [Fact]
     public void SaveCrawlScopeManager_Succeeds()
     {
         Command.TestSaveCrawlScopeManager(InterfaceChain.ScopeManager);
-        Assert.Single(InterfaceChain.ScopeManager.RecordedCalls, c => c.MethodName == "SaveAll");
+        Assert.Equal("SaveAll()", Assert.Single(InterfaceChain.ScopeManager.RecordedCalls));
     }
 }

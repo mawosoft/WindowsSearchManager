@@ -9,13 +9,13 @@ public abstract class MockInterfaceBase
     public class CallInfo
     {
         public string MethodName { get; }
-        public IReadOnlyCollection<object?> Parameters { get; }
+        public IReadOnlyList<object?> Parameters { get; }
         public CallInfo(string methodName, object?[] parameters)
         {
             MethodName = methodName;
             Parameters = parameters;
         }
-        public override string? ToString() => $"{MethodName}({string.Join(",", Parameters)})";
+        public override string ToString() => $"{MethodName}({string.Join(",", Parameters)})";
     }
 
     // Info about an exception a method matching the regex string should throw.
@@ -47,7 +47,10 @@ public abstract class MockInterfaceBase
     internal List<ExceptionInfo> ExceptionsToThrow { get; } = new List<ExceptionInfo>();
 
     // List of recorded calls to interface methods.
-    internal List<CallInfo> RecordedCalls { get; } = new List<CallInfo>();
+    internal List<CallInfo> RecordedCallInfos { get; } = new List<CallInfo>();
+
+    // Strings should be sufficient for everything except AddRoot(CSearchRoot).
+    internal List<string> RecordedCalls => RecordedCallInfos.ConvertAll(c => c.ToString());
 
     // Disable recording (and exception throwing). Mostly for debugging purposes to avoid recording debugger access to variables.
     internal bool RecordingDisabled { get; set; }
@@ -69,7 +72,7 @@ public abstract class MockInterfaceBase
         parameters ??= new object?[] { null };
         StackFrame frame = new(1);
         string methodName = frame.GetMethod()?.Name ?? string.Empty;
-        RecordedCalls.Add(new CallInfo(methodName, parameters));
+        RecordedCallInfos.Add(new CallInfo(methodName, parameters));
         ExceptionInfo? info = ExceptionsToThrow.Find(e => Regex.IsMatch(methodName, e.MethodRegex));
         if (info is not null)
         {
