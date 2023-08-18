@@ -140,4 +140,71 @@ public class SearchCatalogCommandsTests : CommandTestBase
         Assert.False(PowerShell.HadErrors);
         Assert.Equal(expectedInfo, InterfaceChain.CatalogManager, SearchCatalogInfoToMockComparer.Instance);
     }
+
+    [Theory]
+    [InlineData(null, false)]
+    [InlineData("SecondCatalog", false)]
+    [InlineData("ThirdCatalog", true)]
+    public void ResetSearchCatalog_Succeeds(string? catalogName, bool positional)
+    {
+        string script = "Reset-SearchCatalog ";
+        if (catalogName is null)
+        {
+            catalogName = SearchApiCommandBase.DefaultCatalogName;
+        }
+        else
+        {
+            if (!positional) script += "-Catalog ";
+            script += $"'{catalogName}' ";
+        }
+        Collection<PSObject> results = InvokeScript(script);
+        Assert.Empty(results);
+        Assert.False(PowerShell.HadErrors);
+        Assert.Equal($"GetCatalog({catalogName})", Assert.Single(InterfaceChain.SearchManager.RecordedCalls));
+        Assert.Equal("Reset()", Assert.Single(InterfaceChain.CatalogManager.RecordedCalls));
+    }
+
+    [Fact]
+    public void ResetSearchCatalog_NoAdmin_Fails()
+    {
+        InterfaceChain.CatalogManager.AdminMode = false;
+        Collection<PSObject> results = InvokeScript("Reset-SearchCatalog ");
+        Assert.Empty(results);
+        AssertUnauthorizedAccess();
+    }
+
+    [Theory]
+    [ClassData(typeof(Exception_TheoryData))]
+    public void ResetSearchCatalog_HandlesFailures(ExceptionParam exceptionParam)
+    {
+        InterfaceChain.CatalogManager.AddException("^Reset$", exceptionParam.Exception);
+        Collection<PSObject> results = InvokeScript("Reset-SearchCatalog ");
+        Assert.Empty(results);
+        AssertSingleErrorRecord(exceptionParam);
+    }
+
+    [Fact]
+    public void ResetSearchCatalog_ConfirmImpact_Medium()
+    {
+        AssertConfirmImpact(typeof(ResetSearchCatalogCommand), ConfirmImpact.Medium);
+    }
+
+    [Theory]
+    [InlineData("-Catalog ")]
+    [InlineData("-Catalog '' ")]
+    [InlineData("$null ")]
+    [InlineData("'' ")]
+    public void ResetSearchCatalog_ParameterValidation_Succeeds(string arguments)
+    {
+        AssertParameterValidation("Reset-SearchCatalog " + arguments);
+    }
+
+    [Fact]
+    public void ResetSearchCatalog_WhatIf_Succeeds()
+    {
+        Collection<PSObject> results = InvokeScript("Reset-SearchCatalog  -WhatIf ");
+        Assert.Empty(results);
+        Assert.False(PowerShell.HadErrors);
+        Assert.False(InterfaceChain.HasRecordings());
+    }
 }
