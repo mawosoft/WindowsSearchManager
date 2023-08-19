@@ -4,13 +4,18 @@
     <TargetFrameworks>net7.0;net6.0;$(NetFxTfm)</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <Description>Tests for Mawosoft.PowerShell.WindowsSearchManager</Description>
-    <!-- Needed for IDE0005 in cmdline builds. See https://github.com/dotnet/roslyn/issues/41640 -->
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <!-- CS1591  Missing XML comment... Reason: Not needed for tests.
-         MSB3270 Processor architecture mismatch. Reason: interop.searchapi.dll only has processor-specific flavors,
+    <!-- MSB3270 Processor architecture mismatch. Reason: interop.searchapi.dll only has processor-specific flavors,
                  but we only use it to embed the interop types, in which case architecture doesn't matter.
     -->
-    <NoWarn>$(NoWarn);CS1591;MSB3270</NoWarn>
+    <NoWarn>$(NoWarn);MSB3270</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Needed for IDE0005 in cmdline builds with dotnet SDK >= 7.0.400. See https://github.com/dotnet/roslyn/issues/41640
+         CS1591: Missing XML comment -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <CopyDocumentationFileToOutputDirectory>false</CopyDocumentationFileToOutputDirectory>
   </PropertyGroup>
 
   <PropertyGroup>
