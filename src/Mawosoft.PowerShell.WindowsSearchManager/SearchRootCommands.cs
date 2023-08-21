@@ -5,7 +5,7 @@ namespace Mawosoft.PowerShell.WindowsSearchManager;
 /// <summary>
 /// Returns a collection of objects representing the search roots of a catalog.
 /// </summary>
-[Cmdlet(VerbsCommon.Get, Nouns.SearchRoot)]
+[Cmdlet(VerbsCommon.Get, Nouns.SearchRoot, ConfirmImpact = ConfirmImpact.None)]
 [OutputType(typeof(SearchRootInfo), typeof(string))]
 public sealed class GetSearchRootCommand : SearchApiCommandBase
 {
