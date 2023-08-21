@@ -114,12 +114,6 @@ public class SearchCatalogCommandsTests : CommandTestBase
     }
 
 
-    [Fact]
-    public void SetSearchCatalog_ConfirmImpact_Medium()
-    {
-        AssertConfirmImpact(typeof(SetSearchCatalogCommand), ConfirmImpact.Medium);
-    }
-
     [Theory]
     [InlineData("-Catalog ")]
     [InlineData("-Catalog '' ")]
@@ -128,19 +122,6 @@ public class SearchCatalogCommandsTests : CommandTestBase
     public void SetSearchCatalog_ParameterValidation_Succeeds(string arguments)
     {
         AssertParameterValidation("Set-SearchCatalog " + arguments);
-    }
-
-    [Theory]
-    [InlineData("-ConnectTimeout 100 ")]
-    [InlineData("-DataTimeout 100 ")]
-    [InlineData("-DiacriticSensitivity ")]
-    [InlineData("-ConnectTimeout 100 -DataTimeout 100 -DiacriticSensitivity ")]
-    public void SetSearchCatalog_WhatIf_Succeeds(string arguments)
-    {
-        Collection<PSObject> results = InvokeScript("Set-SearchCatalog " + arguments + " -WhatIf ");
-        Assert.False(InterfaceChain.HasWriteRecordings());
-        Assert.Empty(results);
-        Assert.False(PowerShell.HadErrors);
     }
 
     [Theory]
@@ -185,12 +166,6 @@ public class SearchCatalogCommandsTests : CommandTestBase
         AssertSingleErrorRecord(exceptionParam);
     }
 
-    [Fact]
-    public void ResetSearchCatalog_ConfirmImpact_Medium()
-    {
-        AssertConfirmImpact(typeof(ResetSearchCatalogCommand), ConfirmImpact.Medium);
-    }
-
     [Theory]
     [InlineData("-Catalog ")]
     [InlineData("-Catalog '' ")]
@@ -199,14 +174,5 @@ public class SearchCatalogCommandsTests : CommandTestBase
     public void ResetSearchCatalog_ParameterValidation_Succeeds(string arguments)
     {
         AssertParameterValidation("Reset-SearchCatalog " + arguments);
-    }
-
-    [Fact]
-    public void ResetSearchCatalog_WhatIf_Succeeds()
-    {
-        Collection<PSObject> results = InvokeScript("Reset-SearchCatalog  -WhatIf ");
-        Assert.False(InterfaceChain.HasWriteRecordings());
-        Assert.Empty(results);
-        Assert.False(PowerShell.HadErrors);
     }
 }

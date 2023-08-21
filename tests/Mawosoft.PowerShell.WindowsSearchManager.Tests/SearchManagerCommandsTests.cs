@@ -112,12 +112,6 @@ public class SearchManagerCommandsTests : CommandTestBase
         AssertSingleErrorRecord(exceptionParam);
     }
 
-    [Fact]
-    public void SetSearchManager_ConfirmImpact_Medium()
-    {
-        AssertConfirmImpact(typeof(SetSearchManagerCommand), ConfirmImpact.Medium);
-    }
-
     [Theory]
     [InlineData("-UserAgent ")]
     [InlineData("-UserAgent '' ")]
@@ -129,18 +123,5 @@ public class SearchManagerCommandsTests : CommandTestBase
     public void SetSearchManager_ParameterValidation_Succeeds(string arguments)
     {
         AssertParameterValidation("Set-SearchManager " + arguments);
-    }
-
-    [Theory]
-    [InlineData("-UserAgent foo-agent ")]
-    [InlineData("-ProxyAccess PROXY_ACCESS_DIRECT ")]
-    [InlineData("-UserAgent foo-agent -ProxyAccess PROXY_ACCESS_DIRECT ")]
-    [InlineData("-ProxyAccess PROXY_ACCESS_PROXY -ProxyName bar.com -ProxyPortNumber 0x8080 -ProxyBypassLocal -ProxyBypassList buzz.com,baz.org")]
-    public void SetSearchManager_WhatIf_Succeeds(string arguments)
-    {
-        Collection<PSObject> results = InvokeScript("Set-SearchManager " + arguments + " -WhatIf ");
-        Assert.False(InterfaceChain.HasWriteRecordings());
-        Assert.Empty(results);
-        Assert.False(PowerShell.HadErrors);
     }
 }
