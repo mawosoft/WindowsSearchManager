@@ -83,10 +83,13 @@ public sealed class AddSearchRuleCommand : SearchApiCommandBase
             infos = new SearchRuleInfo[Path.Length];
             for (int i = 0; i < Path.Length; i++)
             {
-                infos[i].Path = Path[i];
-                infos[i].RuleType = RuleType;
-                infos[i].RuleSet = RuleSet;
-                infos[i].OverrideChildren = OverrideChildren;
+                infos[i] = new()
+                {
+                    Path = Path[i],
+                    RuleType = RuleType,
+                    RuleSet = RuleSet,
+                    OverrideChildren = OverrideChildren
+                };
             }
         }
         try
