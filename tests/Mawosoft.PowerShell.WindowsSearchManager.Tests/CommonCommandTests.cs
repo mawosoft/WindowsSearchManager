@@ -5,29 +5,51 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 public class CommonCommandTests : CommandTestBase
 {
 
-    [Fact]
-    public void CommonTests_TheoryData_AllCommands_Complete()
+    private static void Assert_TestDataCoverage(
+        List<(Type Type, string Name)> expectedCommands,
+        Delegate method)
     {
-        HashSet<string?> expectedCommandNames = new(AllCommands.ConvertAll(vt => vt.Name));
-        MethodInfo m = ((Action<string, ConfirmImpact>)ConfirmImpact_Matches_SupportsShouldProcess).GetMethodInfo();
-        IEnumerable<string?> actualCommandNames = m.GetCustomAttributes<DataAttribute>()
-            .Select(d => d.GetData(m).First().First() as string);
-        IEnumerable<string?> missing = expectedCommandNames.Except(actualCommandNames);
-        Assert.Empty(missing);
+        MethodInfo m = method.GetMethodInfo();
+        Assert.NotNull(m);
+        List<object[]> data = new(
+            m.GetCustomAttributes<DataAttribute>().SelectMany(a => a.GetData(m)));
+        Type type = data.First().First().GetType();
+        if (type == typeof(string))
+        {
+            HashSet<string> expected = new(expectedCommands.ConvertAll(vt => vt.Name));
+            HashSet<string> actual = new(
+                data.ConvertAll(d => ((string)d.First()).Split(' ').First()));
+            Assert.Empty(expected.Except(actual));
+            Assert.Empty(actual.Except(expected));
+        }
+        else if (type == typeof(string))
+        {
+            HashSet<Type> expected = new(expectedCommands.ConvertAll(vt => vt.Type));
+            HashSet<Type> actual = new(data.Select(d => (Type)d.First()));
+            Assert.Empty(expected.Except(actual));
+            Assert.Empty(actual.Except(expected));
+        }
+        else
+        {
+            Assert.Fail("Expected value of type 'string' or 'Type' as first parameter");
+        }
     }
 
     [Fact]
-    public void CommonTests_TheoryData_CommandsSupportingShouldProcess_Complete()
+    public void CommonTests_TestData_CoverExpectedCommands()
     {
-        HashSet<string?> expectedCommandNames = new(CommandsSupportingShouldProcess.ConvertAll(vt => vt.Name));
-        MethodInfo m = ((Delegate)WhatIf_Succeeds).GetMethodInfo();
-        IEnumerable<string?> actualCommandNames = m.GetCustomAttributes<DataAttribute>()
-            .Select(d => (d.GetData(m).First().First() as string)?.Split(' ').First())
-            .Distinct();
-        IEnumerable<string?> missing = expectedCommandNames.Except(actualCommandNames);
-        Assert.Empty(missing);
-        IEnumerable<string?> unexpected = actualCommandNames.Except(expectedCommandNames);
-        Assert.Empty(unexpected);
+        var commandsWithCatalogValidation = AllCommands.FindAll(
+            vt => vt.Type != typeof(GetSearchManagerCommand)
+                  && vt.Type != typeof(SetSearchManagerCommand));
+        var commandsWithCatalogSelection = commandsWithCatalogValidation.FindAll(
+            vt => vt.Type != typeof(GetSearchCatalogCommand)
+                  && vt.Type != typeof(NewSearchCatalogCommand)
+                  && vt.Type != typeof(RemoveSearchCatalogCommand));
+
+        Assert_TestDataCoverage(AllCommands, ConfirmImpact_Matches_SupportsShouldProcess);
+        Assert_TestDataCoverage(CommandsSupportingShouldProcess, WhatIf_Succeeds);
+        Assert_TestDataCoverage(commandsWithCatalogSelection, CatalogParameter_CatalogSelection_Succeeds);
+        Assert_TestDataCoverage(commandsWithCatalogValidation, CatalogParameter_ParameterValidation_Succeeds);
     }
 
     [Theory]
@@ -57,34 +79,100 @@ public class CommonCommandTests : CommandTestBase
         Assert.Equal(confirmImpact != ConfirmImpact.None, a.SupportsShouldProcess);
     }
 
-    [Theory]
-    [InlineData("Set-SearchManager -UserAgent foo-agent ")]
-    [InlineData("Set-SearchManager -ProxyAccess PROXY_ACCESS_DIRECT ")]
-    [InlineData("Set-SearchManager -UserAgent foo-agent -ProxyAccess PROXY_ACCESS_DIRECT ")]
-    [InlineData("Set-SearchManager -ProxyAccess PROXY_ACCESS_PROXY -ProxyName bar.com -ProxyPortNumber 0x8080 -ProxyBypassLocal -ProxyBypassList buzz.com,baz.org ")]
-    [InlineData("New-SearchCatalog newcat ")]
-    [InlineData("Remove-SearchCatalog oldcat ")]
-    [InlineData("Reset-SearchCatalog ")]
-    [InlineData("Set-SearchCatalog -ConnectTimeout 100 ")]
-    [InlineData("Set-SearchCatalog -DataTimeout 100 ")]
-    [InlineData("Set-SearchCatalog -DiacriticSensitivity ")]
-    [InlineData("Set-SearchCatalog -ConnectTimeout 100 -DataTimeout 100 -DiacriticSensitivity ")]
-    [InlineData("Update-SearchCatalog ")]
-    [InlineData("Update-SearchCatalog -RootPath x:\\ ")]
-    [InlineData("Update-SearchCatalog -Path x:\\foo ")]
-    [InlineData("Add-SearchRoot x:\\ ")]
-    [InlineData("Add-SearchRoot -InputObject @{ Path = 'x:\\' } ")]
-    [InlineData("Remove-SearchRoot x:\\ ")]
-    [InlineData("Add-SearchRule x:\\foo -RuleType Exclude ")]
-    [InlineData("Add-SearchRule -InputObject @{ Path = 'x:\\foo'; RuleType = 'Exclude' } ")]
-    [InlineData("Remove-SearchRule x:\\foo ")]
-    [InlineData("Remove-SearchRule x:\\foo Default ")]
-    [InlineData("Reset-SearchRule ")]
-    public void WhatIf_Succeeds(string command)
+    private static readonly string[] s_WhatifCommands =
     {
-        Collection<PSObject> results = InvokeScript(command + " -WhatIf ");
-        Assert.False(InterfaceChain.HasWriteRecordings());
-        Assert.Empty(results);
+        @"Set-SearchManager -UserAgent foo-agent ",
+        @"Set-SearchManager -ProxyAccess PROXY_ACCESS_DIRECT ",
+        @"Set-SearchManager -UserAgent foo-agent -ProxyAccess PROXY_ACCESS_DIRECT ",
+        @"Set-SearchManager -ProxyAccess PROXY_ACCESS_PROXY -ProxyName bar.com -ProxyPortNumber 0x8080 -ProxyBypassLocal -ProxyBypassList buzz.com,baz.org ",
+        @"New-SearchCatalog newcat ",
+        @"Remove-SearchCatalog oldcat ",
+        @"Reset-SearchCatalog ",
+        @"Set-SearchCatalog -ConnectTimeout 100 ",
+        @"Set-SearchCatalog -DataTimeout 100 ",
+        @"Set-SearchCatalog -DiacriticSensitivity ",
+        @"Set-SearchCatalog -ConnectTimeout 100 -DataTimeout 100 -DiacriticSensitivity ",
+        @"Update-SearchCatalog ",
+        @"Update-SearchCatalog -RootPath x:\ ",
+        @"Update-SearchCatalog -Path x:\foo ",
+        @"Add-SearchRoot x:\ ",
+        @"Add-SearchRoot -InputObject @{ Path = 'x:\' } ",
+        @"Remove-SearchRoot x:\ ",
+        @"Add-SearchRule x:\foo -RuleType Exclude ",
+        @"Add-SearchRule -InputObject @{ Path = 'x:\foo'; RuleType = 'Exclude' } ",
+        @"Remove-SearchRule x:\foo ",
+        @"Remove-SearchRule x:\foo Default ",
+        @"Reset-SearchRule ",
+    };
+
+    public static IEnumerable<object[]> WhatIf_TestData()
+        => CombineTestDataParameters(s_WhatifCommands, new[] { true, false });
+
+    [Theory]
+    [MemberData(nameof(WhatIf_TestData))]
+    public void WhatIf_Succeeds(string command, bool whatIf)
+    {
+        if (whatIf) command += " -WhatIf ";
+        Collection<PSObject> results = InvokeScript(command);
+        Assert.Equal(!whatIf, InterfaceChain.HasWriteRecordings());
+        if (whatIf) Assert.Empty(results);
         Assert.False(PowerShell.HadErrors);
+    }
+
+    private static readonly string[] s_CatalogCommands =
+    {
+        @"Reset-SearchCatalog ",
+        @"Set-SearchCatalog -ConnectTimeout 100 ",
+        @"Update-SearchCatalog -All",
+        @"Update-SearchCatalog -RootPath x:\ ",
+        @"Update-SearchCatalog -Path x:\foo ",
+        @"Add-SearchRoot x:\ ",
+        @"Get-SearchRoot ",
+        @"Remove-SearchRoot x:\ ",
+        @"Add-SearchRule x:\foo -RuleType Exclude ",
+        @"Get-SearchRule ",
+        @"Remove-SearchRule x:\foo ",
+        @"Reset-SearchRule ",
+        @"Test-SearchRule x:\foo ",
+    };
+
+    private static readonly string[] s_CatalogValidationOnlyCommands =
+    {
+        @"Get-SearchCatalog ",
+        @"New-SearchCatalog ",
+        @"Remove-SearchCatalog ",
+    };
+
+    public static IEnumerable<object[]> CatalogSelection_TestData()
+        => CombineTestDataParameters(s_CatalogCommands, new string?[] { null, "SecondCatalog" });
+
+    public static IEnumerable<object[]> CatalogValidation_TestData()
+        => CombineTestDataParameters(
+            s_CatalogCommands.Concat(s_CatalogValidationOnlyCommands),
+            new string[] { "", "''", "$null" });
+
+    [Theory]
+    [MemberData(nameof(CatalogSelection_TestData))]
+    public void CatalogParameter_CatalogSelection_Succeeds(string command, string? catalog)
+    {
+        if (catalog is null)
+        {
+            catalog = SearchApiCommandBase.DefaultCatalogName;
+        }
+        else
+        {
+            command += $" -Catalog {catalog} ";
+        }
+        _ = InvokeScript(command);
+        Assert.False(PowerShell.HadErrors);
+        Assert.Equal($"GetCatalog({catalog})", Assert.Single(InterfaceChain.SearchManager.RecordedCalls));
+    }
+
+    [Theory]
+    [MemberData(nameof(CatalogValidation_TestData))]
+    public void CatalogParameter_ParameterValidation_Succeeds(string command, string catalog)
+    {
+        command += $" -Catalog {catalog} ";
+        AssertParameterValidation(command, "Catalog");
     }
 }

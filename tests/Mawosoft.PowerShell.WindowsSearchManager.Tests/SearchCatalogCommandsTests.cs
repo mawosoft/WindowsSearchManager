@@ -62,16 +62,6 @@ public class SearchCatalogCommandsTests : CommandTestBase
         AssertSingleErrorRecord(exceptionParam);
     }
 
-    [Theory]
-    [InlineData("-Catalog ")]
-    [InlineData("-Catalog '' ")]
-    [InlineData("$null ")]
-    [InlineData("'' ")]
-    public void GetSearchCatalog_ParameterValidation_Succeeds(string arguments)
-    {
-        AssertParameterValidation("Get-SearchCatalog " + arguments);
-    }
-
     private class SetSearchCatalog_TheoryData : TheoryData<string, SearchCatalogInfo>
     {
         public SetSearchCatalog_TheoryData()
@@ -115,8 +105,6 @@ public class SearchCatalogCommandsTests : CommandTestBase
 
 
     [Theory]
-    [InlineData("-Catalog ")]
-    [InlineData("-Catalog '' ")]
     [InlineData("-ConnectTimeout -1 ")]
     [InlineData("-DataTimeout -1 ")]
     public void SetSearchCatalog_ParameterValidation_Succeeds(string arguments)
@@ -164,15 +152,5 @@ public class SearchCatalogCommandsTests : CommandTestBase
         Collection<PSObject> results = InvokeScript("Reset-SearchCatalog ");
         Assert.Empty(results);
         AssertSingleErrorRecord(exceptionParam);
-    }
-
-    [Theory]
-    [InlineData("-Catalog ")]
-    [InlineData("-Catalog '' ")]
-    [InlineData("$null ")]
-    [InlineData("'' ")]
-    public void ResetSearchCatalog_ParameterValidation_Succeeds(string arguments)
-    {
-        AssertParameterValidation("Reset-SearchCatalog " + arguments);
     }
 }

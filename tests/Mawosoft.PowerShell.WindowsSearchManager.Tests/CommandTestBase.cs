@@ -16,10 +16,6 @@ public class CommandTestBase
     // However, user interaction is not possible, and a confirmation prompt will result HostException, which in
     // turn will contain the full prompt message.
     // '-WhatIf' works in so far as ShouldProcess() returns false, but the message is not available.
-    //
-    // The cmdlet can be invoked via AddScript(), but the PS parser has a few quirks. It is recommended to always
-    // add an extra space at the end of the script. For example, "Set-SearchManager -UserAgent" with the actual
-    // value omitted and no extra space will throw a NullReferenceException instead of a param validation error.
     [SuppressMessage("Performance", "CA1810:Initialize reference type static fields inline", Justification = "Multiple fields from same source data.")]
     static CommandTestBase()
     {
@@ -68,6 +64,19 @@ public class CommandTestBase
         PowerShell.Commands.Clear();
     }
 
+    protected static IEnumerable<object[]> CombineTestDataParameters(
+        IEnumerable firstParameters,
+        IEnumerable secondParameters)
+    {
+        foreach (object? first in firstParameters)
+        {
+            foreach (object? second in secondParameters)
+            {
+                yield return new[] { first, second };
+            }
+        }
+    }
+
     protected static ErrorRecord AssertSingleErrorRecord(ExceptionParam exceptionParam)
     {
         Assert.True(PowerShell.HadErrors);
@@ -95,13 +104,14 @@ public class CommandTestBase
         return errorRecord;
     }
 
-    protected ErrorRecord AssertParameterValidation(string script)
+    protected ErrorRecord AssertParameterValidation(string script, string? parameterName = null)
     {
         Collection<PSObject> results = InvokeScript(script);
         Assert.Empty(results);
         Assert.True(PowerShell.HadErrors);
         ErrorRecord errorRecord = Assert.Single(PowerShell.Streams.Error);
-        Assert.IsAssignableFrom<ParameterBindingException>(errorRecord.Exception);
+        ParameterBindingException exception = Assert.IsAssignableFrom<ParameterBindingException>(errorRecord.Exception);
+        if (parameterName is not null) Assert.Equal(parameterName, exception.ParameterName);
         return errorRecord;
     }
 
@@ -110,8 +120,20 @@ public class CommandTestBase
     {
         try
         {
+
+            if (!script.EndsWith(" ", StringComparison.Ordinal))
+            {
+                // The PS parser has a few quirks. It is recommended to always add an extra space
+                // at the end of the script. For example, "Set-SearchManager -UserAgent" with the
+                // actual value omitted and no extra space will throw a NullReferenceException
+                // instead of a param validation error.
+                script += ' ';
+            }
+
             Assert.Empty(PowerShell.Commands.Commands);
             PowerShell.AddScript(script);
+            // Enabled by default, but make it explicit.
+            InterfaceChain.EnableRecording(true);
             Assert.False(InterfaceChain.HasRecordings());
             return PowerShell.Invoke(input);
         }

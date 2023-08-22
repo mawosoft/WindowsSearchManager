@@ -63,10 +63,31 @@ public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager
         return enumerator!;
     }
 
-    public virtual int HasParentScopeRule(string pszUrl) => throw new NotImplementedException();
-    public virtual int HasChildScopeRule(string pszUrl) => throw new NotImplementedException();
-    public virtual int IncludedInCrawlScope(string pszUrl) => throw new NotImplementedException();
-    public virtual void IncludedInCrawlScopeEx(string pszUrl, out int pfIsIncluded, out CLUSION_REASON pReason) => throw new NotImplementedException();
+    public virtual int HasParentScopeRule(string pszUrl)
+    {
+        RecordRead(pszUrl);
+        return 0; // TODO
+    }
+
+    public virtual int HasChildScopeRule(string pszUrl)
+    {
+        RecordRead(pszUrl);
+        return 0; // TODO
+    }
+
+    public virtual int IncludedInCrawlScope(string pszUrl)
+    {
+        RecordRead(pszUrl);
+        return 0; // TODO
+    }
+
+    public virtual void IncludedInCrawlScopeEx(string pszUrl, out int pfIsIncluded, out CLUSION_REASON pReason)
+    {
+        RecordRead(pszUrl);
+        pfIsIncluded = default; // TODO
+        pReason = default;
+    }
+
     public virtual void RevertToDefaultScopes()
     {
         RecordWrite();
@@ -78,7 +99,12 @@ public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager
         TailCall();
     }
 
-    public virtual int GetParentScopeVersionId(string pszUrl) => throw new NotImplementedException();
+    public virtual int GetParentScopeVersionId(string pszUrl)
+    {
+        RecordRead(pszUrl);
+        return 0; // TODO
+    }
+
     public virtual void RemoveDefaultScopeRule(string pszUrl)
     {
         RecordWrite(pszUrl);
