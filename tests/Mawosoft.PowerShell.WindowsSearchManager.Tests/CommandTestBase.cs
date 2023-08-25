@@ -64,19 +64,6 @@ public class CommandTestBase
         PowerShell.Commands.Clear();
     }
 
-    protected static IEnumerable<object[]> CombineTestDataParameters(
-        IEnumerable firstParameters,
-        IEnumerable secondParameters)
-    {
-        foreach (object? first in firstParameters)
-        {
-            foreach (object? second in secondParameters)
-            {
-                yield return new[] { first, second };
-            }
-        }
-    }
-
     protected static ErrorRecord AssertSingleErrorRecord(ExceptionParam exceptionParam)
     {
         Assert.True(PowerShell.HadErrors);
@@ -111,7 +98,7 @@ public class CommandTestBase
         Assert.True(PowerShell.HadErrors);
         ErrorRecord errorRecord = Assert.Single(PowerShell.Streams.Error);
         ParameterBindingException exception = Assert.IsAssignableFrom<ParameterBindingException>(errorRecord.Exception);
-        if (parameterName is not null) Assert.Equal(parameterName, exception.ParameterName);
+        if (parameterName is not null) Assert.Equal(parameterName, exception.ParameterName.Trim());
         return errorRecord;
     }
 

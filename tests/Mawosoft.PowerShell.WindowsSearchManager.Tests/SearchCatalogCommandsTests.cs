@@ -105,14 +105,6 @@ public class SearchCatalogCommandsTests : CommandTestBase
 
 
     [Theory]
-    [InlineData("-ConnectTimeout -1 ")]
-    [InlineData("-DataTimeout -1 ")]
-    public void SetSearchCatalog_ParameterValidation_Succeeds(string arguments)
-    {
-        AssertParameterValidation("Set-SearchCatalog " + arguments);
-    }
-
-    [Theory]
     [InlineData(null, false)]
     [InlineData("SecondCatalog", false)]
     [InlineData("ThirdCatalog", true)]

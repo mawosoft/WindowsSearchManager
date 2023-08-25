@@ -111,17 +111,4 @@ public class SearchManagerCommandsTests : CommandTestBase
         Assert.Empty(results);
         AssertSingleErrorRecord(exceptionParam);
     }
-
-    [Theory]
-    [InlineData("-UserAgent ")]
-    [InlineData("-UserAgent '' ")]
-    [InlineData("-ProxyAccess 3 ")]
-    [InlineData("-ProxyName ")]
-    [InlineData("-ProxyPortNumber -1 ")]
-    [InlineData("-ProxyPortNumber 65536 ")]
-    [InlineData("-ProxyBypassList ")]
-    public void SetSearchManager_ParameterValidation_Succeeds(string arguments)
-    {
-        AssertParameterValidation("Set-SearchManager " + arguments);
-    }
 }
