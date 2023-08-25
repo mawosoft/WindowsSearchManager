@@ -73,10 +73,10 @@ public class CommonCommandTests : CommandTestBase
                 a => a.GetData(m1).Select(
                     d => (GetCommandAndFirstParameter((string)d.First(), out _), "Catalog")))
             .Concat(m2.GetCustomAttributes<DataAttribute>().SelectMany(
-                a => a.GetData(m1).Select(
+                a => a.GetData(m2).Select(
                     d => (GetCommandAndFirstParameter((string)d.First(), out _), "Path"))))
             .Concat(m3.GetCustomAttributes<DataAttribute>().SelectMany(
-                a => a.GetData(m1).Select(
+                a => a.GetData(m3).Select(
                     d => (ValueTuple<string, string>)GetCommandAndFirstParameter((string)d.First())!)))
             .ToHashSet();
         Assert.Empty(expected.Except(actual));

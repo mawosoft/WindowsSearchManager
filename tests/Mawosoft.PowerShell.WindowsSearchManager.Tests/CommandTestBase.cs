@@ -5,7 +5,7 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 [Collection(nameof(NoParallelTests))]
 public class CommandTestBase
 {
-    protected static readonly System.Management.Automation.PowerShell PowerShell;
+    private protected static readonly System.Management.Automation.PowerShell PowerShell;
     private protected static readonly List<(Type Type, string Name)> AllCommands;
     private protected static readonly List<(Type Type, string Name)> CommandsSupportingShouldProcess;
 
@@ -91,7 +91,7 @@ public class CommandTestBase
         return errorRecord;
     }
 
-    protected ErrorRecord AssertParameterValidation(string script, string? parameterName = null)
+    protected ErrorRecord AssertParameterValidation(string script, string? parameterName)
     {
         Collection<PSObject> results = InvokeScript(script);
         Assert.Empty(results);
