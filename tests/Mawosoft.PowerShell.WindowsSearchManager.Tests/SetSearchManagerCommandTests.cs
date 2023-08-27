@@ -4,9 +4,9 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 public class SetSearchManagerCommandTests : CommandTestBase
 {
-    private class SetSearchManager_TheoryData : TheoryData<string, SearchManagerInfo>
+    private class Succeeds_TheoryData : TheoryData<string, SearchManagerInfo>
     {
-        public SetSearchManager_TheoryData()
+        public Succeeds_TheoryData()
         {
             Add("-UserAgent foo-agent ",
                 new SearchManagerInfo(new MockSearchManager2())
@@ -37,17 +37,18 @@ public class SetSearchManagerCommandTests : CommandTestBase
     }
 
     [Theory]
-    [ClassData(typeof(SetSearchManager_TheoryData))]
-    public void SetSearchManager_Succeeds(string arguments, SearchManagerInfo expectedInfo)
+    [ClassData(typeof(Succeeds_TheoryData))]
+    public void Command_Succeeds(string arguments, SearchManagerInfo expectedInfo)
     {
         Collection<PSObject> results = InvokeScript("Set-SearchManager " + arguments);
         Assert.Empty(results);
         Assert.False(PowerShell.HadErrors);
+        Assert.True(InterfaceChain.SingleHasWriteRecordings(InterfaceChain.SearchManager));
         Assert.Equal(expectedInfo, InterfaceChain.SearchManager, SearchManagerInfoToMockComparer.Instance);
     }
 
     [Fact]
-    public void SetSearchManager_NoAdmin_Fails()
+    public void Command_NoAdmin_FailsWithCustomMessage()
     {
         InterfaceChain.SearchManager.AdminMode = false;
         Collection<PSObject> results = InvokeScript("Set-SearchManager -UserAgent foo ");
@@ -55,21 +56,16 @@ public class SetSearchManagerCommandTests : CommandTestBase
         AssertUnauthorizedAccess();
     }
 
-    [Theory]
-    [ClassData(typeof(Exception_TheoryData))]
-    public void SetSearchManager_HandlesGetFailures(ExceptionParam exceptionParam)
-    {
-        InterfaceChain.SearchManager.AddException("^get_", exceptionParam.Exception);
-        Collection<PSObject> results = InvokeScript("Set-SearchManager -ProxyAccess PROXY_ACCESS_DIRECT ");
-        Assert.Empty(results);
-        AssertSingleErrorRecord(exceptionParam);
-    }
+    public static readonly object?[][] HandlesFailures_TestData =
+        new string[] { "^get_", "^set_|^SetProxy$" }
+        .CrossJoin(new Exception_TheoryData())
+        .ToArray();
 
     [Theory]
-    [ClassData(typeof(Exception_TheoryData))]
-    public void SetSearchManager_HandlesSetFailures(ExceptionParam exceptionParam)
+    [MemberData(nameof(HandlesFailures_TestData))]
+    public void Command_HandlesFailures(string exceptionRegex, ExceptionParam exceptionParam)
     {
-        InterfaceChain.SearchManager.AddException("^set_|^SetProxy$", exceptionParam.Exception);
+        InterfaceChain.SearchManager.AddException(exceptionRegex, exceptionParam.Exception);
         Collection<PSObject> results = InvokeScript("Set-SearchManager -ProxyAccess PROXY_ACCESS_DIRECT ");
         Assert.Empty(results);
         AssertSingleErrorRecord(exceptionParam);

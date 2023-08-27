@@ -8,7 +8,7 @@ public class ResetSearchCatalogCommandTests : CommandTestBase
     [InlineData(null, false)]
     [InlineData("SecondCatalog", false)]
     [InlineData("ThirdCatalog", true)]
-    public void ResetSearchCatalog_Succeeds(string? catalogName, bool positional)
+    public void Command_Succeeds(string? catalogName, bool positional)
     {
         string script = "Reset-SearchCatalog ";
         if (catalogName is null)
@@ -25,10 +25,11 @@ public class ResetSearchCatalogCommandTests : CommandTestBase
         Assert.False(PowerShell.HadErrors);
         Assert.Equal($"GetCatalog({catalogName})", Assert.Single(InterfaceChain.SearchManager.RecordedCalls));
         Assert.Equal("Reset()", Assert.Single(InterfaceChain.CatalogManager.RecordedCalls));
+        Assert.True(InterfaceChain.SingleHasWriteRecordings(InterfaceChain.CatalogManager));
     }
 
     [Fact]
-    public void ResetSearchCatalog_NoAdmin_Fails()
+    public void Command_NoAdmin_FailsWithCustomMessage()
     {
         InterfaceChain.CatalogManager.AdminMode = false;
         Collection<PSObject> results = InvokeScript("Reset-SearchCatalog ");
@@ -38,7 +39,7 @@ public class ResetSearchCatalogCommandTests : CommandTestBase
 
     [Theory]
     [ClassData(typeof(Exception_TheoryData))]
-    public void ResetSearchCatalog_HandlesFailures(ExceptionParam exceptionParam)
+    public void Command_HandlesFailures(ExceptionParam exceptionParam)
     {
         InterfaceChain.CatalogManager.AddException("^Reset$", exceptionParam.Exception);
         Collection<PSObject> results = InvokeScript("Reset-SearchCatalog ");

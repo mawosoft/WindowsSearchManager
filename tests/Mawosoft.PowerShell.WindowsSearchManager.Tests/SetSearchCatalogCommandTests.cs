@@ -4,9 +4,9 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 public class SetSearchCatalogCommandTests : CommandTestBase
 {
-    private class SetSearchCatalog_TheoryData : TheoryData<string, SearchCatalogInfo>
+    private class Succeeds_TheoryData : TheoryData<string, SearchCatalogInfo>
     {
-        public SetSearchCatalog_TheoryData()
+        public Succeeds_TheoryData()
         {
             List<MockCatalogManager> catalogs = new MockSearchManager2().CatalogManagers;
             Add("-DiacriticSensitivity ",
@@ -24,20 +24,21 @@ public class SetSearchCatalogCommandTests : CommandTestBase
     }
 
     [Theory]
-    [ClassData(typeof(SetSearchCatalog_TheoryData))]
-    public void SetSearchCatalog_Succeeds(string arguments, SearchCatalogInfo expectedInfo)
+    [ClassData(typeof(Succeeds_TheoryData))]
+    public void Command_Succeeds(string arguments, SearchCatalogInfo expectedInfo)
     {
         InterfaceChain.WithSearchManager(new MockSearchManager());
         MockCatalogManager catalogManager = Assert.Single(InterfaceChain.SearchManager.CatalogManagers, c => c.NameInternal == expectedInfo.Catalog);
         Collection<PSObject> results = InvokeScript("Set-SearchCatalog " + arguments);
         Assert.Empty(results);
         Assert.False(PowerShell.HadErrors);
+        Assert.True(InterfaceChain.SingleHasWriteRecordings(catalogManager));
         Assert.Equal(expectedInfo, catalogManager, SearchCatalogInfoToMockComparer.Instance);
     }
 
     [Theory]
     [ClassData(typeof(Exception_TheoryData))]
-    public void SetSearchCatalog_HandlesFailures(ExceptionParam exceptionParam)
+    public void Command_HandlesFailures(ExceptionParam exceptionParam)
     {
         InterfaceChain.CatalogManager.AddException("^get_|^set_", exceptionParam.Exception);
         Collection<PSObject> results = InvokeScript("Set-SearchCatalog -DiacriticSensitivity ");

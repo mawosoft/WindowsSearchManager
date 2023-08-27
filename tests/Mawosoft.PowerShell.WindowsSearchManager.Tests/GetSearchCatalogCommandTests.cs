@@ -8,7 +8,7 @@ public class GetSearchCatalogCommandTests : CommandTestBase
     [InlineData(null, false)]
     [InlineData("SecondCatalog", false)]
     [InlineData("ThirdCatalog", true)]
-    public void GetSearchCatalog_Succeeds(string? catalogName, bool positional)
+    public void Command_Succeeds(string? catalogName, bool positional)
     {
         MockSearchManager searchManager = new();
         InterfaceChain.WithSearchManager(searchManager);
@@ -22,14 +22,14 @@ public class GetSearchCatalogCommandTests : CommandTestBase
             expected = expected.FindAll(c => c.NameInternal == catalogName);
         }
         Collection<PSObject> results = InvokeScript(script);
+        Assert.False(PowerShell.HadErrors);
         Assert.False(InterfaceChain.HasWriteRecordings());
         Assert.All(results, (item, i) => Assert.Equal(expected[i], item.BaseObject, SearchCatalogInfoToMockComparer.Instance));
         Assert.Equal(expected.Count, results.Count);
-        Assert.False(PowerShell.HadErrors);
     }
 
     [Fact]
-    public void GetSearchCatalog_WithFailures_Succeeds()
+    public void Command_WithFailures_PartiallySucceeds()
     {
         MockSearchManager searchManager = new();
         InterfaceChain.WithSearchManager(searchManager);
@@ -40,25 +40,14 @@ public class GetSearchCatalogCommandTests : CommandTestBase
         InterfaceChain.Factory.SearchRegistryProvider.CatalogNames = searchManager.CatalogManagers.ConvertAll(c => c.NameInternal);
         InterfaceChain.Factory.SearchRegistryProvider.CatalogNames.Insert(2, "NotFound2");
         Collection<PSObject> results = InvokeScript("Get-SearchCatalog");
+        Assert.True(PowerShell.HadErrors);
         Assert.False(InterfaceChain.HasWriteRecordings());
         Assert.All(results, (item, i) => Assert.Equal(expected[i], item.BaseObject, SearchCatalogInfoToMockComparer.Instance));
         Assert.Equal(expected.Count, results.Count);
-        Assert.True(PowerShell.HadErrors);
         PSDataCollection<ErrorRecord> errors = PowerShell.Streams.Error;
         Assert.Collection(errors,
             e => Assert.Equal("BadCatalog1", e.TargetObject),
             e => Assert.Equal("NotFound2", e.TargetObject)
             );
-    }
-
-    [Theory]
-    [ClassData(typeof(Exception_TheoryData))]
-    public void GetSearchCatalog_HandlesFailures(ExceptionParam exceptionParam)
-    {
-        InterfaceChain.CatalogManager.AddException("^get_|^set_", exceptionParam.Exception);
-        Collection<PSObject> results = InvokeScript("Get-SearchCatalog");
-        Assert.False(InterfaceChain.HasWriteRecordings());
-        Assert.Empty(results);
-        AssertSingleErrorRecord(exceptionParam);
     }
 }

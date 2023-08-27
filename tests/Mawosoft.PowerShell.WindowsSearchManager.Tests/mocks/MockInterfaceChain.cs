@@ -119,10 +119,23 @@ public class MockInterfaceChain
         return SearchManager.CatalogManagers.Find(c => c.HasRecordings) is not null;
     }
 
+    // Any mock interface has write recordings?
     public bool HasWriteRecordings()
     {
         if (Factory is not null && Factory.HasWriteRecordings) return true;
         for (int i = 1; i < Count; i++) if (this[i].HasWriteRecordings) return true;
         return SearchManager.CatalogManagers.Find(c => c.HasWriteRecordings) is not null;
+    }
+
+    // Only the given mock interface has write recordings?
+    public bool SingleHasWriteRecordings(MockInterfaceBase mock)
+    {
+        if (!mock.HasWriteRecordings) return false;
+        if (mock != Factory && Factory.HasWriteRecordings) return false;
+        for (int i = 1; i < Count; i++)
+        {
+            if (mock != this[i] && this[i].HasWriteRecordings) return false;
+        }
+        return SearchManager.CatalogManagers.Find(c => mock != c && c.HasWriteRecordings) is null;
     }
 }
