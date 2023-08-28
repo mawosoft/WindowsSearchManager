@@ -4,6 +4,104 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 public class CommonCommandTests : CommandTestBase
 {
+    [Fact]
+    public void AllParameterMetadata_MatchExpected()
+    {
+        var expected = new[]
+        {
+            ("Get-SearchCatalog", "Catalog", "String", 0, false, false, false, "__AllParameterSets"),
+            ("Set-SearchCatalog", "ConnectTimeout", "UInt32", -2147483648, false, false, false, "__AllParameterSets"),
+            ("Set-SearchCatalog", "DataTimeout", "UInt32", -2147483648, false, false, false, "__AllParameterSets"),
+            ("Set-SearchCatalog", "DiacriticSensitivity", "SwitchParameter", -2147483648, false, false, false, "__AllParameterSets"),
+            ("Set-SearchCatalog", "Catalog", "String", -2147483648, false, false, false, "__AllParameterSets"),
+            ("Reset-SearchCatalog", "Catalog", "String", 0, false, false, false, "__AllParameterSets"),
+            ("Update-SearchCatalog", "All", "SwitchParameter", -2147483648, false, false, false, "AllParameterSet"),
+            ("Update-SearchCatalog", "RootPath", "String[]", -2147483648, true, false, true, "RootParameterSet"),
+            ("Update-SearchCatalog", "Path", "String[]", 0, true, true, true, "PathParameterSet"),
+            ("Update-SearchCatalog", "Catalog", "String", -2147483648, false, false, false, "__AllParameterSets"),
+            ("New-SearchCatalog", "Catalog", "String", 0, true, false, false, "__AllParameterSets"),
+            ("Remove-SearchCatalog", "Catalog", "String", 0, true, false, false, "__AllParameterSets"),
+            ("Get-SearchManager", "", "", -2147483648, false, false, false, ""),
+            ("Set-SearchManager", "UserAgent", "String", -2147483648, false, false, false, "__AllParameterSets"),
+            ("Set-SearchManager", "ProxyAccess", "_PROXY_ACCESS", -2147483648, false, false, false, "__AllParameterSets"),
+            ("Set-SearchManager", "ProxyName", "String", -2147483648, false, false, false, "__AllParameterSets"),
+            ("Set-SearchManager", "ProxyPortNumber", "UInt32", -2147483648, false, false, false, "__AllParameterSets"),
+            ("Set-SearchManager", "ProxyBypassLocal", "SwitchParameter", -2147483648, false, false, false, "__AllParameterSets"),
+            ("Set-SearchManager", "ProxyBypassList", "String[]", -2147483648, false, false, false, "__AllParameterSets"),
+            ("Get-SearchRoot", "Catalog", "String", 0, false, false, false, "__AllParameterSets"),
+            ("Get-SearchRoot", "PathOnly", "SwitchParameter", -2147483648, false, false, false, "__AllParameterSets"),
+            ("Add-SearchRoot", "Path", "String[]", 0, true, true, false, "PathParameterSet"),
+            ("Add-SearchRoot", "InputObject", "SearchRootInfo[]", -2147483648, true, true, false, "InputParameterSet"),
+            ("Add-SearchRoot", "Catalog", "String", 1, false, false, false, "__AllParameterSets"),
+            ("Remove-SearchRoot", "Path", "String[]", 0, true, true, true, "__AllParameterSets"),
+            ("Remove-SearchRoot", "Catalog", "String", 1, false, false, false, "__AllParameterSets"),
+            ("Get-SearchRule", "Catalog", "String", 0, false, false, false, "__AllParameterSets"),
+            ("Add-SearchRule", "Path", "String[]", 0, true, true, false, "PathParameterSet"),
+            ("Add-SearchRule", "RuleSet", "SearchRuleSet", 1, false, false, false, "PathParameterSet"),
+            ("Add-SearchRule", "RuleType", "SearchRuleType", 2, true, false, false, "PathParameterSet"),
+            ("Add-SearchRule", "OverrideChildren", "SwitchParameter", -2147483648, false, false, false, "PathParameterSet"),
+            ("Add-SearchRule", "InputObject", "SearchRuleInfo[]", -2147483648, true, true, false, "InputParameterSet"),
+            ("Add-SearchRule", "Catalog", "String", 3, false, false, false, "__AllParameterSets"),
+            ("Remove-SearchRule", "Path", "String[]", 0, true, true, true, "__AllParameterSets"),
+            ("Remove-SearchRule", "RuleSet", "SearchRuleSet", 1, false, false, false, "__AllParameterSets"),
+            ("Remove-SearchRule", "Catalog", "String", 2, false, false, false, "__AllParameterSets"),
+            ("Reset-SearchRule", "Catalog", "String", 0, false, false, false, "__AllParameterSets"),
+            ("Test-SearchRule", "Path", "String[]", 0, true, true, true, "__AllParameterSets"),
+            ("Test-SearchRule", "IsIncluded", "SwitchParameter", -2147483648, false, false, false, "IncludedParameterSet"),
+            ("Test-SearchRule", "HasChildScope", "SwitchParameter", -2147483648, true, false, false, "ChildScopeParameterSet"),
+            ("Test-SearchRule", "HasParentScope", "SwitchParameter", -2147483648, true, false, false, "ParentScopeParameterSet"),
+            ("Test-SearchRule", "Detailed", "SwitchParameter", -2147483648, true, false, false, "DetailedParameterSet"),
+            ("Test-SearchRule", "Catalog", "String", 1, false, false, false, "__AllParameterSets"),
+        }
+        .ToHashSet();
+
+        var actual = AllCommands.SelectMany(vt =>
+        {
+            CommandMetadata meta = new(vt.Type);
+            return meta.Parameters.DefaultIfEmpty().SelectMany(param =>
+            {
+                var sets = param.Value is null
+                    ? new Dictionary<string, ParameterSetMetadata>()
+                    : param.Value.ParameterSets;
+                return sets.DefaultIfEmpty().Select(set => (
+                    Command: meta.Name,
+                    Parameter: param.Key ?? "",
+                    Type: param.Value?.ParameterType.Name ?? "",
+                    Position: set.Value?.Position ?? int.MinValue,
+                    IsMandatory: set.Value?.IsMandatory ?? false,
+                    ValueFromPipeline: set.Value?.ValueFromPipeline ?? false,
+                    ValueFromPipelineByPropertyName: set.Value?.ValueFromPipelineByPropertyName ?? false,
+                    ParameterSet: set.Key ?? ""));
+            });
+        })
+        .ToHashSet();
+        /*
+        // Using an anonymous type instead of ValueTuple, because ValueTuple is limited to
+        // 7 fields + TRest, which again is a ValueTuple.
+        // Also, the VStudio debugger's CSV export is unwieldy. Hence we are creating a string
+        // that can be copied to the clipboard.
+        var csvrows = actual.Select((vt, i) => new
+        {
+            Index = i,
+            vt.Command,
+            vt.Parameter,
+            vt.Type,
+            Position = vt.Position == int.MinValue ? null : $"{vt.Position}",
+            Mandatory = vt.IsMandatory ? "m" : null,
+            Pipeline = vt.ValueFromPipeline
+                ? vt.ValueFromPipelineByPropertyName ? "pipe,prop" : "pipe"
+                : vt.ValueFromPipelineByPropertyName ? "prop" : null,
+            vt.ParameterSet
+        });
+        PropertyInfo[] props = csvrows.First().GetType().GetProperties();
+        string sep = "\t";
+        string csv = string.Join(
+            Environment.NewLine,
+            csvrows.Select(r => string.Join(sep, props.Select(p => $"\"{p.GetValue(r)}\"")))
+                   .Prepend(string.Join(sep, props.Select(p => $"\"{p.Name}\""))));
+        */
+        Assert.Equal(expected, actual);
+    }
 
     private static string GetCommandAndFirstParameter(string command, out string? firstParameter)
     {
@@ -162,30 +260,35 @@ public class CommonCommandTests : CommandTestBase
 
     private static readonly string[] s_CatalogCommands =
     {
-        @"Reset-SearchCatalog ",
+        @"Reset-SearchCatalog {catalog} ",
         @"Set-SearchCatalog -ConnectTimeout 100 ",
         @"Update-SearchCatalog -All",
         @"Update-SearchCatalog -RootPath x:\ ",
         @"Update-SearchCatalog -Path x:\foo ",
-        @"Add-SearchRoot x:\ ",
-        @"Get-SearchRoot ",
-        @"Remove-SearchRoot x:\ ",
-        @"Add-SearchRule x:\foo -RuleType Exclude ",
-        @"Get-SearchRule ",
-        @"Remove-SearchRule x:\foo ",
-        @"Reset-SearchRule ",
-        @"Test-SearchRule x:\foo ",
+        @"Add-SearchRoot x:\ {catalog} ",
+        @"Get-SearchRoot {catalog} ",
+        @"Remove-SearchRoot x:\ {catalog} ",
+        @"Add-SearchRule x:\foo -RuleType Exclude {catalog} -RuleSet User ",
+        @"Get-SearchRule {catalog} ",
+        @"Remove-SearchRule x:\foo User {catalog} ",
+        @"Reset-SearchRule {catalog} ",
+        @"Test-SearchRule x:\foo {catalog} ",
     };
 
     private static readonly string[] s_CatalogValidationOnlyCommands =
     {
-        @"Get-SearchCatalog ",
-        @"New-SearchCatalog ",
-        @"Remove-SearchCatalog ",
+        @"Get-SearchCatalog {catalog} ",
+        @"New-SearchCatalog {catalog} ",
+        @"Remove-SearchCatalog {catalog} ",
     };
 
     public static readonly object?[][] CatalogSelection_TestData = s_CatalogCommands
-        .CrossJoin(new string?[] { null, "SecondCatalog" })
+        .CrossJoin(new object?[][]
+        {
+            new object?[] { null, false },
+            new object?[] { "SecondCatalog", false },
+            new object?[] { "SecondCatalog", true }
+        })
         .ToArray();
 
     public static readonly object?[][] CatalogValidation_TestData = s_CatalogCommands
@@ -195,15 +298,24 @@ public class CommonCommandTests : CommandTestBase
 
     [Theory]
     [MemberData(nameof(CatalogSelection_TestData))]
-    public void CatalogParameter_CatalogSelection_Succeeds(string command, string? catalog)
+    public void CatalogParameter_CatalogSelection_Succeeds(string command, string? catalog, bool positional)
     {
         if (catalog is null)
         {
             catalog = SearchApiCommandBase.DefaultCatalogName;
+            command = command.Replace("{catalog}", "");
         }
         else
         {
-            command += $" -Catalog {catalog} ";
+            if (positional && command.Contains("{catalog}"))
+            {
+                command = command.Replace("{catalog}", catalog);
+            }
+            else
+            {
+                command = command.Replace("{catalog}", "");
+                command += $" -Catalog {catalog} ";
+            }
         }
         _ = InvokeScript(command);
         Assert.False(PowerShell.HadErrors);
@@ -214,6 +326,7 @@ public class CommonCommandTests : CommandTestBase
     [MemberData(nameof(CatalogValidation_TestData))]
     public void CatalogParameter_ParameterValidation_Succeeds(string command, string catalog)
     {
+        command = command.Replace("{catalog}", "");
         command += $" -Catalog {catalog} ";
         AssertParameterValidation(command, "Catalog");
     }
