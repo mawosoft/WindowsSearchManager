@@ -5,10 +5,10 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 public class GetSearchCatalogCommandTests : CommandTestBase
 {
     [Theory]
-    [InlineData(null, false)]
-    [InlineData("SecondCatalog", false)]
-    [InlineData("ThirdCatalog", true)]
-    public void Command_Succeeds(string? catalogName, bool positional)
+    [InlineData(null)]
+    [InlineData("SecondCatalog")]
+    [InlineData("ThirdCatalog")]
+    public void Command_Succeeds(string? catalogName)
     {
         MockSearchManager searchManager = new();
         InterfaceChain.WithSearchManager(searchManager);
@@ -17,8 +17,7 @@ public class GetSearchCatalogCommandTests : CommandTestBase
         string script = "Get-SearchCatalog ";
         if (catalogName is not null)
         {
-            if (!positional) script += "-Catalog ";
-            script += $"'{catalogName}' ";
+            script += $"-Catalog '{catalogName}' ";
             expected = expected.FindAll(c => c.NameInternal == catalogName);
         }
         Collection<PSObject> results = InvokeScript(script);

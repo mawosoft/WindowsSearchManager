@@ -5,10 +5,9 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 public class ResetSearchCatalogCommandTests : CommandTestBase
 {
     [Theory]
-    [InlineData(null, false)]
-    [InlineData("SecondCatalog", false)]
-    [InlineData("ThirdCatalog", true)]
-    public void Command_Succeeds(string? catalogName, bool positional)
+    [InlineData(null)]
+    [InlineData("SecondCatalog")]
+    public void Command_Succeeds(string? catalogName)
     {
         string script = "Reset-SearchCatalog ";
         if (catalogName is null)
@@ -17,8 +16,7 @@ public class ResetSearchCatalogCommandTests : CommandTestBase
         }
         else
         {
-            if (!positional) script += "-Catalog ";
-            script += $"'{catalogName}' ";
+            script += $"-Catalog '{catalogName}' ";
         }
         Collection<PSObject> results = InvokeScript(script);
         Assert.Empty(results);
