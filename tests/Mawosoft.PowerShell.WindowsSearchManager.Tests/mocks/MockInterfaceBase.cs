@@ -6,7 +6,7 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 public abstract class MockInterfaceBase
 {
     // Info about a call to an interface method. Properties are methods starting with 'get_' or 'set_'.
-    public class CallInfo
+    internal class CallInfo
     {
         public string MethodName { get; }
         public IReadOnlyList<object?> Parameters { get; }
@@ -21,14 +21,22 @@ public abstract class MockInterfaceBase
     }
 
     // Info about an exception a method matching the regex string should throw.
-    public class ExceptionInfo
+    // Note:
+    // - Depending on usage this may throw the same exception instance multiple times.
+    //   If this causes problems, consider serializing/deserializing the exception.
+    //   However, the only easy way to do this is using BinaryFormatter, which is obsolete.
+    // - CallNumbers (1..n) refer to any calls stored in RecordedCallInfos of this instance
+    //   derived from MockInterfaceBase.
+    internal class ExceptionInfo
     {
         public string MethodRegex { get; }
         public Exception Exception { get; }
-        public ExceptionInfo(string methodRegex, Exception exception)
+        public List<int> CallNumbers { get; }
+        public ExceptionInfo(string methodRegex, Exception exception, int[] callNumbers)
         {
             MethodRegex = methodRegex;
             Exception = exception;
+            CallNumbers = new(callNumbers);
         }
     }
 
@@ -64,7 +72,8 @@ public abstract class MockInterfaceBase
     internal bool RecordingDisabled { get; set; }
 
     // Shortcut for adding an exception to throw.
-    internal void AddException(string methodRegex, Exception exception) => ExceptionsToThrow.Add(new ExceptionInfo(methodRegex, exception));
+    internal void AddException(string methodRegex, Exception exception, params int[] callNumbers)
+        => ExceptionsToThrow.Add(new ExceptionInfo(methodRegex, exception, callNumbers));
 
     // To be called from each interface method (and property getters/setters) whose calls should be recorded and/or which should throw an exception.
     // The method name itself is taken from the stack frame, but parameter values need to be passed. If the parameter value is not a string or value type,
@@ -97,7 +106,10 @@ public abstract class MockInterfaceBase
         StackFrame frame = new(2); // 0 = Record, 1 = RecordRead/Write, 2 = caller
         string methodName = frame.GetMethod()?.Name ?? string.Empty;
         RecordedCallInfos.Add(new CallInfo(methodName, parameters, isReadOnly));
-        ExceptionInfo? info = ExceptionsToThrow.Find(e => Regex.IsMatch(methodName, e.MethodRegex));
+        int callNumber = RecordedCallInfos.Count;
+        ExceptionInfo? info = ExceptionsToThrow.Find(
+            e => (e.CallNumbers.Count == 0 || e.CallNumbers.Contains(callNumber))
+                 && Regex.IsMatch(methodName, e.MethodRegex));
         if (info is not null)
         {
             throw info.Exception;

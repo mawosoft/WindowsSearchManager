@@ -116,6 +116,12 @@ public class CommandTestBase
                 // instead of a param validation error.
                 script += ' ';
             }
+            if (input is not null
+                && script.IndexOf("$input", StringComparison.OrdinalIgnoreCase) < 0
+                && script.IndexOf("$_", StringComparison.Ordinal) < 0)
+            {
+                script = "$input | " + script;
+            }
 
             Assert.Empty(PowerShell.Commands.Commands);
             PowerShell.AddScript(script);
