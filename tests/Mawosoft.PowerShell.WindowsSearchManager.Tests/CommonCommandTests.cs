@@ -75,7 +75,7 @@ public class CommonCommandTests : CommandTestBase
             });
         })
         .ToHashSet();
-        /*
+#if false
         // Using an anonymous type instead of ValueTuple, because ValueTuple is limited to
         // 7 fields + TRest, which again is a ValueTuple.
         // Also, the VStudio debugger's CSV export is unwieldy. Hence we are creating a string
@@ -99,14 +99,14 @@ public class CommonCommandTests : CommandTestBase
             Environment.NewLine,
             csvrows.Select(r => string.Join(sep, props.Select(p => $"\"{p.GetValue(r)}\"")))
                    .Prepend(string.Join(sep, props.Select(p => $"\"{p.Name}\""))));
-        */
+#endif
         Assert.Equal(expected, actual);
     }
 
-    private static string GetCommandAndFirstParameter(string command, out string? firstParameter)
+    private static string GetCommandAndFirstParameter(string script, out string? firstParameter)
     {
         firstParameter = null;
-        string[] split = command.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        string[] split = script.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         if (split.Length > 1)
         {
             string first = split[1].Trim();
@@ -118,10 +118,10 @@ public class CommonCommandTests : CommandTestBase
         return split[0].Trim();
     }
 
-    private static (string Command, string? Parameter) GetCommandAndFirstParameter(string command)
+    private static (string Command, string? Parameter) GetCommandAndFirstParameter(string script)
     {
-        string cmd = GetCommandAndFirstParameter(command, out string? firstParameter);
-        return (cmd, firstParameter);
+        string command = GetCommandAndFirstParameter(script, out string? firstParameter);
+        return (command, firstParameter);
     }
 
     private static void Assert_TestDataCoverage(
@@ -221,12 +221,12 @@ public class CommonCommandTests : CommandTestBase
         @"Update-SearchCatalog -RootPath x:\, y:\ ", // 2
         @"Update-SearchCatalog -Path x:\foo, x:\bar ", // 2
         @"Add-SearchRoot x:\ ",
-        @"Add-SearchRoot -InputObject @{ Path = 'x:\' }, @{ Path = 'y:\' } ", // 2
+        @"Add-SearchRoot -InputObject @([pscustomobject]@{ Path = 'x:\' }, [pscustomobject]@{ Path = 'y:\' }) ", // 2
         @"Remove-SearchRoot x:\ ",
         @"Remove-SearchRoot x:\, y:\ ", // 2
         @"Add-SearchRule x:\foo -RuleType Exclude ",
         @"Add-SearchRule x:\bar, x:\buzz -RuleType Include ", // 2
-        @"Add-SearchRule -InputObject @{ Path = 'x:\foo'; RuleType = 'Exclude' } ",
+        @"Add-SearchRule -InputObject ([pscustomobject]@{ Path = 'x:\foo'; RuleType = 'Exclude' }) ",
         @"Remove-SearchRule x:\foo ",
         @"Remove-SearchRule x:\foo, x:\bar Default ", // 2
         @"Reset-SearchRule "
@@ -235,9 +235,9 @@ public class CommonCommandTests : CommandTestBase
 
     [Theory]
     [MemberData(nameof(ShouldProcess_TestData))]
-    public void WhatIf_Succeeds(string command)
+    public void WhatIf_Succeeds(string script)
     {
-        Collection<PSObject> results = InvokeScript(command + " -WhatIf ");
+        Collection<PSObject> results = InvokeScript(script + " -WhatIf ");
         Assert.False(PowerShell.HadErrors);
         Assert.False(InterfaceChain.HasWriteRecordings());
         Assert.Empty(results);
@@ -245,16 +245,16 @@ public class CommonCommandTests : CommandTestBase
 
     [Theory]
     [MemberData(nameof(ShouldProcess_TestData))]
-    public void ShouldProcess_CallCount_Matches(string command)
+    public void ShouldProcess_CallCount_Matches(string script)
     {
-        _ = InvokeScript(command + " -Verbose ");
+        _ = InvokeScript(script + " -Verbose ");
         Assert.False(PowerShell.HadErrors);
         Assert.True(InterfaceChain.HasWriteRecordings());
         // A bit hacky. For commands that may call ShouldProcess() multiple times,
         // the test commands contain an array with two elements, separated by comma.
         // This is the only use of comma in the command.
         // Note: This will fail if there are other verbose outputs than from ShouldProcess().
-        int verboseCount = command.IndexOf(',') < 0 ? 1 : 2;
+        int verboseCount = script.IndexOf(',') < 0 ? 1 : 2;
         Assert.Equal(verboseCount, PowerShell.Streams.Verbose.Count);
     }
 
@@ -298,37 +298,37 @@ public class CommonCommandTests : CommandTestBase
 
     [Theory]
     [MemberData(nameof(CatalogSelection_TestData))]
-    public void CatalogParameter_CatalogSelection_Succeeds(string command, string? catalog, bool positional)
+    public void CatalogParameter_CatalogSelection_Succeeds(string script, string? catalog, bool positional)
     {
         if (catalog is null)
         {
             catalog = SearchApiCommandBase.DefaultCatalogName;
-            command = command.Replace("{catalog}", "");
+            script = script.Replace("{catalog}", "");
         }
         else
         {
-            if (positional && command.Contains("{catalog}"))
+            if (positional && script.Contains("{catalog}"))
             {
-                command = command.Replace("{catalog}", catalog);
+                script = script.Replace("{catalog}", catalog);
             }
             else
             {
-                command = command.Replace("{catalog}", "");
-                command += $" -Catalog {catalog} ";
+                script = script.Replace("{catalog}", "");
+                script += $" -Catalog {catalog} ";
             }
         }
-        _ = InvokeScript(command);
+        _ = InvokeScript(script);
         Assert.False(PowerShell.HadErrors);
         Assert.Equal($"GetCatalog({catalog})", Assert.Single(InterfaceChain.SearchManager.RecordedCalls));
     }
 
     [Theory]
     [MemberData(nameof(CatalogValidation_TestData))]
-    public void CatalogParameter_ParameterValidation_Succeeds(string command, string catalog)
+    public void CatalogParameter_ParameterValidation_Succeeds(string script, string catalog)
     {
-        command = command.Replace("{catalog}", "");
-        command += $" -Catalog {catalog} ";
-        AssertParameterValidation(command, "Catalog");
+        script = script.Replace("{catalog}", "");
+        script += $" -Catalog {catalog} ";
+        AssertParameterValidation(script, "Catalog");
     }
 
     public static readonly object?[][] PathValidation_TestData = new string[]
@@ -344,10 +344,10 @@ public class CommonCommandTests : CommandTestBase
 
     [Theory]
     [MemberData(nameof(PathValidation_TestData))]
-    public void PathParameter_ParameterValidation_Succeeds(string command, string path)
+    public void PathParameter_ParameterValidation_Succeeds(string script, string path)
     {
-        command += $" -Path {path} ";
-        AssertParameterValidation(command, "Path");
+        script += $" -Path {path} ";
+        AssertParameterValidation(script, "Path");
     }
 
     // The parameters -Catalog and -Path have separate tests.
@@ -369,14 +369,14 @@ public class CommonCommandTests : CommandTestBase
     [InlineData(@"Update-SearchCatalog -RootPath @() ")]
     [InlineData(@"Update-SearchCatalog -RootPath @('x:\foo', '') ")]
     [InlineData(@"Update-SearchCatalog -RootPath @('x:\foo', $null) ")]
-    [InlineData(@"Add-SearchRoot -InputObject @{ foo = 'bar' } ")]
+    [InlineData(@"Add-SearchRoot -InputObject ([pscustomobject]@{ foo = 'bar' }) ")]
     [InlineData(@"Add-SearchRule -RuleSet 2 -Path x:\foo -RuleType Include ")]
     [InlineData(@"Add-SearchRule -RuleType 2 -Path x:\foo ")]
-    [InlineData(@"Add-SearchRule -InputObject @{ foo = 'bar' } ")]
+    [InlineData(@"Add-SearchRule -InputObject ([pscustomobject]@{ foo = 'bar' }) ")]
     [InlineData(@"Remove-SearchRule -RuleSet system -Path x:\foo ")]
-    public void OtherParameter_ParameterValidation_Succeeds(string command)
+    public void OtherParameter_ParameterValidation_Succeeds(string script)
     {
-        _ = GetCommandAndFirstParameter(command, out string? firstParameter);
-        AssertParameterValidation(command, firstParameter);
+        _ = GetCommandAndFirstParameter(script, out string? firstParameter);
+        AssertParameterValidation(script, firstParameter);
     }
 }
