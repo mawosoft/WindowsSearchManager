@@ -243,7 +243,8 @@ public class CommonCommandTests : CommandTestBase
         Assert.Empty(results);
     }
 
-    [Theory]
+    [Trait("WSearch", "IsEnabled")]
+    [SkippableTheory(SkipCondition.WSearchDisabled)]
     [MemberData(nameof(ShouldProcess_TestData))]
     public void ShouldProcess_CallCount_Matches(string script)
     {
@@ -296,7 +297,8 @@ public class CommonCommandTests : CommandTestBase
         .CrossJoin(new string[] { "", "''", "$null" })
         .ToArray();
 
-    [Theory]
+    [Trait("WSearch", "IsEnabled")]
+    [SkippableTheory(SkipCondition.WSearchDisabled)]
     [MemberData(nameof(CatalogSelection_TestData))]
     public void CatalogParameter_CatalogSelection_Succeeds(string script, string? catalog, bool positional)
     {
