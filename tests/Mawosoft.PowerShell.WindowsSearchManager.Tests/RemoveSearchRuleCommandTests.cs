@@ -41,6 +41,10 @@ public class RemoveSearchRuleCommandTests : CommandTestBase
         InterfaceChain.ScopeManager.AddException(exceptionRegex, exceptionParam.Exception);
         Collection<PSObject> results = InvokeScript(script);
         Assert.Empty(results);
+        if (exceptionRegex.IndexOf("SaveAll", StringComparison.Ordinal) < 0)
+        {
+            Assert.DoesNotContain("SaveAll()", InterfaceChain.ScopeManager.RecordedCalls);
+        }
         AssertSingleErrorRecord(exceptionParam);
     }
 }
