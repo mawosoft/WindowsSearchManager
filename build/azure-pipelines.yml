@@ -48,23 +48,25 @@ steps:
   artifact: azp-Binlogs
   displayName: Upload Binlogs
 - pwsh: |
+    ./build/test.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug -f net7.0, net6.0, net48 -v detailed -r ./TestResults -s ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/coverlet.runsettings
     Set-Service wsearch -StartupType Automatic
     Start-Service wsearch
-    ./build/test.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug -f net7.0, net6.0, net48 -v detailed -r ./TestResults -s ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/coverlet.runsettings
+    ./build/test.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug -f net7.0, net6.0, net48 -v detailed -r ./TestResults2 -s ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/coverlet.runsettings -a '--filter','WSearch=IsEnabled'
   displayName: Test
 - task: reportgenerator@5
   condition: succeededOrFailed()
   inputs:
-    reports: ./TestResults/Debug/*/*.xml
+    reports: ./TestResults/Debug/*/*.xml;./TestResults2/Debug/*/*.xml
     targetdir: ./TestResults/report
     reporttypes: Cobertura;HtmlInline_AzurePipelines
 - task: PublishTestResults@2
   condition: succeededOrFailed()
   inputs:
     testResultsFormat: VSTest
-    testResultsFiles: 'Debug/*/*.trx'
-    searchFolder: ./TestResults
-    publishRunAttachments: false
+    testResultsFiles: |
+      TestResults/Debug/*/*.trx
+      TestResults2/Debug/*/*.trx
+    publishRunAttachments: true
 - task: PublishCodeCoverageResults@1
   condition: succeededOrFailed()
   inputs:
