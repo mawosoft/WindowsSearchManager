@@ -66,7 +66,7 @@ steps:
     testResultsFiles: |
       TestResults/Debug/*/*.trx
       TestResults2/Debug/*/*.trx
-    publishRunAttachments: true
+    publishRunAttachments: false
 - task: PublishCodeCoverageResults@1
   condition: succeededOrFailed()
   inputs:
