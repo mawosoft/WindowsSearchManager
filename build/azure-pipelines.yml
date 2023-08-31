@@ -48,33 +48,32 @@ steps:
   artifact: azp-Binlogs
   displayName: Upload Binlogs
 - pwsh: |
-    ./build/test.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug -f net7.0, net6.0, net48 -v detailed -r ./TestResults -s ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/coverlet.runsettings
+    ./build/test.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug -f net7.0, net6.0, net48 -v detailed -r ./TestResults/WSearchDisabled -s ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/coverlet.runsettings -a '--filter', 'WSearch=IsDisabled'
     Set-Service wsearch -StartupType Automatic
     Start-Service wsearch
-    ./build/test.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug -f net7.0, net6.0, net48 -v detailed -r ./TestResults2 -s ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/coverlet.runsettings -a '--filter','WSearch=IsEnabled'
+    ./build/test.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug -f net7.0, net6.0, net48 -v detailed -r ./TestResults/WSearchNotDisabled -s ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/coverlet.runsettings -a '--filter', 'WSearch!=IsDisabled'
   displayName: Test
 - task: reportgenerator@5
   condition: succeededOrFailed()
   inputs:
-    reports: ./TestResults/Debug/*/*.xml;./TestResults2/Debug/*/*.xml
-    targetdir: ./TestResults/report
+    reports: ./TestResults/*/Debug/*/*.xml
+    targetdir: ./TestResults-Report
     reporttypes: Cobertura;HtmlInline_AzurePipelines
 - task: PublishTestResults@2
   condition: succeededOrFailed()
   inputs:
     testResultsFormat: VSTest
-    testResultsFiles: |
-      TestResults/Debug/*/*.trx
-      TestResults2/Debug/*/*.trx
+    testResultsFiles: '*/Debug/*/*.trx'
+    searchFolder: ./TestResults
     publishRunAttachments: false
 - task: PublishCodeCoverageResults@1
   condition: succeededOrFailed()
   inputs:
     codeCoverageTool: Cobertura
-    summaryFileLocation: ./TestResults/report/Cobertura.xml
-    reportDirectory: ./TestResults/report
+    summaryFileLocation: ./TestResults-Report/Cobertura.xml
+    reportDirectory: ./TestResults-Report
 - pwsh: |
     $null = Invoke-WebRequest -Uri https://uploader.codecov.io/latest/windows/codecov.exe -OutFile ./codecov.exe
-    ./codecov.exe -f ./TestResults/report/Cobertura.xml -t $(CODECOV_TOKEN)
+    ./codecov.exe -f ./TestResults-Report/Cobertura.xml -t $(CODECOV_TOKEN)
   condition: succeededOrFailed()
   displayName: Upload to codecov.io
