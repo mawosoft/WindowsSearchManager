@@ -66,50 +66,47 @@ public class AddSearchRootCommandTests : CommandTestBase
     };
 
     [Theory]
-    [InlineData(1, typeof(SearchRootInfo), false)]
-    [InlineData(1, typeof(PSObject), false)]
-    [InlineData(1, typeof(PSCustomObject), false)]
-    [InlineData(-1, typeof(SearchRootInfo), false)]
-    [InlineData(-1, typeof(PSObject), false)]
-    [InlineData(-1, typeof(PSCustomObject), false)]
-    [InlineData(-1, typeof(SearchRootInfo), true)]
-    [InlineData(-1, typeof(PSObject), true)]
-    public void InputParameterSet_Succeeds(int valueCount, Type valueType, bool usePipeline)
+    [InlineData(1, nameof(SearchRootInfo), false)]
+    [InlineData(1, nameof(PSObject), false)]
+    [InlineData(1, nameof(PSCustomObject), false)]
+    [InlineData(-1, nameof(SearchRootInfo), false)]
+    [InlineData(-1, nameof(PSObject), false)]
+    [InlineData(-1, nameof(PSCustomObject), false)]
+    [InlineData(-1, nameof(SearchRootInfo), true)]
+    [InlineData(-1, nameof(PSObject), true)]
+    public void InputParameterSet_Succeeds(int valueCount, string valueType, bool usePipeline)
     {
         if (valueCount <= 0) valueCount = s_rootInfos.Count;
         List<SearchRootInfo> expected = s_rootInfos.GetRange(0, valueCount);
         IList<object> inputValues;
-        if (valueType == typeof(SearchRootInfo))
+        switch (valueType)
         {
-            inputValues = s_rootInfos.GetRange(0, valueCount).ConvertAll(r => r.Clone());
-        }
-        else if (valueType == typeof(PSObject))
-        {
-            inputValues = s_rootInfos.GetRange(0, valueCount).ConvertAll(r => (object)new PSObject(r.Clone()));
-        }
-        else if (valueType == typeof(PSCustomObject))
-        {
-            PSObject defaultInfo = new(new SearchRootInfo());
-            inputValues = new List<object>(valueCount);
-            foreach (SearchRootInfo info in expected)
-            {
-                PSObject source = new(info);
-                PSObject result = new();
-                foreach (var p in source.Properties)
+            case nameof(SearchRootInfo):
+                inputValues = s_rootInfos.GetRange(0, valueCount).ConvertAll(r => r.Clone());
+                break;
+            case nameof(PSObject):
+                inputValues = s_rootInfos.GetRange(0, valueCount).ConvertAll(r => (object)new PSObject(r.Clone()));
+                break;
+            case nameof(PSCustomObject):
+                PSObject defaultInfo = new(new SearchRootInfo());
+                inputValues = new List<object>(valueCount);
+                foreach (SearchRootInfo info in expected)
                 {
-                    if (!p.Value.Equals(defaultInfo.Properties[p.Name].Value))
+                    PSObject source = new(info);
+                    PSObject result = new();
+                    foreach (var p in source.Properties)
                     {
-                        result.Properties.Add(new PSNoteProperty(p.Name, p.Value));
+                        if (!p.Value.Equals(defaultInfo.Properties[p.Name].Value))
+                        {
+                            result.Properties.Add(new PSNoteProperty(p.Name, p.Value));
+                        }
                     }
+                    inputValues.Add(result);
                 }
-                inputValues.Add(result);
-            }
+                break;
+            default:
+                throw new ArgumentException(null, nameof(valueType));
         }
-        else
-        {
-            throw new ArgumentException(null, nameof(valueType));
-        }
-
 
         Collection<PSObject> results;
         if (usePipeline)
