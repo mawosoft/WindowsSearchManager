@@ -136,6 +136,24 @@ public class CommandTestBase
         }
     }
 
+    protected Collection<PSObject> InvokeCommand(string command, IDictionary? parameters)
+    {
+        try
+        {
+            Assert.Empty(PowerShell.Commands.Commands);
+            PowerShell.AddCommand(command);
+            if (parameters is not null) PowerShell.AddParameters(parameters);
+            // Enabled by default, but make it explicit.
+            InterfaceChain.EnableRecording(true);
+            Assert.False(InterfaceChain.HasRecordings());
+            return PowerShell.Invoke();
+        }
+        finally
+        {
+            InterfaceChain.EnableRecording(false);
+        }
+    }
+
     protected class Exception_TheoryData : TheoryData<ExceptionParam>
     {
         public Exception_TheoryData()

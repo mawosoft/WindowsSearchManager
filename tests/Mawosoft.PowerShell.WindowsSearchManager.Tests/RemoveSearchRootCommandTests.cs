@@ -10,6 +10,7 @@ public class RemoveSearchRootCommandTests : CommandTestBase
     [InlineData(@"Remove-SearchRoot x:\foo, x:\bar", @"x:\foo", @"x:\bar")]
     [InlineData(@"@('x:\foo', 'x:\bar') | Remove-SearchRoot", @"x:\foo", @"x:\bar")]
     [InlineData(@"@([pscustomobject]@{ Path = 'x:\foo'}, [pscustomobject]@{ Path = 'x:\bar'}) | Remove-SearchRoot", @"x:\foo", @"x:\bar")]
+    [InlineData(@"@([Mawosoft.PowerShell.WindowsSearchManager.SearchRootInfo]@{ Path = 'x:\foo'}, [Mawosoft.PowerShell.WindowsSearchManager.SearchRootInfo]@{ Path = 'x:\bar'}) | Remove-SearchRoot", @"x:\foo", @"x:\bar")]
     public void Command_Succeeds(string script, params string[] expectedMethodParameters)
     {
         Collection<PSObject> results = InvokeScript(script);
