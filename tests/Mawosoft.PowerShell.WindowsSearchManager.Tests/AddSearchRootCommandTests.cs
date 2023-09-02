@@ -4,7 +4,8 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 public class AddSearchRootCommandTests : CommandTestBase
 {
-    [Theory]
+    [Trait("WSearch", "IsEnabled")]
+    [SkippableTheory(SkipCondition.WSearchDisabled)]
     [InlineData(@"Add-SearchRoot -Path x:\foo", @"x:\foo")]
     [InlineData(@"Add-SearchRoot -Path x:\foo, x:\bar", @"x:\foo", @"x:\bar")]
     [InlineData(@"Add-SearchRoot x:\foo, x:\bar", @"x:\foo", @"x:\bar")]
@@ -65,7 +66,8 @@ public class AddSearchRootCommandTests : CommandTestBase
         }
     };
 
-    [Theory]
+    [Trait("WSearch", "IsEnabled")]
+    [SkippableTheory(SkipCondition.WSearchDisabled)]
     [InlineData(1, nameof(SearchRootInfo), false)]
     [InlineData(1, nameof(PSObject), false)]
     [InlineData(1, nameof(PSCustomObject), false)]
@@ -145,7 +147,8 @@ public class AddSearchRootCommandTests : CommandTestBase
         .CrossJoin(new Exception_TheoryData())
         .ToArray();
 
-    [Theory]
+    [Trait("WSearch", "IsEnabled")]
+    [SkippableTheory(SkipCondition.WSearchDisabled)]
     [MemberData(nameof(HandlesFailures_TestData))]
     public void Command_HandlesFailures(string script, string exceptionRegex, ExceptionParam exceptionParam)
     {

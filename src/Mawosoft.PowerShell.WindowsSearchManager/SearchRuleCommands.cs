@@ -103,7 +103,7 @@ public sealed class AddSearchRuleCommand : SearchApiCommandBase
                         ScopeManager.AddUserScopeRule(
                             info.Path,
                             (info.RuleType == SearchRuleInfo.SearchRuleType.Include) ? 1 : 0,
-                            OverrideChildren ? 1 : 0,
+                            info.OverrideChildren ? 1 : 0,
                             (uint)info.FollowFlags);
                     }
                     else
