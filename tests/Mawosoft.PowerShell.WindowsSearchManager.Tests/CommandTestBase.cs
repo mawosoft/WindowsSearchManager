@@ -5,7 +5,9 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 [Collection(nameof(NoParallelTests))]
 public class CommandTestBase
 {
-    protected static readonly System.Management.Automation.PowerShell PowerShell = CreatePowerShell();
+    private protected static readonly System.Management.Automation.PowerShell PowerShell;
+    private protected static readonly List<(Type Type, string Name)> AllCommands;
+    private protected static readonly List<(Type Type, string Name)> CommandsSupportingShouldProcess;
 
     // We already have SearchApiCommandBase.SearchManagerFactory as a static variable and therefore
     // disabled parallel tests. So we can use a static instance of PowerShell as well.
@@ -14,13 +16,11 @@ public class CommandTestBase
     // However, user interaction is not possible, and a confirmation prompt will result HostException, which in
     // turn will contain the full prompt message.
     // '-WhatIf' works in so far as ShouldProcess() returns false, but the message is not available.
-    //
-    // The cmdlet can be invoked via AddScript(), but the PS parser has a few quirks. It is recommended to always
-    // add an extra space at the end of the script. For example, "Set-SearchManager -UserAgent" with the actual
-    // value omitted and no extra space will throw a NullReferenceException instead of a param validation error.
-    private static System.Management.Automation.PowerShell CreatePowerShell()
+    [SuppressMessage("Performance", "CA1810:Initialize reference type static fields inline", Justification = "Multiple fields from same source data.")]
+    static CommandTestBase()
     {
-        System.Management.Automation.PowerShell pwsh;
+        AllCommands = new();
+        CommandsSupportingShouldProcess = new();
         InitialSessionState iss = InitialSessionState.Create();
         iss.ThreadOptions = PSThreadOptions.UseCurrentThread;
         iss.LanguageMode = PSLanguageMode.FullLanguage;
@@ -29,10 +29,16 @@ public class CommandTestBase
             CmdletAttribute? a = t.GetCustomAttribute<CmdletAttribute>();
             if (a is not null)
             {
-                iss.Commands.Add(new SessionStateCmdletEntry($"{a.VerbName}-{a.NounName}", t, null));
+                string name = $"{a.VerbName}-{a.NounName}";
+                AllCommands.Add((t, name));
+                if (a.SupportsShouldProcess) CommandsSupportingShouldProcess.Add((t, name));
+                iss.Commands.Add(new SessionStateCmdletEntry(name, t, null));
             }
         }
-        pwsh = System.Management.Automation.PowerShell.Create(iss);
+
+        Assert.Distinct(AllCommands.ConvertAll(vt => vt.Name));
+
+        PowerShell = System.Management.Automation.PowerShell.Create(iss);
         // This will create all the built-in variables like ConfirmPreference.
         // See PowerShell.Runspace.ExecutionContext.TopLevelSessionState.CurrentScope.Variables
         // in the debugger (all non-public below Runspace).
@@ -40,13 +46,12 @@ public class CommandTestBase
         //     iss.Variables.Add(new SessionStateVariableEntry("ConfirmPreference", ConfirmImpact.High, ""));
         // ...or explicitly set in the Runspace.
         //     PowerShell.Runspace.SessionStateProxy.SetVariable("ConfirmPreference", ConfirmImpact.High);
-        pwsh.Runspace.ResetRunspaceState();
+        PowerShell.Runspace.ResetRunspaceState();
         // Avoid accidental issues with confirmation. We use -WhatIf for ShouldProcess() testing and assert
         // the ConfirmImpact property of the CmdletAttribute for selected commands.
-        pwsh.Runspace.SessionStateProxy.SetVariable("ConfirmPreference", ConfirmImpact.None);
+        PowerShell.Runspace.SessionStateProxy.SetVariable("ConfirmPreference", ConfirmImpact.None);
         // 'Continue' is default, but make it explicit.
-        pwsh.Runspace.SessionStateProxy.SetVariable("ErrorActionPreference", ActionPreference.Continue);
-        return pwsh;
+        PowerShell.Runspace.SessionStateProxy.SetVariable("ErrorActionPreference", ActionPreference.Continue);
     }
 
     protected readonly MockInterfaceChain InterfaceChain;
@@ -57,14 +62,6 @@ public class CommandTestBase
         SearchApiCommandBase.SearchManagerFactory = InterfaceChain.Factory;
         PowerShell.Streams.ClearStreams();
         PowerShell.Commands.Clear();
-    }
-
-    protected static void AssertConfirmImpact(Type commandType, ConfirmImpact confirmImpact)
-    {
-        CmdletAttribute a = commandType.GetCustomAttribute<CmdletAttribute>()!;
-        Assert.NotNull(a);
-        Assert.True(a.SupportsShouldProcess, "Expected SupportsShouldProcess == true");
-        Assert.Equal(confirmImpact, a.ConfirmImpact);
     }
 
     protected static ErrorRecord AssertSingleErrorRecord(ExceptionParam exceptionParam)
@@ -94,13 +91,14 @@ public class CommandTestBase
         return errorRecord;
     }
 
-    protected ErrorRecord AssertParameterValidation(string script)
+    protected ErrorRecord AssertParameterValidation(string script, string? parameterName)
     {
         Collection<PSObject> results = InvokeScript(script);
         Assert.Empty(results);
         Assert.True(PowerShell.HadErrors);
         ErrorRecord errorRecord = Assert.Single(PowerShell.Streams.Error);
-        Assert.IsAssignableFrom<ParameterBindingException>(errorRecord.Exception);
+        ParameterBindingException exception = Assert.IsAssignableFrom<ParameterBindingException>(errorRecord.Exception);
+        if (parameterName is not null) Assert.Equal(parameterName, exception.ParameterName.Trim());
         return errorRecord;
     }
 
@@ -109,10 +107,46 @@ public class CommandTestBase
     {
         try
         {
+
+            if (!script.EndsWith(" ", StringComparison.Ordinal))
+            {
+                // The PS parser has a few quirks. It is recommended to always add an extra space
+                // at the end of the script. For example, "Set-SearchManager -UserAgent" with the
+                // actual value omitted and no extra space will throw a NullReferenceException
+                // instead of a param validation error.
+                script += ' ';
+            }
+            if (input is not null
+                && script.IndexOf("$input", StringComparison.OrdinalIgnoreCase) < 0
+                && script.IndexOf("$_", StringComparison.Ordinal) < 0)
+            {
+                script = "$input | " + script;
+            }
+
             Assert.Empty(PowerShell.Commands.Commands);
             PowerShell.AddScript(script);
+            // Enabled by default, but make it explicit.
+            InterfaceChain.EnableRecording(true);
             Assert.False(InterfaceChain.HasRecordings());
             return PowerShell.Invoke(input);
+        }
+        finally
+        {
+            InterfaceChain.EnableRecording(false);
+        }
+    }
+
+    protected Collection<PSObject> InvokeCommand(string command, IDictionary? parameters)
+    {
+        try
+        {
+            Assert.Empty(PowerShell.Commands.Commands);
+            PowerShell.AddCommand(command);
+            if (parameters is not null) PowerShell.AddParameters(parameters);
+            // Enabled by default, but make it explicit.
+            InterfaceChain.EnableRecording(true);
+            Assert.False(InterfaceChain.HasRecordings());
+            return PowerShell.Invoke();
         }
         finally
         {
