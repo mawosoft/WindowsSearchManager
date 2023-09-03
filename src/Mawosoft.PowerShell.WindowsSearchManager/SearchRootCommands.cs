@@ -41,7 +41,6 @@ public sealed class GetSearchRootCommand : SearchApiCommandBase
         catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
         {
             ThrowTerminatingError(rec);
-            throw; // Unreachable
         }
     }
 }
@@ -105,7 +104,6 @@ public sealed class AddSearchRootCommand : SearchApiCommandBase
         catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
         {
             ThrowTerminatingError(rec);
-            throw; // Unreachable
         }
     }
 
@@ -147,7 +145,6 @@ public sealed class RemoveSearchRootCommand : SearchApiCommandBase
         catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
         {
             ThrowTerminatingError(rec);
-            throw; // Unreachable
         }
     }
 

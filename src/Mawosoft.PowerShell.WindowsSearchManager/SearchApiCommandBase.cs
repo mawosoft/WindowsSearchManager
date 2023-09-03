@@ -89,7 +89,6 @@ public abstract class SearchApiCommandBase : PSCmdlet
         catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
         {
             ThrowTerminatingError(rec);
-            throw; // Unreachable
         }
     }
 }
