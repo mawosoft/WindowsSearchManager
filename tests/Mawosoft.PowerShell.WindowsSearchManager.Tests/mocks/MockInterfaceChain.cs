@@ -56,6 +56,7 @@ public class MockInterfaceChain
         return this;
     }
 
+#if false
     public MockInterfaceChain WithCatalogManager(MockCatalogManager catalogManager)
     {
         if (catalogManager is null) throw new ArgumentNullException(nameof(catalogManager));
@@ -71,6 +72,7 @@ public class MockInterfaceChain
         CatalogManager.ChildInterface = ScopeManager;
         return this;
     }
+#endif
 
     public MockInterfaceChain WithNullReference(int index)
     {

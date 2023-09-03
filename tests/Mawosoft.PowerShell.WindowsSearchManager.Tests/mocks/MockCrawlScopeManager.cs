@@ -187,12 +187,12 @@ public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager
 
     // Unused ISearchCrawlScopeManager members.
 
-    public virtual void AddHierarchicalScope(string pszUrl, int fInclude, int fDefault, int fOverrideChildren) => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public virtual void AddHierarchicalScope(string pszUrl, int fInclude, int fDefault, int fOverrideChildren) => throw new NotImplementedException();
 
     // Unused IEnumSearchRoots and IEnumSearchScopeRules members.
 
-    public void Skip(uint celt) => throw new NotImplementedException();
-    public void Reset() => throw new NotImplementedException();
-    IEnumSearchRoots IEnumSearchRoots.Clone() => throw new NotImplementedException();
-    IEnumSearchScopeRules IEnumSearchScopeRules.Clone() => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public void Skip(uint celt) => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] public void Reset() => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] IEnumSearchRoots IEnumSearchRoots.Clone() => throw new NotImplementedException();
+    [ExcludeFromCodeCoverage] IEnumSearchScopeRules IEnumSearchScopeRules.Clone() => throw new NotImplementedException();
 }

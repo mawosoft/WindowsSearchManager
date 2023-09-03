@@ -34,5 +34,7 @@ public class ShallowFieldComparer : IEqualityComparer, IEqualityComparer<object>
         return true;
     }
 
-    public int GetHashCode(object obj) => obj?.GetHashCode() ?? 0;
+    [SuppressMessage("Design", "CA1065:Do not raise exceptions in unexpected locations", Justification = "Only used for Asser.Equal().")]
+    [ExcludeFromCodeCoverage]
+    public int GetHashCode(object obj) => throw new NotImplementedException();
 }
