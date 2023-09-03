@@ -6,27 +6,37 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 public abstract class MockInterfaceBase
 {
     // Info about a call to an interface method. Properties are methods starting with 'get_' or 'set_'.
-    public class CallInfo
+    internal class CallInfo
     {
         public string MethodName { get; }
-        public IReadOnlyCollection<object?> Parameters { get; }
-        public CallInfo(string methodName, object?[] parameters)
+        public IReadOnlyList<object?> Parameters { get; }
+        public bool IsReadOnly { get; }
+        public CallInfo(string methodName, object?[] parameters, bool isReadOnly)
         {
             MethodName = methodName;
             Parameters = parameters;
+            IsReadOnly = isReadOnly;
         }
-        public override string? ToString() => $"{MethodName}({string.Join(",", Parameters)})";
+        public override string ToString() => $"{MethodName}({string.Join(",", Parameters)})";
     }
 
     // Info about an exception a method matching the regex string should throw.
-    public class ExceptionInfo
+    // Note:
+    // - Depending on usage this may throw the same exception instance multiple times.
+    //   If this causes problems, consider serializing/deserializing the exception.
+    //   However, the only easy way to do this is using BinaryFormatter, which is obsolete.
+    // - CallNumbers (1..n) refer to any calls stored in RecordedCallInfos of this instance
+    //   derived from MockInterfaceBase.
+    internal class ExceptionInfo
     {
         public string MethodRegex { get; }
         public Exception Exception { get; }
-        public ExceptionInfo(string methodRegex, Exception exception)
+        public List<int> CallNumbers { get; }
+        public ExceptionInfo(string methodRegex, Exception exception, int[] callNumbers)
         {
             MethodRegex = methodRegex;
             Exception = exception;
+            CallNumbers = new(callNumbers);
         }
     }
 
@@ -47,13 +57,23 @@ public abstract class MockInterfaceBase
     internal List<ExceptionInfo> ExceptionsToThrow { get; } = new List<ExceptionInfo>();
 
     // List of recorded calls to interface methods.
-    internal List<CallInfo> RecordedCalls { get; } = new List<CallInfo>();
+    internal List<CallInfo> RecordedCallInfos { get; } = new List<CallInfo>();
+
+    // Strings should be sufficient for everything except AddRoot(CSearchRoot).
+    internal List<string> RecordedCalls => RecordedCallInfos.ConvertAll(c => c.ToString());
+
+    // Has any recorded calls?
+    internal bool HasRecordings => RecordedCallInfos.Count > 0;
+
+    // Has recorded writes, i.e. methods that change something.
+    internal bool HasWriteRecordings => RecordedCallInfos.Find(c => !c.IsReadOnly) is not null;
 
     // Disable recording (and exception throwing). Mostly for debugging purposes to avoid recording debugger access to variables.
     internal bool RecordingDisabled { get; set; }
 
     // Shortcut for adding an exception to throw.
-    internal void AddException(string methodRegex, Exception exception) => ExceptionsToThrow.Add(new ExceptionInfo(methodRegex, exception));
+    internal void AddException(string methodRegex, Exception exception, params int[] callNumbers)
+        => ExceptionsToThrow.Add(new ExceptionInfo(methodRegex, exception, callNumbers));
 
     // To be called from each interface method (and property getters/setters) whose calls should be recorded and/or which should throw an exception.
     // The method name itself is taken from the stack frame, but parameter values need to be passed. If the parameter value is not a string or value type,
@@ -63,14 +83,33 @@ public abstract class MockInterfaceBase
     // would work in such a situation, but a) doesn't distinguish between property getters and setters, and b) doesn't work with 'params' parameters.
     // We could probably live with b) and drop 'params', but losing the getter/setter info is a no-go.
     // Solution: If calling Record() is the last/only call, follow it with a call to TailCall();
-    protected void Record(params object?[] parameters)
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    protected void RecordRead(params object?[] parameters)
+    {
+        Record(parameters, isReadOnly: true);
+        TailCall();
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    protected void RecordWrite(params object?[] parameters)
+    {
+        Record(parameters, isReadOnly: false);
+        TailCall();
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private void Record(object?[] parameters, bool isReadOnly)
     {
         if (RecordingDisabled) return;
         parameters ??= new object?[] { null };
-        StackFrame frame = new(1);
+        StackFrame frame = new(2); // 0 = Record, 1 = RecordRead/Write, 2 = caller
         string methodName = frame.GetMethod()?.Name ?? string.Empty;
-        RecordedCalls.Add(new CallInfo(methodName, parameters));
-        ExceptionInfo? info = ExceptionsToThrow.Find(e => Regex.IsMatch(methodName, e.MethodRegex));
+        RecordedCallInfos.Add(new CallInfo(methodName, parameters, isReadOnly));
+        int callNumber = RecordedCallInfos.Count;
+        ExceptionInfo? info = ExceptionsToThrow.Find(
+            e => (e.CallNumbers.Count == 0 || e.CallNumbers.Contains(callNumber))
+                 && Regex.IsMatch(methodName, e.MethodRegex));
         if (info is not null)
         {
             throw info.Exception;

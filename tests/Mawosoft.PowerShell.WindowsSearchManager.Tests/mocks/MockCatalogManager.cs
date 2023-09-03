@@ -31,7 +31,7 @@ public class MockCatalogManager : MockInterfaceBase, ISearchCatalogManager
 
     public virtual ISearchCrawlScopeManager GetCrawlScopeManager()
     {
-        Record();
+        RecordRead();
         return (GetChildInterface() as ISearchCrawlScopeManager)!;
     }
 
@@ -39,7 +39,7 @@ public class MockCatalogManager : MockInterfaceBase, ISearchCatalogManager
     {
         get
         {
-            Record();
+            RecordRead();
             return NameInternal;
         }
     }
@@ -48,12 +48,12 @@ public class MockCatalogManager : MockInterfaceBase, ISearchCatalogManager
     {
         get
         {
-            Record();
+            RecordRead();
             return ConnectTimeoutInternal;
         }
         set
         {
-            Record(value);
+            RecordWrite(value);
             ConnectTimeoutInternal = value;
         }
     }
@@ -62,12 +62,12 @@ public class MockCatalogManager : MockInterfaceBase, ISearchCatalogManager
     {
         get
         {
-            Record();
+            RecordRead();
             return DataTimeoutInternal;
         }
         set
         {
-            Record(value);
+            RecordWrite(value);
             DataTimeoutInternal = value;
         }
     }
@@ -76,63 +76,63 @@ public class MockCatalogManager : MockInterfaceBase, ISearchCatalogManager
     {
         get
         {
-            Record();
+            RecordRead();
             return DiacriticSensitivityInternal;
         }
         set
         {
-            Record(value);
+            RecordWrite(value);
             DiacriticSensitivityInternal = value;
         }
     }
 
     public virtual void GetCatalogStatus(out _CatalogStatus pStatus, out _CatalogPausedReason pPausedReason)
     {
-        Record();
+        RecordRead();
         pStatus = StatusInternal;
         pPausedReason = PausedReasonInternal;
     }
 
     public virtual void Reset()
     {
-        Record();
+        RecordWrite();
         TailCall();
     }
 
     public virtual void Reindex()
     {
-        Record();
+        RecordWrite();
         TailCall();
     }
 
     public virtual void ReindexMatchingURLs(string pszPattern)
     {
-        Record(pszPattern);
+        RecordWrite(pszPattern);
         TailCall();
     }
 
     public virtual void ReindexSearchRoot(string pszRootURL)
     {
-        Record(pszRootURL);
+        RecordWrite(pszRootURL);
         TailCall();
     }
 
     public virtual int NumberOfItems()
     {
-        Record();
+        RecordRead();
         return NumberOfItemsInternal;
     }
 
     public virtual void NumberOfItemsToIndex(out int plIncrementalCount,
         out int plNotificationQueue, out int plHighPriorityQueue)
     {
-        Record();
+        RecordRead();
         (plIncrementalCount, plNotificationQueue, plHighPriorityQueue) = NumberOfItemsToIndexInternal;
     }
 
     public virtual string URLBeingIndexed()
     {
-        Record();
+        RecordRead();
         return URLBeingIndexedInternal;
     }
 
