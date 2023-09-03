@@ -11,13 +11,13 @@ internal class MockSearchManagerFactory : MockInterfaceBase, ISearchManagerFacto
 
     public virtual ISearchManager CreateSearchManager()
     {
-        Record();
+        RecordRead();
         return (GetChildInterface() as ISearchManager)!;
     }
 
     public virtual ISearchRegistryProvider CreateSearchRegistryProvider()
     {
-        Record();
+        RecordRead();
         return SearchRegistryProvider;
     }
 }
