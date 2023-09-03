@@ -5,7 +5,7 @@ namespace Mawosoft.PowerShell.WindowsSearchManager;
 /// <summary>
 /// Returns an object with settings and status infos for specified or all search catalogs.
 /// </summary>
-[Cmdlet(VerbsCommon.Get, Nouns.SearchCatalog)]
+[Cmdlet(VerbsCommon.Get, Nouns.SearchCatalog, ConfirmImpact = ConfirmImpact.None)]
 [OutputType(typeof(SearchCatalogInfo))]
 public sealed class GetSearchCatalogCommand : SearchApiCommandBase
 {
