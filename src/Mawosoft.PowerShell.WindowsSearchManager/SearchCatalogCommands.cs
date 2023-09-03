@@ -89,7 +89,6 @@ public sealed class SetSearchCatalogCommand : SearchApiCommandBase
             catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
             {
                 ThrowTerminatingError(rec);
-                throw; // Unreachable
             }
         }
     }
@@ -121,13 +120,10 @@ public sealed class ResetSearchCatalogCommand : SearchApiCommandBase
                     {
                         ErrorDetails = new(SR.AdminRequiredForOperation)
                     });
-                throw; // Unreachable
-
             }
             catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
             {
                 ThrowTerminatingError(rec);
-                throw; // Unreachable
             }
         }
     }
@@ -182,13 +178,10 @@ public sealed class UpdateSearchCatalogCommand : SearchApiCommandBase
                         {
                             ErrorDetails = new(SR.AdminRequiredForOperation)
                         });
-                    throw; // Unreachable
-
                 }
                 catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
                 {
                     ThrowTerminatingError(rec);
-                    throw; // Unreachable
                 }
             }
         }
@@ -257,7 +250,6 @@ public sealed class NewSearchCatalogCommand : SearchApiCommandBase
             catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
             {
                 ThrowTerminatingError(rec);
-                throw; // Unreachable
             }
         }
     }
@@ -285,7 +277,6 @@ public sealed class RemoveSearchCatalogCommand : SearchApiCommandBase
             catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
             {
                 ThrowTerminatingError(rec);
-                throw; // Unreachable
             }
         }
     }

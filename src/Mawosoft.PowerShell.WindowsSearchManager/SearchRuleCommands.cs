@@ -31,7 +31,6 @@ public sealed class GetSearchRuleCommand : SearchApiCommandBase
         catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
         {
             ThrowTerminatingError(rec);
-            throw; // Unreachable
         }
     }
 }
@@ -121,7 +120,6 @@ public sealed class AddSearchRuleCommand : SearchApiCommandBase
         catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
         {
             ThrowTerminatingError(rec);
-            throw; // Unreachable
         }
     }
 
@@ -173,7 +171,6 @@ public sealed class RemoveSearchRuleCommand : SearchApiCommandBase
         catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
         {
             ThrowTerminatingError(rec);
-            throw; // Unreachable
         }
     }
 
@@ -202,7 +199,6 @@ public sealed class ResetSearchRuleCommand : SearchApiCommandBase
             catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
             {
                 ThrowTerminatingError(rec);
-                throw; // Unreachable
             }
         }
     }
