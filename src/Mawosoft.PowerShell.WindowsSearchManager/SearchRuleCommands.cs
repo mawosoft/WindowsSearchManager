@@ -82,10 +82,13 @@ public sealed class AddSearchRuleCommand : SearchApiCommandBase
             infos = new SearchRuleInfo[Path.Length];
             for (int i = 0; i < Path.Length; i++)
             {
-                infos[i].Path = Path[i];
-                infos[i].RuleType = RuleType;
-                infos[i].RuleSet = RuleSet;
-                infos[i].OverrideChildren = OverrideChildren;
+                infos[i] = new()
+                {
+                    Path = Path[i],
+                    RuleType = RuleType,
+                    RuleSet = RuleSet,
+                    OverrideChildren = OverrideChildren
+                };
             }
         }
         try
@@ -100,7 +103,7 @@ public sealed class AddSearchRuleCommand : SearchApiCommandBase
                         ScopeManager.AddUserScopeRule(
                             info.Path,
                             (info.RuleType == SearchRuleInfo.SearchRuleType.Include) ? 1 : 0,
-                            OverrideChildren ? 1 : 0,
+                            info.OverrideChildren ? 1 : 0,
                             (uint)info.FollowFlags);
                     }
                     else
