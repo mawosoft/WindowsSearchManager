@@ -147,8 +147,8 @@ public class MockSearchManager : MockInterfaceBase, ISearchManager
 
     // ISearchManager members not supported by the original COM class.
 
-    public virtual IntPtr GetParameter(string pszName) => throw new NotSupportedException();
-    public virtual void SetParameter(string pszName, ref tag_inner_PROPVARIANT pValue) => throw new NotSupportedException();
+    [ExcludeFromCodeCoverage] public virtual IntPtr GetParameter(string pszName) => throw new NotSupportedException();
+    [ExcludeFromCodeCoverage] public virtual void SetParameter(string pszName, ref tag_inner_PROPVARIANT pValue) => throw new NotSupportedException();
 }
 
 internal class MockSearchManager2 : MockSearchManager, ISearchManager2
