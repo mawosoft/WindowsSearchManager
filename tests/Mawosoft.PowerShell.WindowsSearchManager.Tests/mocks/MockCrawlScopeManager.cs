@@ -75,7 +75,7 @@ public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager
     public virtual int IncludedInCrawlScope(string pszUrl)
     {
         RecordRead(pszUrl);
-        return GetTestRuleInfo(forceMoveNext: true)?.IsIncluded is true ? 1 : 0;
+        return GetTestRuleInfo()?.IsIncluded is true ? 1 : 0;
     }
 
     public virtual void IncludedInCrawlScopeEx(string pszUrl, out int pfIsIncluded, out CLUSION_REASON pReason)
@@ -83,7 +83,7 @@ public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager
         RecordRead(pszUrl);
         pfIsIncluded = default;
         pReason = default;
-        TestSearchRuleInfo? info = GetTestRuleInfo(forceMoveNext: true);
+        TestSearchRuleInfo? info = GetTestRuleInfo();
         if (info is not null)
         {
             pfIsIncluded = info.IsIncluded ? 1 : 0;
@@ -114,16 +114,40 @@ public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager
         TailCall();
     }
 
-    private TestSearchRuleInfo? GetTestRuleInfo(bool forceMoveNext = false)
+    private readonly List<string> _dontMoveNext = new();
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private TestSearchRuleInfo? GetTestRuleInfo()
     {
         if (!(TestRuleInfos?.Count > TestRuleInfosEnumIndex)) return null;
         object? value = TestRuleInfos[TestRuleInfosEnumIndex];
-        if (forceMoveNext
-            || RecordedCallInfos.Find(c => c.MethodName == nameof(IncludedInCrawlScopeEx)) is null)
+
+        if (value is Exception ex)
+        {
+            _dontMoveNext.Clear();
+            TestRuleInfosEnumIndex++;
+            throw ex;
+        }
+
+        string methodName = new StackFrame(1).GetMethod()?.Name ?? string.Empty;
+        _dontMoveNext.Remove(methodName);
+        switch (methodName)
+        {
+            case nameof(IncludedInCrawlScope):
+                _dontMoveNext.Clear();
+                break;
+            case nameof(IncludedInCrawlScopeEx):
+                _dontMoveNext.Clear();
+                _dontMoveNext.Add(nameof(HasChildScopeRule));
+                _dontMoveNext.Add(nameof(HasParentScopeRule));
+                _dontMoveNext.Add(nameof(GetParentScopeVersionId));
+                break;
+        }
+        if (_dontMoveNext.Count == 0)
         {
             TestRuleInfosEnumIndex++;
         }
-        if (value is Exception ex) throw ex;
+
         return value as TestSearchRuleInfo;
     }
 
