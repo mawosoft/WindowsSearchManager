@@ -10,12 +10,14 @@ public class DefaultSearchManagerFactoryTests
         Assert.NotNull(DefaultSearchManagerFactory.Instance);
     }
 
+    [Trait("WSearch", "IsEnabled")]
     [SkippableFact(SkipCondition.WSearchDisabled)]
     public void CreateSearchManager_WSearchEnabled_Succeeds()
     {
         Assert.NotNull(DefaultSearchManagerFactory.Instance.CreateSearchManager());
     }
 
+    [Trait("WSearch", "IsDisabled")]
     [SkippableFact(SkipCondition.WSearchEnabled)]
     public void CreateSearchManager_WSearchDisabled_Throws()
     {

@@ -44,7 +44,8 @@ public class SearchRootInfoTests
         Assert.Equal(mock, info, SearchRootInfoToMockComparer.Instance);
     }
 
-    [Fact]
+    [Trait("WSearch", "IsEnabled")]
+    [SkippableFact(SkipCondition.WSearchDisabled)]
     public void ToCSearchRoot_Succeeds()
     {
         SearchRootInfo info = new()
