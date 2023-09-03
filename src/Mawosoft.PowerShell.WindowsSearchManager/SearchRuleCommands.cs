@@ -5,7 +5,7 @@ namespace Mawosoft.PowerShell.WindowsSearchManager;
 /// <summary>
 /// Returns a collection of objects representing the search rules of a catalog.
 /// </summary>
-[Cmdlet(VerbsCommon.Get, Nouns.SearchRule)]
+[Cmdlet(VerbsCommon.Get, Nouns.SearchRule, ConfirmImpact = ConfirmImpact.None)]
 [OutputType(typeof(SearchRuleInfo))]
 public sealed class GetSearchRuleCommand : SearchApiCommandBase
 {
@@ -211,7 +211,8 @@ public sealed class ResetSearchRuleCommand : SearchApiCommandBase
 /// <summary>
 /// Tests a path against the search rules in a catalog.
 /// </summary>
-[Cmdlet(VerbsDiagnostic.Test, Nouns.SearchRule, DefaultParameterSetName = IncludedParameterSet)]
+[Cmdlet(VerbsDiagnostic.Test, Nouns.SearchRule, DefaultParameterSetName = IncludedParameterSet,
+    ConfirmImpact = ConfirmImpact.None)]
 [OutputType(typeof(bool), typeof(TestSearchRuleInfo))]
 public sealed class TestSearchRuleCommand : SearchApiCommandBase
 {
