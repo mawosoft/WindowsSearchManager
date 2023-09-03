@@ -5,6 +5,7 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 public class SearchRegistryProviderTests
 {
     // On CI runners, WSearch is disabled by default, has never run, and therefore has no catalogs.
+    [Trait("WSearch", "IsEnabled"), Trait("WSearch", "WasEnabled")]
     [SkippableFact(SkipCondition.IsCIandWSearchDisabled)]
     public void GetCatalogNames_Succeeds()
     {
