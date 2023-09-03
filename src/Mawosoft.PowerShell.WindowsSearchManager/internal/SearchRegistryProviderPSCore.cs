@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2023 Matthias Wolf, Mawosoft.
+// Copyright (c) 2023 Matthias Wolf, Mawosoft.
 
 using Microsoft.Win32;
 
