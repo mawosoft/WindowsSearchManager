@@ -4,27 +4,42 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 #pragma warning disable CA1054 // URI-like parameters should not be strings
 
-public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager
+[SuppressMessage("Design", "CA1033:Interface methods should be callable by child types",
+    Justification = "Multiple interfaces with same method names.")]
+public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager, IEnumSearchRoots, IEnumSearchScopeRules
 {
-    // TODO we need roots and rules for enum and queries
+    internal List<object?>? Roots { get; set; }
+    internal int RootsEnumIndex { get; set; }
+    internal List<object?>? Rules { get; set; }
+    internal int RulesEnumIndex { get; set; }
+    internal List<object?>? TestRuleInfos { get; set; }
+    internal int TestRuleInfosEnumIndex { get; set; }
+
+    // ISearchCrawlScopeManager
+
     public virtual void AddDefaultScopeRule(string pszUrl, int fInclude, uint fFollowFlags)
     {
         RecordWrite(pszUrl, fInclude, fFollowFlags);
         TailCall();
     }
 
-    public virtual void AddRoot(CSearchRoot pSearchRoot) => throw new NotImplementedException(); // TODO Record tostring
+    public virtual void AddRoot(CSearchRoot pSearchRoot)
+    {
+        RecordWrite(pSearchRoot);
+        TailCall();
+    }
+
     public virtual void RemoveRoot(string pszUrl)
     {
         RecordWrite(pszUrl);
         TailCall();
     }
 
-    public virtual IEnumSearchRoots EnumerateRoots() => throw new NotImplementedException();
-    public virtual void AddHierarchicalScope(string pszUrl, int fInclude, int fDefault, int fOverrideChildren)
+    public virtual IEnumSearchRoots EnumerateRoots()
     {
-        RecordWrite(pszUrl, fInclude, fDefault, fOverrideChildren);
-        TailCall();
+        RecordRead();
+        RootsEnumIndex = 0;
+        return Roots?.Count > 0 ? this : null!;
     }
 
     public virtual void AddUserScopeRule(string pszUrl, int fInclude, int fOverrideChildren, uint fFollowFlags)
@@ -38,11 +53,44 @@ public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager
         RecordWrite(pszRule);
         TailCall();
     }
-    public virtual IEnumSearchScopeRules EnumerateScopeRules() => throw new NotImplementedException();
-    public virtual int HasParentScopeRule(string pszUrl) => throw new NotImplementedException();
-    public virtual int HasChildScopeRule(string pszUrl) => throw new NotImplementedException();
-    public virtual int IncludedInCrawlScope(string pszUrl) => throw new NotImplementedException();
-    public virtual void IncludedInCrawlScopeEx(string pszUrl, out int pfIsIncluded, out CLUSION_REASON pReason) => throw new NotImplementedException();
+    public virtual IEnumSearchScopeRules EnumerateScopeRules()
+    {
+        RecordRead();
+        RulesEnumIndex = 0;
+        return Rules?.Count > 0 ? this : null!;
+    }
+
+    public virtual int HasParentScopeRule(string pszUrl)
+    {
+        RecordRead(pszUrl);
+        return GetTestRuleInfo()?.HasParentScope is true ? 1 : 0;
+    }
+
+    public virtual int HasChildScopeRule(string pszUrl)
+    {
+        RecordRead(pszUrl);
+        return GetTestRuleInfo()?.HasChildScope is true ? 1 : 0;
+    }
+
+    public virtual int IncludedInCrawlScope(string pszUrl)
+    {
+        RecordRead(pszUrl);
+        return GetTestRuleInfo()?.IsIncluded is true ? 1 : 0;
+    }
+
+    public virtual void IncludedInCrawlScopeEx(string pszUrl, out int pfIsIncluded, out CLUSION_REASON pReason)
+    {
+        RecordRead(pszUrl);
+        pfIsIncluded = default;
+        pReason = default;
+        TestSearchRuleInfo? info = GetTestRuleInfo();
+        if (info is not null)
+        {
+            pfIsIncluded = info.IsIncluded ? 1 : 0;
+            pReason = info.Reason;
+        }
+    }
+
     public virtual void RevertToDefaultScopes()
     {
         RecordWrite();
@@ -54,10 +102,97 @@ public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager
         TailCall();
     }
 
-    public virtual int GetParentScopeVersionId(string pszUrl) => throw new NotImplementedException();
+    public virtual int GetParentScopeVersionId(string pszUrl)
+    {
+        RecordRead(pszUrl);
+        return GetTestRuleInfo()?.ParentScopeVersiondId ?? 0;
+    }
+
     public virtual void RemoveDefaultScopeRule(string pszUrl)
     {
         RecordWrite(pszUrl);
         TailCall();
     }
+
+    private readonly List<string> _dontMoveNext = new();
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private TestSearchRuleInfo? GetTestRuleInfo()
+    {
+        if (!(TestRuleInfos?.Count > TestRuleInfosEnumIndex)) return null;
+        object? value = TestRuleInfos[TestRuleInfosEnumIndex];
+
+        if (value is Exception ex)
+        {
+            _dontMoveNext.Clear();
+            TestRuleInfosEnumIndex++;
+            throw ex;
+        }
+
+        string methodName = new StackFrame(1).GetMethod()?.Name ?? string.Empty;
+        _dontMoveNext.Remove(methodName);
+        switch (methodName)
+        {
+            case nameof(IncludedInCrawlScope):
+                _dontMoveNext.Clear();
+                break;
+            case nameof(IncludedInCrawlScopeEx):
+                _dontMoveNext.Clear();
+                _dontMoveNext.Add(nameof(HasChildScopeRule));
+                _dontMoveNext.Add(nameof(HasParentScopeRule));
+                _dontMoveNext.Add(nameof(GetParentScopeVersionId));
+                break;
+        }
+        if (_dontMoveNext.Count == 0)
+        {
+            TestRuleInfosEnumIndex++;
+        }
+
+        return value as TestSearchRuleInfo;
+    }
+
+    // IEnumSearchRoots
+
+    public void Next(uint celt, out CSearchRoot rgelt, ref uint pceltFetched)
+    {
+        RecordRead(celt, nameof(CSearchRoot));
+        if (celt != 1) throw new NotImplementedException();
+        rgelt = null!;
+        pceltFetched = 0;
+        if (Roots?.Count > RootsEnumIndex)
+        {
+            object? value = Roots[RootsEnumIndex++];
+            if (value is Exception ex) throw ex;
+            rgelt = (value as CSearchRoot)!;
+            pceltFetched++;
+        }
+    }
+
+    // IEnumSearchScopeRules
+
+    public void Next(uint celt, out CSearchScopeRule pprgelt, ref uint pceltFetched)
+    {
+        RecordRead(celt, nameof(CSearchScopeRule));
+        if (celt != 1) throw new NotImplementedException();
+        pprgelt = null!;
+        pceltFetched = 0;
+        if (Rules?.Count > RulesEnumIndex)
+        {
+            object? value = Rules[RulesEnumIndex++];
+            if (value is Exception ex) throw ex;
+            pprgelt = (value as CSearchScopeRule)!;
+            pceltFetched++;
+        }
+    }
+
+    // Unused ISearchCrawlScopeManager members.
+
+    public virtual void AddHierarchicalScope(string pszUrl, int fInclude, int fDefault, int fOverrideChildren) => throw new NotImplementedException();
+
+    // Unused IEnumSearchRoots and IEnumSearchScopeRules members.
+
+    public void Skip(uint celt) => throw new NotImplementedException();
+    public void Reset() => throw new NotImplementedException();
+    IEnumSearchRoots IEnumSearchRoots.Clone() => throw new NotImplementedException();
+    IEnumSearchScopeRules IEnumSearchScopeRules.Clone() => throw new NotImplementedException();
 }
