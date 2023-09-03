@@ -11,13 +11,13 @@ coverage:
           - src
         target: auto
         threshold: 2%
-        informational: true
+        informational: false
         if_ci_failed: success
     patch:
       default:
         target: auto
         threshold: 5%
-        informational: true
+        informational: false
         if_ci_failed: success
 
 github_checks:
