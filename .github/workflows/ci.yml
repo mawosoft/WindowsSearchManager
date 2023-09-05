@@ -70,8 +70,9 @@ jobs:
       fail-fast: ${{ github.event.inputs.fail-fast == 'true' }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
+        show-progress: false
         fetch-depth: 0
     - name: Setup dotnet (pinned)
       uses: actions/setup-dotnet@v3
@@ -205,8 +206,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
+        show-progress: false
         fetch-depth: 1
     - name: Create GitHub release
       # TODO release notes
