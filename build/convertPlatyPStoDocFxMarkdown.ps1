@@ -229,8 +229,8 @@ class HelpConverter {
                     $codeblock.Clear().AppendLine($code)
 
                 }
-                # TODO powershell hljs doesn't work well for syntax notation
-                $this.DocfxMarkdown.AppendLine('```powershell').Append($codeblock).AppendLine('```')
+                # Using self-defined 'psmeta', because 'powershell' hljs doesn't work well for syntax notation.
+                $this.DocfxMarkdown.AppendLine('```psmeta').Append($codeblock).AppendLine('```')
             }
             elseif (-not $script:ExludeSyntaxParameterSetHeading -or
                 -not $line.StartsWith('### ', [StringComparison]::Ordinal)) {
