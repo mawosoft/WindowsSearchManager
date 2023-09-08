@@ -6,8 +6,8 @@
 
 .DESCRIPTION
     Imports the required version of platyPS, builds and imports WindowsSearchManager,
-    generates markdown help with and without -UseFullTypeName, generates the respective
-    MAML files.
+    generates markdown help with and without -UseFullTypeName, with and without AlphabeticParamsOrder,
+    generates the respective MAML files.
     Runs Get-Help for each MAML and without MAML and exports the results as text files.
     Also exports a syntax-only summary for all commands in a single text file.
 
@@ -77,18 +77,17 @@ function Export-TextHelp {
     $null = New-Item $txtdir -ItemType Directory -Force
     [hashtable]$cmdsByNoun = Get-Command -Module WindowsSearchManager | Group-Object Noun -AsHashTable
     [System.Collections.ArrayList]$cmdsOrdered = @()
-    foreach ($noun in 'SearchManager', 'SearchCatalog', 'SearchRoot', 'SearchRule')
-    {
+    foreach ($noun in 'SearchManager', 'SearchCatalog', 'SearchRoot', 'SearchRule') {
         $cmds = $cmdsByNoun[$noun] | Sort-Object Name
-        if ($cmds) { 
-            $cmdsOrdered.AddRange($cmds) 
+        if ($cmds) {
+            $cmdsOrdered.AddRange($cmds)
             $cmdsByNoun.Remove($noun)
         }
     }
     if ($cmdsByNoun.Count -gt 0) {
-        Write-Warning "Found commands with unexpected nouns."
+        Write-Warning 'Found commands with unexpected nouns.'
         $cmds = $cmdsByNoun.GetEnumerator() | Sort-Object Key | Select-Object -ExpandProperty Value | Sort-Object Name
-        $cmdsOrdered.AddRange($cmds) 
+        $cmdsOrdered.AddRange($cmds)
     }
     [StringBuilder]$syntax = [StringBuilder]::new()
     foreach ($cmd in $cmdsOrdered) {
@@ -106,7 +105,14 @@ function Export-TextHelp {
             }
         }
     }
-    $syntax.ToString() | Set-Content -Path (Join-Path $Path 'syntax.txt')
+
+    [string]$s = $syntax.ToString()
+    $s | Set-Content -Path (Join-Path $Path 'syntax.txt')
+
+    [string]$break = [Environment]::NewLine + [string]::new([char]' ', 8)
+    $s = [regex]::Replace($s, ' (?=\[?\[?-|\[<CommonParameters>\])', $break)
+    $s = [regex]::Replace($s, '<(?!CommonParameters>)[^>]+>', '<value>')
+    $s | Set-Content -Path (Join-Path $Path 'syntax-order.txt')
 }
 
 
@@ -133,11 +139,12 @@ $null = New-Item $helpcmpdir -ItemType Directory
 
 Export-TextHelp (Join-Path $helpcmpdir 'nomaml')
 
-[string[]]$subdirs = @('shorttype', 'fulltype')
+[string[]]$subdirs = @('shorttype', 'fulltype', 'shortalpha', 'fullalpha')
 foreach ($subdir in $subdirs) {
     [string]$typedir = Join-Path $helpcmpdir $subdir
     [string]$mddir = Join-Path $typedir 'md'
-    $null = New-MarkdownHelp -Module 'WindowsSearchManager' -OutputFolder $mddir -UseFullTypeName:($subdir -eq 'fulltype')
+    $null = New-MarkdownHelp -Module 'WindowsSearchManager' -OutputFolder $mddir `
+        -UseFullTypeName:($subdir.StartsWith('full')) -AlphabeticParamsOrder:($subdir.EndsWith('alpha'))
     $null = New-ExternalHelp -Path $mddir -OutputPath $typedir -Force
 }
 

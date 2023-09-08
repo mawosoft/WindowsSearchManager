@@ -21,6 +21,14 @@
     - Inputs/Outputs: **Always uses full type name.
     As long as the Syntax section keeps the short name, we should use the -UseFullTypeName switch
     to make DocFx xrefs easier.
+
+    Current behavior of platyPS (as of v0.14.2) for parameter -AlphabeticParamsOrder:
+    - Syntax: true:  Original order is preserved in markdown and MAML/Get-Help.
+              false: Original order is preserved in markdown, but **not** in MAML/Get-Help.
+    - Parameters: true:  Sorted alphabetically, except for selected params like -Confirm, WhatIf.
+                  false: Sorted alphabetically, includig -Confirm, -WhatIf, etc.
+    Doesn't seem to make much sense. We have to use -AlphabeticParamsOrder to avoid the syntax block
+    getting messed up.
 #>
 
 #Requires -Version 7
@@ -77,14 +85,16 @@ if ($NewProcess -eq 'Always' -or ($NewProcess -eq 'Conditional' -and (Get-Module
 
 [string]$helpdir = "$PSScriptRoot/../help"
 if (-not (Test-Path "$helpdir/*.md")) {
-    New-MarkdownHelp -Module 'WindowsSearchManager' -OutputFolder $helpdir -UseFullTypeName:$UseFullTypeName
+    New-MarkdownHelp -Module 'WindowsSearchManager' -OutputFolder $helpdir -AlphabeticParamsOrder `
+        -UseFullTypeName:$UseFullTypeName
 }
 else {
     [string]$bakdir = Join-Path $helpdir "bak$(Get-Date -Format FileDateTime)"
     $null = New-Item $bakdir -ItemType Directory
     Get-ChildItem "$helpdir/*.md" -File | Copy-Item -Destination $bakdir
 
-    Update-MarkdownHelpModule -Path $helpdir -UseFullTypeName:$UseFullTypeName -UpdateInputOutput:$UpdateInputOutput -Force:$Force
+    Update-MarkdownHelpModule -Path $helpdir -AlphabeticParamsOrder `
+        -UseFullTypeName:$UseFullTypeName -UpdateInputOutput:$UpdateInputOutput -Force:$Force
 
     if (Compare-Object -ReferenceObject (Get-ChildItem "$helpdir/*.md" -File | Get-FileHash) `
             -DifferenceObject (Get-ChildItem "$bakdir/*" -File | Get-FileHash) `
