@@ -8,7 +8,8 @@ schema: 2.0.0
 # Remove-SearchRoot
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+
+Deletes the specified search roots from a search catalog.
 
 ## SYNTAX
 
@@ -40,7 +41,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: SystemIndex
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -100,7 +101,12 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-### System.Object
+### None
+
 ## NOTES
 
 ## RELATED LINKS
+
+[Add-SearchRoot](Add-SearchRoot.md)
+
+[Get-SearchRoot](Get-SearchRoot.md)

@@ -8,7 +8,8 @@ schema: 2.0.0
 # Test-SearchRule
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+
+Tests specified paths against the search rules of a search catalog.
 
 ## SYNTAX
 
@@ -19,17 +20,17 @@ Test-SearchRule [-Path] <String[]> [-IsIncluded] [-Catalog <String>] [<CommonPar
 
 ### ChildScopeParameterSet
 ```
-Test-SearchRule [-Path] <String[]> [-HasChildScope] [-Catalog <String>] [<CommonParameters>]
+Test-SearchRule [-Path] <String[]> -HasChildScope [-Catalog <String>] [<CommonParameters>]
 ```
 
 ### ParentScopeParameterSet
 ```
-Test-SearchRule [-Path] <String[]> [-HasParentScope] [-Catalog <String>] [<CommonParameters>]
+Test-SearchRule [-Path] <String[]> -HasParentScope [-Catalog <String>] [<CommonParameters>]
 ```
 
 ### DetailedParameterSet
 ```
-Test-SearchRule [-Path] <String[]> [-Detailed] [-Catalog <String>] [<CommonParameters>]
+Test-SearchRule [-Path] <String[]> -Detailed [-Catalog <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -56,7 +57,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: SystemIndex
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -152,3 +153,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## NOTES
 
 ## RELATED LINKS
+
+[Add-SearchRule](Add-SearchRule.md)
+
+[Get-SearchRule](Get-SearchRule.md)
+
+[Remove-SearchRule](Remove-SearchRule.md)
+
+[Reset-SearchRule](Reset-SearchRule.md)

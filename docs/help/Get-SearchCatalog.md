@@ -8,7 +8,8 @@ schema: 2.0.0
 # Get-SearchCatalog
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+
+Gets settings and status for of all search catalogs or for a specified one.
 
 ## SYNTAX
 
@@ -59,3 +60,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## NOTES
 
 ## RELATED LINKS
+
+[New-SearchCatalog](New-SearchCatalog.md)
+
+[Remove-SearchCatalog](Remove-SearchCatalog.md)
+
+[Reset-SearchCatalog](Reset-SearchCatalog.md)
+
+[Set-SearchCatalog](Set-SearchCatalog.md)
+
+[Update-SearchCatalog](Update-SearchCatalog.md)

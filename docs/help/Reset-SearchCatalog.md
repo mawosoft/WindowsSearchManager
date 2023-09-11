@@ -8,7 +8,8 @@ schema: 2.0.0
 # Reset-SearchCatalog
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+
+Resets a search catalog by completely rebuilding its index database.
 
 ## SYNTAX
 
@@ -40,7 +41,7 @@ Aliases:
 
 Required: False
 Position: 0
-Default value: None
+Default value: SystemIndex
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -85,7 +86,18 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-### System.Object
+### None
+
 ## NOTES
 
 ## RELATED LINKS
+
+[Get-SearchCatalog](Get-SearchCatalog.md)
+
+[New-SearchCatalog](New-SearchCatalog.md)
+
+[Remove-SearchCatalog](Remove-SearchCatalog.md)
+
+[Set-SearchCatalog](Set-SearchCatalog.md)
+
+[Update-SearchCatalog](Update-SearchCatalog.md)

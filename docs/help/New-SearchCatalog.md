@@ -8,7 +8,8 @@ schema: 2.0.0
 # New-SearchCatalog
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+
+Creates a new search catalog.
 
 ## SYNTAX
 
@@ -85,7 +86,18 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-### System.Object
+### None
+
 ## NOTES
 
 ## RELATED LINKS
+
+[Get-SearchCatalog](Get-SearchCatalog.md)
+
+[Remove-SearchCatalog](Remove-SearchCatalog.md)
+
+[Reset-SearchCatalog](Reset-SearchCatalog.md)
+
+[Set-SearchCatalog](Set-SearchCatalog.md)
+
+[Update-SearchCatalog](Update-SearchCatalog.md)
