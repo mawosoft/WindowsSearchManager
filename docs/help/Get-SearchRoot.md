@@ -8,7 +8,8 @@ schema: 2.0.0
 # Get-SearchRoot
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+
+Gets all search roots defined for a search catalog.
 
 ## SYNTAX
 
@@ -40,7 +41,7 @@ Aliases:
 
 Required: False
 Position: 0
-Default value: None
+Default value: SystemIndex
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -76,3 +77,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## NOTES
 
 ## RELATED LINKS
+
+[Add-SearchRoot](Add-SearchRoot.md)
+
+[Remove-SearchRoot](Remove-SearchRoot.md)

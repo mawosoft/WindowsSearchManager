@@ -8,7 +8,8 @@ schema: 2.0.0
 # Get-SearchManager
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+
+Gets global settings and version information for Windows Search.
 
 ## SYNTAX
 
@@ -44,3 +45,5 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## NOTES
 
 ## RELATED LINKS
+
+[Set-SearchManager](Set-SearchManager.md)

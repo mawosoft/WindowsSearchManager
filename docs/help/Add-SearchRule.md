@@ -8,7 +8,8 @@ schema: 2.0.0
 # Add-SearchRule
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+
+Adds search rules to a search catalog.
 
 ## SYNTAX
 
@@ -47,7 +48,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: SystemIndex
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -108,7 +109,7 @@ Accepted values: User, Default
 
 Required: False
 Position: 2
-Default value: None
+Default value: User
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -171,7 +172,16 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## OUTPUTS
 
-### System.Object
+### None
+
 ## NOTES
 
 ## RELATED LINKS
+
+[Get-SearchRule](Get-SearchRule.md)
+
+[Remove-SearchRule](Remove-SearchRule.md)
+
+[Reset-SearchRule](Reset-SearchRule.md)
+
+[Test-SearchRule](Test-SearchRule.md)
