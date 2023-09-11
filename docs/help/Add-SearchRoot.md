@@ -14,12 +14,12 @@ schema: 2.0.0
 
 ### PathParameterSet (Default)
 ```
-Add-SearchRoot [-Path] <String[]> [[-Catalog] <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-SearchRoot [-Path] <String[]> [-Catalog <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### InputParameterSet
 ```
-Add-SearchRoot -InputObject <SearchRootInfo[]> [[-Catalog] <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-SearchRoot -InputObject <SearchRootInfo[]> [-Catalog <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,7 +28,7 @@ Add-SearchRoot -InputObject <SearchRootInfo[]> [[-Catalog] <String>] [-WhatIf] [
 ## EXAMPLES
 
 ### Example 1
-```
+```powershell
 PS C:\> {{ Add example code here }}
 ```
 
@@ -45,23 +45,8 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Confirm
-Prompts you for confirmation before running the cmdlet.
-
-```yaml
-Type: System.Management.Automation.SwitchParameter
-Parameter Sets: (All)
-Aliases: cf
-
-Required: False
 Position: Named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -96,6 +81,21 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
+### -Confirm
+Prompts you for confirmation before running the cmdlet.
+
+```yaml
+Type: System.Management.Automation.SwitchParameter
+Parameter Sets: (All)
+Aliases: cf
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -WhatIf
 Shows what would happen if the cmdlet runs.
 The cmdlet is not run.
@@ -107,7 +107,7 @@ Aliases: wi
 
 Required: False
 Position: Named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -118,7 +118,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## INPUTS
 
 ### System.String[]
+
 ### Mawosoft.PowerShell.WindowsSearchManager.SearchRootInfo[]
+
 ## OUTPUTS
 
 ### System.Object

@@ -12,7 +12,7 @@ public sealed class RemoveSearchRootCommand : SearchApiCommandBase
     [ValidateNotNullOrEmpty()]
     public string[]? Path { get; set; }
 
-    [Parameter(Position = 1)]
+    [Parameter]
     [ValidateNotNullOrEmpty()]
     public string Catalog { get; set; } = DefaultCatalogName;
 

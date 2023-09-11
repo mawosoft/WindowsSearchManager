@@ -14,22 +14,22 @@ schema: 2.0.0
 
 ### IncludedParameterSet (Default)
 ```
-Test-SearchRule [-Path] <String[]> [-IsIncluded] [[-Catalog] <String>] [<CommonParameters>]
+Test-SearchRule [-Path] <String[]> [-IsIncluded] [-Catalog <String>] [<CommonParameters>]
 ```
 
 ### ChildScopeParameterSet
 ```
-Test-SearchRule [-Path] <String[]> [-HasChildScope] [[-Catalog] <String>] [<CommonParameters>]
+Test-SearchRule [-Path] <String[]> [-HasChildScope] [-Catalog <String>] [<CommonParameters>]
 ```
 
 ### ParentScopeParameterSet
 ```
-Test-SearchRule [-Path] <String[]> [-HasParentScope] [[-Catalog] <String>] [<CommonParameters>]
+Test-SearchRule [-Path] <String[]> [-HasParentScope] [-Catalog <String>] [<CommonParameters>]
 ```
 
 ### DetailedParameterSet
 ```
-Test-SearchRule [-Path] <String[]> [-Detailed] [[-Catalog] <String>] [<CommonParameters>]
+Test-SearchRule [-Path] <String[]> [-Detailed] [-Catalog <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -38,7 +38,7 @@ Test-SearchRule [-Path] <String[]> [-Detailed] [[-Catalog] <String>] [<CommonPar
 ## EXAMPLES
 
 ### Example 1
-```
+```powershell
 PS C:\> {{ Add example code here }}
 ```
 
@@ -55,7 +55,7 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 1
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -71,7 +71,7 @@ Aliases:
 
 Required: True
 Position: Named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -86,7 +86,7 @@ Aliases:
 
 Required: True
 Position: Named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -101,7 +101,7 @@ Aliases:
 
 Required: True
 Position: Named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -116,7 +116,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -142,10 +142,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## INPUTS
 
 ### System.String[]
+
 ## OUTPUTS
 
 ### System.Boolean
+
 ### Mawosoft.PowerShell.WindowsSearchManager.TestSearchRuleInfo
+
 ## NOTES
 
 ## RELATED LINKS

@@ -16,11 +16,11 @@ public sealed class AddSearchRuleCommand : SearchApiCommandBase
     [ValidateNotNullOrEmpty()]
     public string[]? Path { get; set; }
 
-    [Parameter(ParameterSetName = PathParameterSet, Position = 1)]
-    public SearchRuleInfo.SearchRuleSet RuleSet { get; set; } = SearchRuleInfo.SearchRuleSet.User;
-
-    [Parameter(Mandatory = true, ParameterSetName = PathParameterSet, Position = 2)]
+    [Parameter(Mandatory = true, ParameterSetName = PathParameterSet, Position = 1)]
     public SearchRuleInfo.SearchRuleType RuleType { get; set; }
+
+    [Parameter(ParameterSetName = PathParameterSet, Position = 2)]
+    public SearchRuleInfo.SearchRuleSet RuleSet { get; set; } = SearchRuleInfo.SearchRuleSet.User;
 
     [Parameter(ParameterSetName = PathParameterSet)]
     public SwitchParameter OverrideChildren { get; set; }
@@ -28,7 +28,7 @@ public sealed class AddSearchRuleCommand : SearchApiCommandBase
     [Parameter(Mandatory = true, ParameterSetName = InputParameterSet, ValueFromPipeline = true)]
     public SearchRuleInfo[]? InputObject { get; set; }
 
-    [Parameter(Position = 3)]
+    [Parameter]
     [ValidateNotNullOrEmpty()]
     public string Catalog { get; set; } = DefaultCatalogName;
 

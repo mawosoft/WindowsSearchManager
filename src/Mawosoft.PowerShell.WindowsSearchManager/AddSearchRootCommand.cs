@@ -23,7 +23,7 @@ public sealed class AddSearchRootCommand : SearchApiCommandBase
     [Parameter(Mandatory = true, ParameterSetName = InputParameterSet, ValueFromPipeline = true)]
     public SearchRootInfo[]? InputObject { get; set; }
 
-    [Parameter(Position = 1)]
+    [Parameter]
     [ValidateNotNullOrEmpty()]
     public string Catalog { get; set; } = DefaultCatalogName;
 

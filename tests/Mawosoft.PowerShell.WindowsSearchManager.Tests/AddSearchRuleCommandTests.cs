@@ -107,7 +107,7 @@ public class AddSearchRuleCommandTests : CommandTestBase
     [InlineData(@"Add-SearchRule -Path x:\foo -RuleType Include", @"AddUserScopeRule(x:\foo,1,0,1)")]
     [InlineData(@"Add-SearchRule -Path x:\foo -RuleType Exclude -OverrideChildren", @"AddUserScopeRule(x:\foo,0,1,1)")]
     [InlineData(@"Add-SearchRule -Path x:\foo, x:\bar -RuleType Include -OverrideChildren", @"AddUserScopeRule(x:\foo,1,1,1)", @"AddUserScopeRule(x:\bar,1,1,1)")]
-    [InlineData(@"Add-SearchRule x:\foo, x:\bar Default Include", @"AddDefaultScopeRule(x:\foo,1,1)", @"AddDefaultScopeRule(x:\bar,1,1)")]
+    [InlineData(@"Add-SearchRule x:\foo, x:\bar Include Default", @"AddDefaultScopeRule(x:\foo,1,1)", @"AddDefaultScopeRule(x:\bar,1,1)")]
     [InlineData(@"@('x:\foo', 'x:\bar') | Add-SearchRule -RuleSet 1 -RuleType Exclude", @"AddDefaultScopeRule(x:\foo,0,1)", @"AddDefaultScopeRule(x:\bar,0,1)")]
     public void PathParameterSet_Succeeds(string script, params string[] expectedMethodCalls)
     {

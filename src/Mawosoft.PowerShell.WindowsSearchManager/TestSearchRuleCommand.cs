@@ -31,7 +31,7 @@ public sealed class TestSearchRuleCommand : SearchApiCommandBase
     [Parameter(Mandatory = true, ParameterSetName = DetailedParameterSet)]
     public SwitchParameter Detailed { get; set; }
 
-    [Parameter(Position = 1)]
+    [Parameter]
     [ValidateNotNullOrEmpty()]
     public string Catalog { get; set; } = DefaultCatalogName;
 
