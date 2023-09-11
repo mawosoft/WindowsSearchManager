@@ -14,13 +14,13 @@ schema: 2.0.0
 
 ### PathParameterSet (Default)
 ```
-Add-SearchRule [-Path] <String[]> [[-RuleSet] <SearchRuleSet>] [-RuleType] <SearchRuleType> [-OverrideChildren]
- [[-Catalog] <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-SearchRule [-Path] <String[]> [-RuleType] <SearchRuleType> [[-RuleSet] <SearchRuleSet>] [-OverrideChildren]
+ [-Catalog <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ### InputParameterSet
 ```
-Add-SearchRule -InputObject <SearchRuleInfo[]> [[-Catalog] <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-SearchRule -InputObject <SearchRuleInfo[]> [-Catalog <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -29,7 +29,7 @@ Add-SearchRule -InputObject <SearchRuleInfo[]> [[-Catalog] <String>] [-WhatIf] [
 ## EXAMPLES
 
 ### Example 1
-```
+```powershell
 PS C:\> {{ Add example code here }}
 ```
 
@@ -46,23 +46,8 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 3
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Confirm
-Prompts you for confirmation before running the cmdlet.
-
-```yaml
-Type: System.Management.Automation.SwitchParameter
-Parameter Sets: (All)
-Aliases: cf
-
-Required: False
 Position: Named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -92,7 +77,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -122,7 +107,7 @@ Aliases:
 Accepted values: User, Default
 
 Required: False
-Position: 1
+Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -138,7 +123,22 @@ Aliases:
 Accepted values: Exclude, Include
 
 Required: True
-Position: 2
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Confirm
+Prompts you for confirmation before running the cmdlet.
+
+```yaml
+Type: System.Management.Automation.SwitchParameter
+Parameter Sets: (All)
+Aliases: cf
+
+Required: False
+Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -155,7 +155,7 @@ Aliases: wi
 
 Required: False
 Position: Named
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -166,7 +166,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## INPUTS
 
 ### System.String[]
+
 ### Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo[]
+
 ## OUTPUTS
 
 ### System.Object

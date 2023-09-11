@@ -15,7 +15,7 @@ public sealed class RemoveSearchRuleCommand : SearchApiCommandBase
     [Parameter(Position = 1)]
     public SearchRuleInfo.SearchRuleSet RuleSet { get; set; } = SearchRuleInfo.SearchRuleSet.User;
 
-    [Parameter(Position = 2)]
+    [Parameter]
     [ValidateNotNullOrEmpty()]
     public string Catalog { get; set; } = DefaultCatalogName;
 

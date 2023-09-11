@@ -8,7 +8,7 @@ schema: 2.0.0
 # Get-SearchCatalog
 
 ## SYNOPSIS
-Returns an object with settings and status information for a catalog.
+{{ Fill in the Synopsis }}
 
 ## SYNTAX
 
@@ -22,7 +22,7 @@ Get-SearchCatalog [[-Catalog] <String>] [<CommonParameters>]
 ## EXAMPLES
 
 ### Example 1
-```
+```powershell
 PS C:\> {{ Add example code here }}
 ```
 
@@ -40,7 +40,7 @@ Aliases:
 
 Required: False
 Position: 0
-Default value: SystemIndex
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -51,9 +51,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## INPUTS
 
 ### None
+
 ## OUTPUTS
 
 ### Mawosoft.PowerShell.WindowsSearchManager.SearchCatalogInfo
+
 ## NOTES
 
 ## RELATED LINKS
