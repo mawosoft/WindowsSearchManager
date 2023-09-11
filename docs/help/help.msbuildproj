@@ -39,6 +39,7 @@
           -Path '$(MSBuildProjectDirectory)'
           -Destination '$(BaseIntermediateOutputPath)'
           -PlatyPSImportPath '$(PlatyPSImportPath)'
+          -Verbose
         &quot;
       </_command>
     </PropertyGroup>

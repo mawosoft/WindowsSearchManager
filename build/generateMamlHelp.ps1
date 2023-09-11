@@ -12,7 +12,9 @@
 
 #Requires -Version 7
 
+using namespace System.Collections.Generic
 using namespace System.IO
+using namespace System.Text.RegularExpressions
 using namespace System.Xml.Linq
 
 [CmdletBinding()]
@@ -36,21 +38,95 @@ param(
 Set-StrictMode -Version 3.0
 $ErrorActionPreference = 'Stop'
 
+# Supress VT100 esc sequences when invoked via dotnet/msbuild
+# Exec task process hierarchy is dotnet|msbuild -> cmd|sh -> pwsh
+
+try {
+    [string]$parent = (Get-Process -Id $PID).Parent.Parent.Name
+    if ($parent -eq 'dotnet' -or $parent -eq 'MSBuild') {
+        $PSStyle.OutputRendering = 'PlainText'
+    }
+}
+catch {}
+
 if ($PlatyPSImportPath) {
     Import-Module -Name $PlatyPSImportPath
 }
+
 # Leave path testing to platyPS
-New-ExternalHelp -Path $Path -OutputPath $Destination -Force | Where-Object Extension -eq '.xml' | ForEach-Object {
+$mamlHelp = New-ExternalHelp -Path $Path -OutputPath $Destination -Force | Where-Object Extension -EQ '.xml'
+
+$syntaxes = Get-ChildItem $Path -Filter '*.md' -File | Get-Content -Raw | ForEach-Object {
+    [regex]::Match($_, '(?ns)\n## SYNTAX(.*?\n```.*?\n(?<syntax>.*?)\n```)+?\s*\n## ').Groups['syntax'].Captures.Value | ForEach-Object {
+        [PSCustomObject]@{
+            Cmdlet = [regex]::Match($_, '(?ns)^[A-Za-z\-]+').Value
+            Params = [string[]][regex]::Matches($_, '(?ns)[\[\s]-(?<param>[A-Za-z]+)').ForEach({ $_.Groups['param'].Value })
+        }
+    }
+}
+
+$mamlHelp | ForEach-Object {
     # Postprocess MAML files
     [XDocument]$maml = [XDocument]::Load($_.FullName)
+    [XNamespace]$nsmaml = $maml.Root.FirstNode.GetNamespaceOfPrefix('maml')
+    [XNamespace]$nscmd = $maml.Root.FirstNode.GetNamespaceOfPrefix('command')
+    [bool]$script:dirty = $false
+
+    # Ensure proper order of parameters per syntax item (helpItems/command/syntax/syntaxItem).
+    $maml.Root.Descendants($nscmd + 'syntaxItem').ForEach({
+            [string]$cmdlet = $_.Element($nsmaml + 'name')?.Value
+            [XElement[]]$params = $_.Elements($nscmd + 'parameter')
+            if ($params) {
+                [Dictionary[string, XElement]]$paramsMap = [KeyValuePair[string, XElement][]]$params.ForEach({
+                        [KeyValuePair[string, XElement]]::new($_.Element($nsmaml + 'name')?.Value, $_)
+                    })
+                [HashSet[string]]$paramsSet = $paramsMap.Keys
+                $foundSyntax = $syntaxes.Where({ $cmdlet -eq $_.Cmdlet -and $paramsSet.SetEquals($_.Params) })
+                if (-not $foundSyntax) {
+                    Write-Warning "No matching markdown paramset found for $cmdlet $($paramsMap.Keys)"
+                }
+                elseif ($foundSyntax.Count -ne 1) {
+                    Write-Warning "Multiple matching markdown paramsets found for $cmdlet $($paramsMap.Keys)"
+                }
+                else {
+                    $syntax = $foundSyntax[0]
+                    if (-not [System.Linq.Enumerable]::SequenceEqual($paramsSet, $syntax.Params)) {
+                        Write-Verbose "Reordering syntax $cmdlet $($paramsMap.Keys) -> $($syntax.Params)"
+                        $params.ForEach({ $_.Remove() })
+                        $_.Add([XElement[]]$syntax[0].Params.ForEach({ $paramsMap[$_] }))
+                        $script:dirty = $true
+                    }
+                }
+            }
+        })
+
+    # Use short type names in syntax blocks (helpItems/command/syntax/syntaxItem/parameter/parameterValue).
+    [hashtable]$shortenedTypes = @{}
+    $maml.Root.Descendants($nscmd + 'syntaxItem').ForEach({
+            $_.Descendants($nscmd + 'parameterValue').ForEach({
+                    [string]$s = $_.Value
+                    [Match]$m = [regex]::Match($s, '^(\w+\.)+')
+                    if ($m.Success) {
+                        $shortenedTypes[$s] = $shortenedTypes[$s] + 1
+                        $_.Value = $s.Remove($m.Index, $m.Length)
+                        $script:dirty = $true
+                    }
+                })
+        })
+    if ($shortenedTypes.Count) {
+        'Shortened type names in syntax blocks:', ($shortenedTypes | Format-Table -AutoSize | Out-String) | Write-Verbose
+    }
+
     # EXAMPLES and NOTES are the only help sections that can be omitted from display if they have no content.
     # All other help sections will *always* show their heading. For EXAMPLES, omission happens automatically,
-    # for NOTES, an empty <maml:alertSet> node must be removed.
-    [array]$emptyNotes = $maml.Root.Descendants('{http://schemas.microsoft.com/maml/2004/10}alertSet').Where({
-            $_.Value.Length -eq 0
+    # for NOTES, an empty alertSet node must be removed (helpItems/command/alertSet).
+    $maml.Root.Descendants($nsmaml + 'alertSet').Where({ $_.Value.Length -eq 0 }).ForEach({
+            Write-Verbose "Removing empty notes for $($_.Parent?.Element($nscmd + 'details')?.Element($nscmd + 'name')?.Value)"
+            $_.Remove()
+            $script:dirty = $true
         })
-    if ($emptyNotes) {
-        $emptyNotes.ForEach({ $_.Remove() })
+
+    if ($script:dirty) {
         $maml.Save($_.FullName)
     }
 }
