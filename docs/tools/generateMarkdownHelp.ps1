@@ -25,6 +25,8 @@
     Current behavior of platyPS (as of v0.14.2) for parameter -AlphabeticParamsOrder:
     - Syntax: true:  Original order is preserved in markdown and MAML/Get-Help.
               false: Original order is preserved in markdown, but **not** in MAML/Get-Help.
+              In MAML/Get-Help, the original order is sometimes preserved, sometimes not,
+              regardless of the setting.
     - Parameters: true:  Sorted alphabetically, except for selected params like -Confirm, WhatIf.
                   false: Sorted alphabetically, includig -Confirm, -WhatIf, etc.
     Doesn't seem to make much sense. We have to use -AlphabeticParamsOrder to avoid the syntax block

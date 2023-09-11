@@ -2,13 +2,12 @@
 
 <#
 .SYNOPSIS
-    Generate markdown help variants via platyPS and export results for comparison.
+    Generates Get-Help -Full preview for WindowsSearch with and without MAML and exports results for
+    comparison.
 
 .DESCRIPTION
-    Imports the required version of platyPS, builds and imports WindowsSearchManager,
-    generates markdown help with and without -UseFullTypeName, with and without AlphabeticParamsOrder,
-    generates the respective MAML files.
-    Runs Get-Help for each MAML and without MAML and exports the results as text files.
+    Builds and imports WindowsSearchManager, runs Get-Help for each command with MAML and without
+    MAML and exports the results as text files.
     Also exports a syntax-only summary for all commands in a single text file.
 
 .NOTES
@@ -16,10 +15,7 @@
     into the current instance, which would block subsequent builds of the module because the assembly
     remains loaded until PowerShell exits.
     The results are stored in a 'helpcmp<number>' directory, with subdirectories named
-    shorttype, fulltype, nomaml.
-    Each directory contains the maml-help.xml and the syntax-only.txt files as well as further subdirectories
-    'md' and 'txt' for the generated markdown help the text produced by Get-Help -Full for each
-    command.
+    nomaml and preview.
 #>
 
 #Requires -Version 7
@@ -66,11 +62,7 @@ if ($NewProcess -eq 'Always' -or ($NewProcess -eq 'Conditional' -and (Get-Module
 #
 ################################################################################
 
-& "$PSScriptRoot/importPlatyPS.ps1"
-
-# We need to exclude the current MAML help file from build/import.
-# Otherwise platyPS would not see any changes to parameter sets and simply report the MAML help content.
-& "$PSScriptRoot/importWindowsSearchManager.ps1" -NoMamlHelp
+& "$PSScriptRoot/importWindowsSearchManager.ps1"
 [string]$moduledir = Split-Path (Get-Module WindowsSearchManager).Path -Parent
 
 [string]$helpcmpdir = Join-Path $Path 'helpcmp'
@@ -81,22 +73,11 @@ while (Test-Path $helpcmpdir) {
 }
 $null = New-Item $helpcmpdir -ItemType Directory
 
+[string]$previewdir = Join-Path $helpcmpdir 'preview'
+& "$PSScriptRoot/exportTextHelp.ps1" $previewdir
+
+Get-ChildItem (Join-Path $moduledir '*-help.xml') | Move-Item -Destination $previewdir
+Remove-Module WindowsSearchManager
+Import-Module $moduledir
+
 & "$PSScriptRoot/exportTextHelp.ps1" (Join-Path $helpcmpdir 'nomaml')
-
-[string[]]$subdirs = @('shorttype', 'fulltype', 'shortalpha', 'fullalpha')
-foreach ($subdir in $subdirs) {
-    [string]$typedir = Join-Path $helpcmpdir $subdir
-    [string]$mddir = Join-Path $typedir 'md'
-    $null = New-MarkdownHelp -Module 'WindowsSearchManager' -OutputFolder $mddir `
-        -UseFullTypeName:($subdir.StartsWith('full')) -AlphabeticParamsOrder:($subdir.EndsWith('alpha'))
-    $null = New-ExternalHelp -Path $mddir -OutputPath $typedir -Force
-}
-
-foreach ($subdir in $subdirs) {
-    [string]$typedir = Join-Path $helpcmpdir $subdir
-    Get-ChildItem (Join-Path $typedir '*-help.xml') | Copy-Item -Destination $moduledir
-    Remove-Module WindowsSearchManager
-    Import-Module $moduledir
-    & "$PSScriptRoot/exportTextHelp.ps1" $typedir
-    Get-ChildItem (Join-Path $moduledir '*-help.xml') | Remove-Item
-}
