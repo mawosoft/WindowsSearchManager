@@ -54,6 +54,6 @@ public class SearchManagerInfoTests
         };
         SearchManagerInfo info = new(mock);
         SearchManagerInfo clone = (SearchManagerInfo)info.Clone();
-        Assert.Equal(info, clone, ShallowFieldComparer.Instance);
+        Assert.Equivalent(info, clone, strict: true);
     }
 }

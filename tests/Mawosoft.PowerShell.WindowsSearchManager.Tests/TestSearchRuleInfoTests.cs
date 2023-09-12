@@ -29,6 +29,6 @@ public class TestSearchRuleInfoTests
             ParentScopeVersiondId = 111
         };
         TestSearchRuleInfo clone = (TestSearchRuleInfo)info.Clone();
-        Assert.Equal(info, clone, ShallowFieldComparer.Instance);
+        Assert.Equivalent(info, clone, strict: true);
     }
 }

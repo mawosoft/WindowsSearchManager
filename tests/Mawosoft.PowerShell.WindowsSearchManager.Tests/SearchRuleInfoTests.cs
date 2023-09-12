@@ -46,6 +46,6 @@ public class SearchRuleInfoTests
             OverrideChildren = true
         };
         SearchRuleInfo clone = (SearchRuleInfo)info.Clone();
-        Assert.Equal(info, clone, ShallowFieldComparer.Instance);
+        Assert.Equivalent(info, clone, strict: true);
     }
 }

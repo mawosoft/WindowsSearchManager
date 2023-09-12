@@ -84,6 +84,6 @@ public class SearchRootInfoTests
             Password = "pass"
         };
         SearchRootInfo clone = (SearchRootInfo)info.Clone();
-        Assert.Equal(info, clone, ShallowFieldComparer.Instance);
+        Assert.Equivalent(info, clone, strict: true);
     }
 }
