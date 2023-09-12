@@ -47,6 +47,6 @@ public class SearchCatalogInfoTests
         MockCatalogManager mock = new();
         SearchCatalogInfo info = new(mock);
         SearchCatalogInfo clone = (SearchCatalogInfo)info.Clone();
-        Assert.Equal(info, clone, ShallowFieldComparer.Instance);
+        Assert.Equivalent(info, clone, strict: true);
     }
 }
