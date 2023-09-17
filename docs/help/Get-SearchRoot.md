@@ -68,11 +68,17 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ### None
 
+You can't pipe objects to this cmdlet.
+
 ## OUTPUTS
 
 ### Mawosoft.PowerShell.WindowsSearchManager.SearchRootInfo
 
+By default, this cmdlet returns **SearchRootInfo** objects.
+
 ### System.String
+
+When you use the **PathOnly** parameter, the cmdlet returns the root paths.
 
 ## NOTES
 
