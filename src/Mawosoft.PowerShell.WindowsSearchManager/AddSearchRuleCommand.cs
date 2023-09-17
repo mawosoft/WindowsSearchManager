@@ -22,11 +22,11 @@ public sealed class AddSearchRuleCommand : SearchApiCommandBase
     [Parameter(ParameterSetName = PathParameterSet, Position = 2)]
     public SearchRuleInfo.SearchRuleSet RuleSet { get; set; } = SearchRuleInfo.SearchRuleSet.User;
 
-    [Parameter(ParameterSetName = PathParameterSet)]
-    public SwitchParameter OverrideChildren { get; set; }
-
     [Parameter(Mandatory = true, ParameterSetName = InputParameterSet, ValueFromPipeline = true)]
     public SearchRuleInfo[]? InputObject { get; set; }
+
+    [Parameter]
+    public SwitchParameter OverrideChildren { get; set; }
 
     [Parameter]
     [ValidateNotNullOrEmpty()]
@@ -53,8 +53,7 @@ public sealed class AddSearchRuleCommand : SearchApiCommandBase
                 {
                     Path = Path[i],
                     RuleType = RuleType,
-                    RuleSet = RuleSet,
-                    OverrideChildren = OverrideChildren
+                    RuleSet = RuleSet
                 };
             }
         }
@@ -70,12 +69,12 @@ public sealed class AddSearchRuleCommand : SearchApiCommandBase
                         ScopeManager.AddUserScopeRule(
                             info.Path,
                             (info.RuleType == SearchRuleInfo.SearchRuleType.Include) ? 1 : 0,
-                            info.OverrideChildren ? 1 : 0,
+                            OverrideChildren ? 1 : 0,
                             (uint)info.FollowFlags);
                     }
                     else
                     {
-                        if (info.OverrideChildren)
+                        if (OverrideChildren)
                         {
                             WriteWarning(SR.OverrideChildrenNotSupported + Environment.NewLine + "    " + target);
                         }

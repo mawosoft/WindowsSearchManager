@@ -29,7 +29,6 @@ public class SearchRuleInfoToMockComparer : IEqualityComparer, IEqualityComparer
         if ((mock.IsIncluded == 0 ? SearchRuleInfo.SearchRuleType.Exclude : SearchRuleInfo.SearchRuleType.Include) != info.RuleType) return false;
         if ((mock.IsDefault == 0 ? SearchRuleInfo.SearchRuleSet.User : SearchRuleInfo.SearchRuleSet.Default) != info.RuleSet) return false;
         if (SearchRuleInfo._FOLLOW_FLAGS.FF_INDEXCOMPLEXURLS != info.FollowFlags) return false;
-        if (info.OverrideChildren) return false;
         return true;
     }
 

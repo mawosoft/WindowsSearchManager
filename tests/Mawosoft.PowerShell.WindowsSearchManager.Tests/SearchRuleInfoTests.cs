@@ -8,12 +8,11 @@ public class SearchRuleInfoTests
     public void Ctor_Defaults()
     {
         SearchRuleInfo info = new();
-        Assert.Equal(5, info.GetType().GetProperties().Length);
+        Assert.Equal(4, info.GetType().GetProperties().Length);
         Assert.Null(info.Path);
         Assert.Equal(SearchRuleInfo.SearchRuleType.Exclude, info.RuleType);
         Assert.Equal(SearchRuleInfo.SearchRuleSet.User, info.RuleSet);
         Assert.Equal(SearchRuleInfo._FOLLOW_FLAGS.FF_INDEXCOMPLEXURLS, info.FollowFlags);
-        Assert.False(info.OverrideChildren);
     }
 
     [Fact]
@@ -43,7 +42,7 @@ public class SearchRuleInfoTests
             Path = @"c:\foo\bar",
             RuleType = SearchRuleInfo.SearchRuleType.Include,
             RuleSet = SearchRuleInfo.SearchRuleSet.Default,
-            OverrideChildren = true
+            FollowFlags = SearchRuleInfo._FOLLOW_FLAGS.FF_SUPPRESSINDEXING
         };
         SearchRuleInfo clone = (SearchRuleInfo)info.Clone();
         Assert.Equivalent(info, clone, strict: true);
