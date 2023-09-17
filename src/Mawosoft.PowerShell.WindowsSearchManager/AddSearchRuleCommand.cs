@@ -3,7 +3,7 @@
 namespace Mawosoft.PowerShell.WindowsSearchManager;
 
 /// <summary>
-/// Adds one or more search rules to a catalog.
+/// Adds search rules to a search catalog.
 /// </summary>
 [Cmdlet(VerbsCommon.Add, Nouns.SearchRule, DefaultParameterSetName = PathParameterSet,
         ConfirmImpact = ConfirmImpact.Medium, SupportsShouldProcess = true)]

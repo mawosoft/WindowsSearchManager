@@ -3,9 +3,11 @@
 namespace Mawosoft.PowerShell.WindowsSearchManager;
 
 /// <summary>
-/// Updates a search catalog by reindexing it either completely or partially.
-/// Requires Admin rights for complete reindexing.
+/// Reindexes a search catalog either completely or partially.
 /// </summary>
+/// <remarks>
+/// Requires admin rights when using the <c>-All</c> switch.
+/// </remarks>
 [Cmdlet(VerbsData.Update, Nouns.SearchCatalog, DefaultParameterSetName = AllParameterSet,
         ConfirmImpact = ConfirmImpact.Medium, SupportsShouldProcess = true)]
 public sealed class UpdateSearchCatalogCommand : SearchApiCommandBase

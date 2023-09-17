@@ -9,7 +9,7 @@ schema: 2.0.0
 
 ## SYNOPSIS
 
-Gets all search rules defined for a search catalog.
+Gets the search rules in effect for a search catalog.
 
 ## SYNTAX
 

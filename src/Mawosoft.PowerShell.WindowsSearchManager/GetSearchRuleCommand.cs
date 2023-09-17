@@ -3,7 +3,7 @@
 namespace Mawosoft.PowerShell.WindowsSearchManager;
 
 /// <summary>
-/// Returns a collection of objects representing the search rules of a catalog.
+/// Gets the search rules in effect for a search catalog.
 /// </summary>
 [Cmdlet(VerbsCommon.Get, Nouns.SearchRule, ConfirmImpact = ConfirmImpact.None)]
 [OutputType(typeof(SearchRuleInfo))]

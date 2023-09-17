@@ -3,8 +3,11 @@
 namespace Mawosoft.PowerShell.WindowsSearchManager;
 
 /// <summary>
-/// Applies global SearchManager settings. Requires admin rights.
+/// Changes global settings for Windows Search.
 /// </summary>
+/// <remarks>
+/// Requires admin rights.
+/// </remarks>
 [Cmdlet(VerbsCommon.Set, Nouns.SearchManager, ConfirmImpact = ConfirmImpact.Medium, SupportsShouldProcess = true)]
 public sealed class SetSearchManagerCommand : SearchApiCommandBase
 {

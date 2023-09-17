@@ -3,8 +3,11 @@
 namespace Mawosoft.PowerShell.WindowsSearchManager;
 
 /// <summary>
-/// Returns an object with the global SearchManager settings. Requires admin rights.
+/// Gets global settings and version information for Windows Search.
 /// </summary>
+/// <remarks>
+/// Requires admin rights.
+/// </remarks>
 [Cmdlet(VerbsCommon.Get, Nouns.SearchManager, ConfirmImpact = ConfirmImpact.None)]
 [OutputType(typeof(SearchManagerInfo))]
 public sealed class GetSearchManagerCommand : SearchApiCommandBase

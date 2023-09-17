@@ -9,7 +9,7 @@ schema: 2.0.0
 
 ## SYNOPSIS
 
-Gets settings and status for of all search catalogs or for a specified one.
+Gets settings and status of all search catalogs or for a specified one.
 
 ## SYNTAX
 

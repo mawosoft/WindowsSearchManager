@@ -3,12 +3,8 @@
 namespace Mawosoft.PowerShell.WindowsSearchManager;
 
 /// <summary>
-/// Applies settings to a search catalog.
+/// Changes settings for a search catalog.
 /// </summary>
-/// <remarks>
-/// <c>DiacriticSensitivity</c> seems to be the only changeable setting.
-/// The timeout properties remain 0 after being set.
-/// </remarks>
 [Cmdlet(VerbsCommon.Set, Nouns.SearchCatalog, ConfirmImpact = ConfirmImpact.Medium, SupportsShouldProcess = true)]
 public sealed class SetSearchCatalogCommand : SearchApiCommandBase
 {

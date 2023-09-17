@@ -3,7 +3,7 @@
 namespace Mawosoft.PowerShell.WindowsSearchManager;
 
 /// <summary>
-/// Remove one or more search roots from a catalog.
+/// Deletes the specified search roots from a search catalog.
 /// </summary>
 [Cmdlet(VerbsCommon.Remove, Nouns.SearchRoot, ConfirmImpact = ConfirmImpact.High, SupportsShouldProcess = true)]
 public sealed class RemoveSearchRootCommand : SearchApiCommandBase

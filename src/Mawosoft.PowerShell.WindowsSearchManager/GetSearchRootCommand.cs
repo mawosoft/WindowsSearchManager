@@ -3,7 +3,7 @@
 namespace Mawosoft.PowerShell.WindowsSearchManager;
 
 /// <summary>
-/// Returns a collection of objects representing the search roots of a catalog.
+/// Gets all search roots defined for a search catalog.
 /// </summary>
 [Cmdlet(VerbsCommon.Get, Nouns.SearchRoot, ConfirmImpact = ConfirmImpact.None)]
 [OutputType(typeof(SearchRootInfo), typeof(string))]
