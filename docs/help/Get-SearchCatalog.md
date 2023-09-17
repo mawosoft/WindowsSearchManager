@@ -53,9 +53,13 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ### None
 
+You can't pipe objects to this cmdlet.
+
 ## OUTPUTS
 
 ### Mawosoft.PowerShell.WindowsSearchManager.SearchCatalogInfo
+
+This cmdlet returns one or more a **SearchCatalogInfo** objects.
 
 ## NOTES
 

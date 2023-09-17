@@ -120,11 +120,17 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ### System.String[]
 
+You can pipe paths to this cmdlet.
+
 ### Mawosoft.PowerShell.WindowsSearchManager.SearchRootInfo[]
+
+You can pipe **SearchRootInfo** objects to this cmdlet.
 
 ## OUTPUTS
 
 ### None
+
+This cmdlet returns no output.
 
 ## NOTES
 

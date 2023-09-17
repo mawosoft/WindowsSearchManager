@@ -144,11 +144,17 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ### System.String[]
 
+You can pipe paths to this cmdlet.
+
 ## OUTPUTS
 
 ### System.Boolean
 
+When you use the **IsIncluded**, **HasChildScope**, or **HasParentScope** parameters, the cmdlet returns a **Boolean** value for each tested path.
+
 ### Mawosoft.PowerShell.WindowsSearchManager.TestSearchRuleInfo
+
+When you use the **Detailed** parameter, the cmdlet returns an **TestSearchRuleInfo** object for each tested path.
 
 ## NOTES
 
