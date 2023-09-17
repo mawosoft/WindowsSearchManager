@@ -3,25 +3,79 @@
 namespace Mawosoft.PowerShell.WindowsSearchManager;
 
 /// <summary>
-/// POCO for CSearchScopeRule
+/// Contains information about a search rule in a search catalog.
 /// </summary>
 public sealed class SearchRuleInfo : ICloneable
 {
-    public enum SearchRuleType { Exclude, Include }
-    public enum SearchRuleSet { User, Default }
     /// <summary>
-    /// _FOLLOW_FLAGS is defined in searchapi.h, but missing from Interop.SearchAPI.
+    /// Specifies the type of a search rule.
+    /// </summary>
+    public enum SearchRuleType
+    {
+        /// <summary>
+        /// The rule excludes items from indexing.
+        /// </summary>
+        Exclude,
+
+        /// <summary>
+        /// The rule includes items into the index.
+        /// </summary>
+        Include
+    }
+
+    /// <summary>
+    /// Specifies the rule set a search rule belongs to.
+    /// </summary>
+    public enum SearchRuleSet
+    {
+        /// <summary>
+        /// The search rule belongs to the user scope.
+        /// </summary>
+        User,
+
+        /// <summary>
+        /// The search rule belongs to the default scope.
+        /// </summary>
+        Default
+    }
+
+    /// <summary>
+    /// Specifies whether to follow complex URLs and whether a URL is to be indexed or just followed.
     /// </summary>
     [SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores", Justification = "Definition from searchapi.h")]
     [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Definition from searchapi.h")]
     [Flags]
-    public enum _FOLLOW_FLAGS { FF_INDEXCOMPLEXURLS = 1, FF_SUPPRESSINDEXING = 2 }
+    public enum _FOLLOW_FLAGS
+    {
+        /// <summary>
+        /// Specifies whether complex URLs should be indexed.
+        /// </summary>
+        FF_INDEXCOMPLEXURLS = 1,
+        /// <summary>
+        /// Follow but do not index this URL.
+        /// </summary>
+        FF_SUPPRESSINDEXING = 2
+    }
 
+    /// <summary>Gets or sets the path of this search rule.</summary>
+    /// <value>The path of this search rule.</value>
     public string? Path { get; set; }
+
+    /// <summary>Gets or sets the type of the rule.</summary>
+    /// <value>One of the enumeration values indicating whether this is an inclusion or exclusion rule.</value>
     public SearchRuleType RuleType { get; set; }
+
+    /// <summary>Gets or sets a value indicating the rule set this rule belongs to.</summary>
+    /// <value>One of the enumeration values indicating whether this is a user scope or default scope rule.</value>
     public SearchRuleSet RuleSet { get; set; }
+
+    /// <summary>Gets or sets a value describing the crawl behavior.</summary>
+    /// <value>A combination of enumeration values to indicate whether to follow complex URLs and whether a URL is to be indexed or just followed.</value>
     public _FOLLOW_FLAGS FollowFlags { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SearchRuleInfo"/> class.
+    /// </summary>
     public SearchRuleInfo() => FollowFlags = _FOLLOW_FLAGS.FF_INDEXCOMPLEXURLS;
 
     internal SearchRuleInfo(ISearchScopeRule searchScopeRule)
@@ -37,5 +91,9 @@ public sealed class SearchRuleInfo : ICloneable
         FollowFlags = _FOLLOW_FLAGS.FF_INDEXCOMPLEXURLS;
     }
 
+    /// <summary>
+    /// Creates a shallow copy of the <see cref="SearchRuleInfo"/> instance.
+    /// </summary>
+    /// <returns>A shallow copy of the <see cref="SearchRuleInfo"/> instance.</returns>
     public object Clone() => MemberwiseClone();
 }
