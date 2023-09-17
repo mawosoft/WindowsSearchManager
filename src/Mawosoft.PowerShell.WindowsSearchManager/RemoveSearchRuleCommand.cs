@@ -3,7 +3,7 @@
 namespace Mawosoft.PowerShell.WindowsSearchManager;
 
 /// <summary>
-/// Remove one or more search rules from a catalog.
+/// Deletes the specified search rules from a search catalog.
 /// </summary>
 [Cmdlet(VerbsCommon.Remove, Nouns.SearchRule, ConfirmImpact = ConfirmImpact.Medium, SupportsShouldProcess = true)]
 public sealed class RemoveSearchRuleCommand : SearchApiCommandBase

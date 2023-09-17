@@ -3,8 +3,11 @@
 namespace Mawosoft.PowerShell.WindowsSearchManager;
 
 /// <summary>
-/// Resets a search catalog by completely rebuilding the index database. Requires Admin rights.
+/// Resets a search catalog by completely rebuilding its index database.
 /// </summary>
+/// <remarks>
+/// Requires admin rights.
+/// </remarks>
 [Cmdlet(VerbsCommon.Reset, Nouns.SearchCatalog, ConfirmImpact = ConfirmImpact.Medium, SupportsShouldProcess = true)]
 public sealed class ResetSearchCatalogCommand : SearchApiCommandBase
 {

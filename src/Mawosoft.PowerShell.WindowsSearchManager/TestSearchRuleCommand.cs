@@ -3,7 +3,7 @@
 namespace Mawosoft.PowerShell.WindowsSearchManager;
 
 /// <summary>
-/// Tests a path against the search rules in a catalog.
+/// Tests specified paths against the search rules of a search catalog.
 /// </summary>
 [Cmdlet(VerbsDiagnostic.Test, Nouns.SearchRule, DefaultParameterSetName = IncludedParameterSet,
     ConfirmImpact = ConfirmImpact.None)]

@@ -3,7 +3,7 @@
 namespace Mawosoft.PowerShell.WindowsSearchManager;
 
 /// <summary>
-/// Deletes a search catalog
+/// Deletes the specified search catalog.
 /// </summary>
 [Cmdlet(VerbsCommon.Remove, Nouns.SearchCatalog, ConfirmImpact = ConfirmImpact.High, SupportsShouldProcess = true)]
 public sealed class RemoveSearchCatalogCommand : SearchApiCommandBase

@@ -3,7 +3,7 @@
 namespace Mawosoft.PowerShell.WindowsSearchManager;
 
 /// <summary>
-/// Resets a catalog to defaults search rules.
+/// Resets a catalog to the default search rules.
 /// </summary>
 [Cmdlet(VerbsCommon.Reset, Nouns.SearchRule, ConfirmImpact = ConfirmImpact.High, SupportsShouldProcess = true)]
 public sealed class ResetSearchRuleCommand : SearchApiCommandBase

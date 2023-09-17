@@ -3,12 +3,8 @@
 namespace Mawosoft.PowerShell.WindowsSearchManager;
 
 /// <summary>
-/// Adds one or more search roots to a catalog.
+/// Adds search roots to a search catalog.
 /// </summary>
-/// <remarks>
-/// It is not necessary to add search roots for the <c>file:</c> protocol.
-/// If needed, they are automatically created when a search rule is added.
-/// </remarks>
 [Cmdlet(VerbsCommon.Add, Nouns.SearchRoot, DefaultParameterSetName = PathParameterSet,
         ConfirmImpact = ConfirmImpact.Medium, SupportsShouldProcess = true)]
 public sealed class AddSearchRootCommand : SearchApiCommandBase
