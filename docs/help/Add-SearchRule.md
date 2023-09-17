@@ -21,7 +21,8 @@ Add-SearchRule [-Path] <String[]> [-RuleType] <SearchRuleType> [[-RuleSet] <Sear
 
 ### InputParameterSet
 ```
-Add-SearchRule -InputObject <SearchRuleInfo[]> [-Catalog <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
+Add-SearchRule -InputObject <SearchRuleInfo[]> [-OverrideChildren] [-Catalog <String>] [-WhatIf] [-Confirm]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -73,7 +74,7 @@ Accept wildcard characters: False
 
 ```yaml
 Type: System.Management.Automation.SwitchParameter
-Parameter Sets: PathParameterSet
+Parameter Sets: (All)
 Aliases:
 
 Required: False

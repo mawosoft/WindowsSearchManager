@@ -74,7 +74,7 @@ Accepted values: User, Default
 Required: False
 Position: 1
 Default value: User
-Accept pipeline input: False
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
