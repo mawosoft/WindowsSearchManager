@@ -10,7 +10,9 @@ public class ResetSearchRuleCommandTests : CommandTestBase
         Collection<PSObject> results = InvokeScript("Reset-SearchRule ");
         Assert.Empty(results);
         Assert.False(PowerShell.HadErrors);
-        Assert.Equal("RevertToDefaultScopes()", Assert.Single(InterfaceChain.ScopeManager.RecordedCalls));
+        Assert.Collection(InterfaceChain.ScopeManager.RecordedCalls,
+            c => Assert.Equal("RevertToDefaultScopes()", c),
+            c => Assert.Equal("SaveAll()", c));
         Assert.True(InterfaceChain.SingleHasWriteRecordings(InterfaceChain.ScopeManager));
     }
 

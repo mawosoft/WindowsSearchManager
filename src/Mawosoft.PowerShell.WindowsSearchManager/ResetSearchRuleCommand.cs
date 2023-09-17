@@ -20,6 +20,7 @@ public sealed class ResetSearchRuleCommand : SearchApiCommandBase
             try
             {
                 scope.RevertToDefaultScopes();
+                scope.SaveAll();
             }
             catch (COMException ex) when (SearchApiErrorHelper.TryWrapCOMException(ex, out ErrorRecord rec))
             {
