@@ -9,6 +9,7 @@ public class CommonCommandTests : CommandTestBase
     {
         var expected = new[]
         {
+            // Command, Parameter, Type, Position, IsMandatory, ValueFromPipeline, ValueFromPipelineByPropertyName, ParameterSet
             ("Get-SearchCatalog", "Catalog", "String", 0, false, false, false, "__AllParameterSets"),
             ("Set-SearchCatalog", "ConnectTimeout", "UInt32", -2147483648, false, false, false, "__AllParameterSets"),
             ("Set-SearchCatalog", "DataTimeout", "UInt32", -2147483648, false, false, false, "__AllParameterSets"),
@@ -39,8 +40,8 @@ public class CommonCommandTests : CommandTestBase
             ("Add-SearchRule", "Path", "String[]", 0, true, true, false, "PathParameterSet"),
             ("Add-SearchRule", "RuleType", "SearchRuleType", 1, true, false, false, "PathParameterSet"),
             ("Add-SearchRule", "RuleSet", "SearchRuleSet", 2, false, false, false, "PathParameterSet"),
-            ("Add-SearchRule", "OverrideChildren", "SwitchParameter", -2147483648, false, false, false, "PathParameterSet"),
             ("Add-SearchRule", "InputObject", "SearchRuleInfo[]", -2147483648, true, true, false, "InputParameterSet"),
+            ("Add-SearchRule", "OverrideChildren", "SwitchParameter", -2147483648, false, false, false, "__AllParameterSets"),
             ("Add-SearchRule", "Catalog", "String", -2147483648, false, false, false, "__AllParameterSets"),
             ("Remove-SearchRule", "Path", "String[]", 0, true, true, true, "__AllParameterSets"),
             ("Remove-SearchRule", "RuleSet", "SearchRuleSet", 1, false, false, false, "__AllParameterSets"),

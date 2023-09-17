@@ -7,7 +7,6 @@ namespace Mawosoft.PowerShell.WindowsSearchManager;
 /// </summary>
 public sealed class SearchRuleInfo : ICloneable
 {
-    // TODO Un-nest enums?
     public enum SearchRuleType { Exclude, Include }
     public enum SearchRuleSet { User, Default }
     /// <summary>
@@ -22,7 +21,6 @@ public sealed class SearchRuleInfo : ICloneable
     public SearchRuleType RuleType { get; set; }
     public SearchRuleSet RuleSet { get; set; }
     public _FOLLOW_FLAGS FollowFlags { get; set; }
-    public bool OverrideChildren { get; set; }
 
     public SearchRuleInfo() => FollowFlags = _FOLLOW_FLAGS.FF_INDEXCOMPLEXURLS;
 

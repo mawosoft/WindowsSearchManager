@@ -4,7 +4,7 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 public class AddSearchRuleCommandTests : CommandTestBase
 {
-    private Collection<PSObject> InvokeInputParameterSet(List<SearchRuleInfo> ruleInfos, string valueType, bool usePipeline)
+    private Collection<PSObject> InvokeInputParameterSet(List<SearchRuleInfo> ruleInfos, string valueType, bool overrideChildren, bool usePipeline)
     {
         IList<object> inputValues;
         switch (valueType)
@@ -38,19 +38,20 @@ public class AddSearchRuleCommandTests : CommandTestBase
 
         if (usePipeline)
         {
-            return InvokeScript("Add-SearchRule", inputValues);
+            return InvokeScript(overrideChildren ? "Add-SearchRule -OverrideChildren" : "Add-SearchRule", inputValues);
         }
         else
         {
             object values = inputValues.Count == 1 ? inputValues[0] : inputValues;
             Dictionary<string, object> parameters = new() { { "InputObject", values } };
+            if (overrideChildren) parameters.Add("OverrideChildren", true);
             return InvokeCommand("Add-SearchRule", parameters);
         }
     }
 
-    private static List<string> GetExpectedMethodCalls(List<SearchRuleInfo> ruleInfos)
+    private static List<string> GetExpectedMethodCalls(List<SearchRuleInfo> ruleInfos, bool overrideChildren)
         => ruleInfos.ConvertAll(r => r.RuleSet == SearchRuleInfo.SearchRuleSet.User
-            ? $"AddUserScopeRule({r.Path},{(r.RuleType == SearchRuleInfo.SearchRuleType.Include ? 1 : 0)},{(r.OverrideChildren ? 1 : 0)},{(uint)r.FollowFlags})"
+            ? $"AddUserScopeRule({r.Path},{(r.RuleType == SearchRuleInfo.SearchRuleType.Include ? 1 : 0)},{(overrideChildren ? 1 : 0)},{(uint)r.FollowFlags})"
             : $"AddDefaultScopeRule({r.Path},{(r.RuleType == SearchRuleInfo.SearchRuleType.Include ? 1 : 0)},{(uint)r.FollowFlags})");
 
     private void Assert_InvokeSucceeded(Collection<PSObject> results, IList<string> expectedMethodCalls)
@@ -85,7 +86,6 @@ public class AddSearchRuleCommandTests : CommandTestBase
             Path = @"x:\foo\bar",
             RuleType = SearchRuleInfo.SearchRuleType.Exclude,
             RuleSet = SearchRuleInfo.SearchRuleSet.User,
-            OverrideChildren = true
         },
         new()
         {
@@ -99,7 +99,6 @@ public class AddSearchRuleCommandTests : CommandTestBase
             Path = @"x:\foo\baz\bar",
             RuleType = SearchRuleInfo.SearchRuleType.Include,
             RuleSet = SearchRuleInfo.SearchRuleSet.User,
-            OverrideChildren = true
         }
     };
 
@@ -128,8 +127,8 @@ public class AddSearchRuleCommandTests : CommandTestBase
     {
         if (valueCount <= 0) valueCount = s_ruleInfos.Count;
         List<SearchRuleInfo> ruleInfos = s_ruleInfos.GetRange(0, valueCount);
-        Collection<PSObject> results = InvokeInputParameterSet(ruleInfos, valueType, usePipeline);
-        Assert_InvokeSucceeded(results, GetExpectedMethodCalls(ruleInfos));
+        Collection<PSObject> results = InvokeInputParameterSet(ruleInfos, valueType, overrideChildren: false, usePipeline);
+        Assert_InvokeSucceeded(results, GetExpectedMethodCalls(ruleInfos, overrideChildren: false));
     }
 
     [Theory]
@@ -146,16 +145,10 @@ public class AddSearchRuleCommandTests : CommandTestBase
     [InlineData(true)]
     public void InputParameterSet_RuleSetDefault_WithOverrideChildren_WritesWarnings(bool usePipeline)
     {
-        List<SearchRuleInfo> ruleInfos = s_ruleInfos.ConvertAll(r =>
-        {
-            SearchRuleInfo r2 = (SearchRuleInfo)r.Clone();
-            r2.RuleSet = SearchRuleInfo.SearchRuleSet.Default;
-            return r2;
-        });
-        int expectedWarningCount = ruleInfos.Count(r => r.OverrideChildren);
-        Assert.InRange(expectedWarningCount, 1, ruleInfos.Count - 1);
-        Collection<PSObject> results = InvokeInputParameterSet(ruleInfos, nameof(PSObject), usePipeline);
-        Assert_InvokeSucceeded(results, GetExpectedMethodCalls(ruleInfos));
+        int expectedWarningCount = s_ruleInfos.Count(r => r.RuleSet == SearchRuleInfo.SearchRuleSet.Default);
+        Assert.InRange(expectedWarningCount, 1, s_ruleInfos.Count - 1);
+        Collection<PSObject> results = InvokeInputParameterSet(s_ruleInfos, nameof(PSObject), overrideChildren: true, usePipeline);
+        Assert_InvokeSucceeded(results, GetExpectedMethodCalls(s_ruleInfos, overrideChildren: true));
         Assert.Equal(expectedWarningCount, PowerShell.Streams.Warning.Count);
     }
 
