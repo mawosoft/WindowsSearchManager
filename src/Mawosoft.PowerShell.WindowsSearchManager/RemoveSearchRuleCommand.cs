@@ -12,7 +12,7 @@ public sealed class RemoveSearchRuleCommand : SearchApiCommandBase
     [ValidateNotNullOrEmpty()]
     public string[]? Path { get; set; }
 
-    [Parameter(Position = 1)]
+    [Parameter(Position = 1, ValueFromPipelineByPropertyName = true)]
     public SearchRuleInfo.SearchRuleSet RuleSet { get; set; } = SearchRuleInfo.SearchRuleSet.User;
 
     [Parameter]

@@ -44,7 +44,7 @@ public class CommonCommandTests : CommandTestBase
             ("Add-SearchRule", "OverrideChildren", "SwitchParameter", -2147483648, false, false, false, "__AllParameterSets"),
             ("Add-SearchRule", "Catalog", "String", -2147483648, false, false, false, "__AllParameterSets"),
             ("Remove-SearchRule", "Path", "String[]", 0, true, true, true, "__AllParameterSets"),
-            ("Remove-SearchRule", "RuleSet", "SearchRuleSet", 1, false, false, false, "__AllParameterSets"),
+            ("Remove-SearchRule", "RuleSet", "SearchRuleSet", 1, false, false, true, "__AllParameterSets"),
             ("Remove-SearchRule", "Catalog", "String", -2147483648, false, false, false, "__AllParameterSets"),
             ("Reset-SearchRule", "Catalog", "String", 0, false, false, false, "__AllParameterSets"),
             ("Test-SearchRule", "Path", "String[]", 0, true, true, true, "__AllParameterSets"),
