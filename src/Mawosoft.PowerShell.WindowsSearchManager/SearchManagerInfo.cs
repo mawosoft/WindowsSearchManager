@@ -7,40 +7,37 @@ namespace Mawosoft.PowerShell.WindowsSearchManager;
 /// </summary>
 public sealed class SearchManagerInfo : ICloneable
 {
-    /// <summary>Gets the complete version number of the indexer.</summary>
-    /// <value>The complete version number of the indexer.</value>
+    /// <value>
+    /// The complete version number of the indexer. For Windows 10 and newer, this will typically
+    /// match the OS version number.
+    /// </value>
     public string? Version { get; }
 
-    /// <summary>Gets the major version number of the indexer.</summary>
     /// <value>The major version number of the indexer.</value>
     public uint MajorVersion { get; }
 
-    /// <summary>Gets the minor version number of the indexer.</summary>
     /// <value>The minor version number of the indexer.</value>
     public uint MinorVersion { get; }
 
-    /// <summary>Gets or sets the user agent string.</summary>
-    /// <value>The user agent string.</value>
+    /// <value>The user agent string that a user agent passes to website and services to identify itself.</value>
     public string? UserAgent { get; set; }
 
-    /// <summary>Gets or sets if and how a proxy server is to be used.</summary>
-    /// <value>One of the enumeration values that identifies the proxy use.</value>
+    /// <value>One of the enumeration values that indicates if and how a proxy server is used.</value>
     public _PROXY_ACCESS ProxyAccess { get; set; }
 
-    /// <summary>Gets or sets the proxy name.</summary>
-    /// <value>The proxy name.</value>
+    /// <value>The name of the proxy server.</value>
     public string? ProxyName { get; set; }
 
-    /// <summary>Gets or sets the proxy port number.</summary>
-    /// <value>The proxy port number.</value>
+    /// <value>The port number of the proxy server.</value>
     public uint ProxyPortNumber { get; set; }
 
-    /// <summary>Gets or sets whether the proxy should be bypassed for local domains.</summary>
-    /// <value><c>true</c> if the proxy is bypassed for local domains, <c>false</c> otherwise.</value>
+    /// <value><c>true</c> if the proxy should be bypassed for local domains, <c>false</c> otherwise.</value>
     public bool ProxyBypassLocal { get; set; }
 
-    /// <summary>Gets or sets a comma-separated list of items that are considered local by the indexer.</summary>
-    /// <value>A comma-separated list of items that are considered local by the indexer.</value>
+    /// <value>
+    /// A comma-separated list of items that are considered local by the indexer and are not
+    /// to be accessed through a proxy server.
+    /// </value>
     public string? ProxyBypassList { get; set; }
 
     /// <summary>

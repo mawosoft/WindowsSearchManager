@@ -1,4 +1,29 @@
 /*
+    github.css has padding: 1em;
+    in docfx.vendor.min.css (@default/highlight.js/styles/github.css)
+*/
+pre code.hljs {
+    padding: 0;
+}
+
+/*
+    Hide greyed 'Declaration' header above syntax block.
+*/
+h5.declaration {
+    display: none;
+}
+
+/*
+    docfx.css has word-break/wrap: break-word which causes arbitrary breaks in xref'd type names
+    (e.g. strin|g) in the parameter table.
+    Since docfx.js inserts <wbr> into long words at certain points, this is not necessary.
+*/
+.text-break {
+    word-break: normal;
+    word-wrap: normal;
+}
+
+/*
     docfx.css has svg:hover path { fill: #ffffff; }
 */
 svg.homePageBtn:hover path {
