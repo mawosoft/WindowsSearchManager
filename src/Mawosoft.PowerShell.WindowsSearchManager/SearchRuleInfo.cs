@@ -48,7 +48,7 @@ public sealed class SearchRuleInfo : ICloneable
     public enum _FOLLOW_FLAGS
     {
         /// <summary>
-        /// Specifies whether complex URLs should be indexed.
+        /// Complex URLs should be indexed.
         /// </summary>
         FF_INDEXCOMPLEXURLS = 1,
         /// <summary>
@@ -57,20 +57,19 @@ public sealed class SearchRuleInfo : ICloneable
         FF_SUPPRESSINDEXING = 2
     }
 
-    /// <summary>Gets or sets the path of this search rule.</summary>
-    /// <value>The path of this search rule.</value>
+    /// <value>The URL, path, or pattern of this search rule.</value>
     public string? Path { get; set; }
 
-    /// <summary>Gets or sets the type of the rule.</summary>
     /// <value>One of the enumeration values indicating whether this is an inclusion or exclusion rule.</value>
     public SearchRuleType RuleType { get; set; }
 
-    /// <summary>Gets or sets a value indicating the rule set this rule belongs to.</summary>
     /// <value>One of the enumeration values indicating whether this is a user scope or default scope rule.</value>
     public SearchRuleSet RuleSet { get; set; }
 
-    /// <summary>Gets or sets a value describing the crawl behavior.</summary>
-    /// <value>A combination of enumeration values to indicate whether to follow complex URLs and whether a URL is to be indexed or just followed.</value>
+    /// <value>
+    /// A combination of enumeration values to indicate whether to follow complex URLs and whether
+    /// a URL is to be indexed or just followed.
+    /// </value>
     public _FOLLOW_FLAGS FollowFlags { get; set; }
 
     /// <summary>

@@ -9,36 +9,34 @@ public sealed class SearchRootInfo : ICloneable
 {
     internal string? Schedule { get; set; }
 
-    /// <summary>Gets or sets the path of this search root.</summary>
-    /// <value>The path of this search root.</value>
+    /// <value>The root URL of this search root.</value>
     public string? Path { get; set; }
 
-    /// <summary>Gets or sets a value indicating whether this search root is hierarchical.</summary>
-    /// <value><c>true</c> if the search root is hierarchical, <c>false</c> otherwise.</value>
+    /// <value><c>true</c> if this search root is hierarchical, <c>false</c> otherwise.</value>
     public bool IsHierarchical { get; set; }
 
-    /// <summary>Gets or sets a value indicating whether the search root provides change notifications.</summary>
-    /// <value><c>true</c> if the search root provides notifications, <c>false</c> otherwise.</value>
+    /// <value><c>true</c> if this search root provides notifications, <c>false</c> otherwise.</value>
     public bool ProvidesNotifications { get; set; }
 
-    /// <summary>Gets or sets a value indicating whether the search root uses notifications only.</summary>
-    /// <value><c>true</c> if the search root uses notifications only, <c>false</c> otherwise.</value>
+    /// <value>
+    /// <c>true</c> if this search root should be indexed only by notification and not crawled,
+    /// <c>false</c> otherwise.
+    /// </value>
     public bool UseNotificationsOnly { get; set; }
 
-    /// <summary>Gets or sets the enumeration depth of the search root.</summary>
-    /// <value>The enumeration depth of the search root.</value>
+    /// <value>The enumeration depth of this search root.</value>
     public uint EnumerationDepth { get; set; }
 
-    /// <summary>Gets or sets the host depth of the search root.</summary>
-    /// <value>The host depth of the search root.</value>
+    /// <value>The host depth of this search root.</value>
     public uint HostDepth { get; set; }
 
-    /// <summary>Gets or sets a value indicating whether to follow subdirectories.</summary>
-    /// <value><c>true</c> to follow subdirectories, <c>false</c> otherwise.</value>
+    /// <value>
+    /// <c>true</c> if the search engine should follow subdirectories and hierarchical scopes
+    /// for this search root, <c>false</c> otherwise.
+    /// </value>
     public bool FollowDirectories { get; set; }
 
-    /// <summary>Gets or sets the authentication type needed to crawl this search root.</summary>
-    /// <value>One of the enumeration values indicating the authentication type.</value>
+    /// <value>One of the enumeration values indicating the authentication type needed to access this search root.</value>
     public _AUTH_TYPE AuthenticationType { get; set; }
 
     internal string? User { get; set; }

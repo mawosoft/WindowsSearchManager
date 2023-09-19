@@ -7,47 +7,36 @@ namespace Mawosoft.PowerShell.WindowsSearchManager;
 /// </summary>
 public sealed class SearchCatalogInfo : ICloneable
 {
-    /// <summary>Gets or sets the catalog name.</summary>
     /// <value>The catalog name.</value>
     public string? Catalog { get; set; }
 
-    /// <summary>Gets or sets the connection time-out value for connecting to a store.</summary>
-    /// <value>The connection time-out value in seconds.</value>
+    /// <value>The time, in seconds, that the indexer should wait for a connection response from a server or data store.</value>
     public uint ConnectTimeout { get; set; }
 
-    /// <summary>Gets or sets the data time-out value for transactions between the indexer and the search filter host.</summary>
-    /// <value>The data time-out value in seconds.</value>
+    /// <value>The time, in seconds, that the indexer should wait for a data transaction.</value>
     public uint DataTimeout { get; set; }
 
-    /// <summary>Gets or sets whether the catalog is sensitive to diacritics.</summary>
-    /// <value><c>true</c> if the catalog is sensitive to diacritics, <c>false</c> otherwise.</value>
+    /// <value><c>true</c> if the catalog should differentiate words with diacritics. <c>false</c> if the catalog should ignore diacritics.</value>
     public bool DiacriticSensitivity { get; set; }
 
-    /// <summary>Gets a value indicating the current status of the catalog.</summary>
-    /// <value>One of the enumeration values that indicates the catalog status.</value>
+    /// <value>One of the enumeration values that indicates the current catalog status.</value>
     public _CatalogStatus Status { get; }
 
-    /// <summary>Gets a value indicating why the catalog is currently paused.</summary>
     /// <value>One of the enumeration values that indicates why the catalog is paused.</value>
     public _CatalogPausedReason PausedReason { get; }
 
-    /// <summary>Gets the number of items in the catalog.</summary>
     /// <value>The number of items in the catalog.</value>
     public int ItemCount { get; }
 
-    /// <summary>Gets the number of items to be indexed during the next incremental crawl.</summary>
     /// <value>The number of items to be indexed during the next incremental crawl.</value>
     public int ItemsToIndexCount { get; }
 
-    /// <summary>Gets the number of items in the notification queue.</summary>
     /// <value>The number of items in the notification queue.</value>
     public int NotificationQueueCount { get; }
 
-    /// <summary>Gets the number of items in the high-priority queue.</summary>
     /// <value>The number of items in the high-priority queue.</value>
     public int HighPriorityQueueCount { get; }
 
-    /// <summary>Gets the path currently being indexed.</summary>
     /// <value>The path currently being indexed.</value>
     public string? PathBeingIndexed { get; }
 
