@@ -18,21 +18,44 @@ Get-SearchCatalog [[-Catalog] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+
+The `Get-SearchCatalog` cmdlet gets settings and status of all search catalogs or for a specified one.
 
 ## EXAMPLES
 
-### Example 1
+### Example 1: Get settings for all search catalogs
+
 ```powershell
-PS C:\> {{ Add example code here }}
+Get-SearchCatalog
 ```
 
-{{ Add example description here }}
+```output
+Catalog                : SystemIndex
+ConnectTimeout         : 0
+DataTimeout            : 0
+DiacriticSensitivity   : False
+Status                 : CATALOG_STATUS_PROCESSING_NOTIFICATIONS
+PausedReason           : CATALOG_PAUSED_REASON_NONE
+ItemCount              : 23930
+ItemsToIndexCount      : 0
+NotificationQueueCount : 47
+HighPriorityQueueCount : 0
+PathBeingIndexed       : file:C:/Users/Bob/Documents/foo.txt
+```
+
+While it is possible to create, manage, and query multiple catalogs, Windows Search currently uses only one catalog, named **SystemIndex**.
+
+### Example 2: Get settings for a specific catalog
+
+```powershell
+Get-SearchCatalog -Catalog SystemIndex
+```
 
 ## PARAMETERS
 
 ### -Catalog
-{{ Fill Catalog Description }}
+
+Specifies the name of the catalog to return information about. If omitted, settings and status of all search catalogs are returned.
 
 ```yaml
 Type: System.String
@@ -59,7 +82,7 @@ You can't pipe objects to this cmdlet.
 
 ### Mawosoft.PowerShell.WindowsSearchManager.SearchCatalogInfo
 
-This cmdlet returns one or more a **SearchCatalogInfo** objects.
+This cmdlet returns one or more **SearchCatalogInfo** objects.
 
 ## NOTES
 

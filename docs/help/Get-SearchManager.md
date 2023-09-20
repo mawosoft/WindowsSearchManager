@@ -18,16 +18,31 @@ Get-SearchManager [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+
+The `Get-SearchManager` cmdlet gets the global settings and version information for Windows Search.
+
+> [!NOTE]
+> You must run this cmdlet from an elevated PowerShell session. Start PowerShell by using the **Run as administrator** option.
 
 ## EXAMPLES
 
-### Example 1
+### Example 1: Get global Windows Search settings
+
 ```powershell
-PS C:\> {{ Add example code here }}
+Get-SearchManager
 ```
 
-{{ Add example description here }}
+```output
+Version          : 10.0.19041.3324
+MajorVersion     : 10
+MinorVersion     : 0
+UserAgent        : Mozilla/4.0 (compatible; MSIE 6.0; Windows NT; MS Search 4.0 Robot)
+ProxyAccess      : PROXY_ACCESS_PRECONFIG
+ProxyName        :
+ProxyPortNumber  : 0
+ProxyBypassLocal : False
+ProxyBypassList  :
+```
 
 ## PARAMETERS
 
