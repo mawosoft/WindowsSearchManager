@@ -20,21 +20,48 @@ Set-SearchManager [-UserAgent <String>] [-ProxyAccess <_PROXY_ACCESS>] [-ProxyNa
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+
+The `Set-SearchManager` cmdlet changes the global settings of Windows Search across all search catalogs.
+
+> [!NOTE]
+> You must run this cmdlet from an elevated PowerShell session. Start PowerShell by using the **Run as administrator** option.
 
 ## EXAMPLES
 
-### Example 1
+### Example 1: Configure a custom proxy server
+
 ```powershell
-PS C:\> {{ Add example code here }}
+Set-SearchManager -ProxyAccess PROXY_ACCESS_PROXY -ProxyName proxy.foo.org -ProxyPortNumber 8080
+
 ```
 
-{{ Add example description here }}
+This command tells Windows Search to use `proxy.foo.org:8080` as the proxy server.
+
+### Example 2: Configure local addresses to bypass the proxy.
+
+```powershell
+Set-SearchManager -ProxyBypassLocal -ProxyBypassList localhost, 127.0.0.1, *.foo.org
+```
+
+This command tells Windows Search to bypass the proxy for local addresses and provides a list of those local addresses.
+
+### Example 3: Use Windows settings
+
+```powershell
+Set-SearchManager -ProxyAccess PROXY_ACCESS_PRECONFIG
+```
+
+This command tells Windows Search to use the settings as configured in Windows Network & Internet Settings.
 
 ## PARAMETERS
 
 ### -ProxyAccess
-{{ Fill ProxyAccess Description }}
+
+Specifies if and how a proxy server is used. The acceptable values for this parameter are:
+
+- `PROXY_ACCESS_PRECONFIG` - Use the Windows Network & Internet Settings.
+- `PROXY_ACCESS_DIRECT` - Don't use a proxy.
+- `PROXY_ACCESS_PROXY` - Use a proxy as specified by the other **Proxy...** parameters.
 
 ```yaml
 Type: SearchAPI._PROXY_ACCESS
@@ -50,7 +77,8 @@ Accept wildcard characters: False
 ```
 
 ### -ProxyBypassList
-{{ Fill ProxyBypassList Description }}
+
+Specifies, as a string array, the local addresses for which the proxy server should not be used. Use this parameter in conjunction with the **ProxyBypassLocal** parameter.
 
 ```yaml
 Type: System.String[]
@@ -65,7 +93,8 @@ Accept wildcard characters: False
 ```
 
 ### -ProxyBypassLocal
-{{ Fill ProxyBypassLocal Description }}
+
+Use this parameter to bypass the proxy server for local addresses. Use the **ProxyBypassList** parameter to specifiy a list of local addresses.
 
 ```yaml
 Type: System.Management.Automation.SwitchParameter
@@ -80,7 +109,8 @@ Accept wildcard characters: False
 ```
 
 ### -ProxyName
-{{ Fill ProxyName Description }}
+
+Specifies the name of the proxy server.
 
 ```yaml
 Type: System.String
@@ -95,7 +125,8 @@ Accept wildcard characters: False
 ```
 
 ### -ProxyPortNumber
-{{ Fill ProxyPortNumber Description }}
+
+Specifies the port number of the proxy server.
 
 ```yaml
 Type: System.UInt32
@@ -110,7 +141,8 @@ Accept wildcard characters: False
 ```
 
 ### -UserAgent
-{{ Fill UserAgent Description }}
+
+Specifies the user agent string.
 
 ```yaml
 Type: System.String
@@ -171,6 +203,8 @@ You can't pipe objects to this cmdlet.
 This cmdlet returns no output.
 
 ## NOTES
+
+The [Microsoft documentation for Windows Search](https://learn.microsoft.com/windows/win32/search/-search-3x-wds-mngidx-searchmanager) states that the settings described above are implemented, but reserved for future use.
 
 ## RELATED LINKS
 
