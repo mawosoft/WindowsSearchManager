@@ -24,6 +24,15 @@ h5.declaration {
 }
 
 /*
+    Don't break or wrap in syntax and example code.
+*/
+pre code {
+    word-break: normal;
+    word-wrap: normal;
+    white-space: pre;
+}
+
+/*
     docfx.css has svg:hover path { fill: #ffffff; }
 */
 svg.homePageBtn:hover path {
