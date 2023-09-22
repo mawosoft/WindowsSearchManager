@@ -6,12 +6,18 @@
 
 .NOTES
     This is intended for use in MSBuild projects where platyPS is restored via <PackageReference>
-    to support central version management via Directory.Packages.props.
-    The generated MAML help file is postprocessed to apply some tweaks.
+    to support central version management via Directory.Packages.props. The generated MAML help
+    file is postprocessed to apply some tweaks.
+    MAML postprocessing:
+    - Ensure proper parameter order in syntax blocks.
+    - Use short type names in syntax blocks.
+    - Remove empty NOTES sections.
+    - Reformat docfx alerts (like > [!NOTE]).
 #>
 
 #Requires -Version 7
 
+using namespace System
 using namespace System.Collections.Generic
 using namespace System.IO
 using namespace System.Text.RegularExpressions
@@ -125,6 +131,22 @@ $mamlHelp | ForEach-Object {
             $_.Remove()
             $script:dirty = $true
         })
+
+    # [!NOTE] and similar docfx alerts appear as '> [!NOTE] > text' in MAML.
+    [int]$alertCount = 0
+    $maml.Root.Descendants($nsmaml + 'para').Where({ $_.Value.StartsWith('>') }).ForEach({
+            [string]$s1 = $_.Value
+            [string]$s2 = [regex]::Replace($s1, '(?n)^> ?\[!(?<alert>[A-Za-z]+)\][ \t]*\r?\n?>[ \t]*', "`${alert}:`n")
+            if (-not [object]::ReferenceEquals($s1, $s2)) {
+                # Handle multiline alerts as well
+                $_.Value = [regex]::Replace($s2, '\n>[ \t]*', "`n")
+                $script:dirty = $true
+                $alertCount++
+            }
+        })
+    if ($alertCount) {
+        Write-Verbose "Reformatted $alertCount [!NOTE]-style alerts."
+    }
 
     if ($script:dirty) {
         $maml.Save($_.FullName)
