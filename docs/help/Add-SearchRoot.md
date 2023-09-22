@@ -38,7 +38,8 @@ PS C:\> {{ Add example code here }}
 ## PARAMETERS
 
 ### -Catalog
-{{ Fill Catalog Description }}
+
+Specifies the name of the catalog this cmdlet operates on. If omitted, this is the default Windows Search catalog, named **SystemIndex**.
 
 ```yaml
 Type: System.String
