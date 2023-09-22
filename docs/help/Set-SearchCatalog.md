@@ -19,21 +19,30 @@ Set-SearchCatalog [-ConnectTimeout <UInt32>] [-DataTimeout <UInt32>] [-Diacritic
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+
+The `Set-SearchCatalog` cmdlet changes settings for a search catalog.
 
 ## EXAMPLES
 
-### Example 1
+### Example 1: Enable diacritic sensitivity
 ```powershell
-PS C:\> {{ Add example code here }}
+Set-SearchCatalog -DiacriticSensitivity
 ```
 
-{{ Add example description here }}
+This command enables diacritic sensitivity for the default Windows Search catalog.
+
+### Example 2: Disable diacritic sensitivity
+```powershell
+Set-SearchCatalog -DiacriticSensitivity:$false
+```
+
+This command disables diacritic sensitivity for the default Windows Search catalog.
 
 ## PARAMETERS
 
 ### -Catalog
-{{ Fill Catalog Description }}
+
+Specifies the name of the catalog this cmdlet operates on. If omitted, this is the default Windows Search catalog, named **SystemIndex**.
 
 ```yaml
 Type: System.String
@@ -48,7 +57,11 @@ Accept wildcard characters: False
 ```
 
 ### -ConnectTimeout
-{{ Fill ConnectTimeout Description }}
+
+Specifies the time, in seconds, that the indexer should wait for a connection response from a server or data store.
+
+> [!NOTE]
+> This parameter has currently no effect in Windows Search.
 
 ```yaml
 Type: System.UInt32
@@ -63,7 +76,11 @@ Accept wildcard characters: False
 ```
 
 ### -DataTimeout
-{{ Fill DataTimeout Description }}
+
+Specifies the time, in seconds, that the indexer should wait for a data transaction.
+
+> [!NOTE]
+> This parameter has currently no effect in Windows Search.
 
 ```yaml
 Type: System.UInt32
@@ -78,7 +95,10 @@ Accept wildcard characters: False
 ```
 
 ### -DiacriticSensitivity
-{{ Fill DiacriticSensitivity Description }}
+
+Enables diacritic sensitivity. When enabled, the catalog treats words like `resume` and `resumé` as different. When disabled, the catalog treats them as if they were the same word.
+
+To disable diacritic sensitivity, specify the parameter as follows: `-DiacriticSensitivity:$false`.
 
 ```yaml
 Type: System.Management.Automation.SwitchParameter
@@ -139,6 +159,8 @@ You can't pipe objects to this cmdlet.
 This cmdlet returns no output.
 
 ## NOTES
+
+Changing diacritic sensitivity automatically causes the catalog to be reindexed.
 
 ## RELATED LINKS
 

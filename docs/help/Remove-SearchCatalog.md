@@ -18,21 +18,39 @@ Remove-SearchCatalog [-Catalog] <String> [-WhatIf] [-Confirm] [<CommonParameters
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+
+The `Remove-SearchCatalog` cmdlet deletes the catalog with the specified name.
 
 ## EXAMPLES
 
-### Example 1
+### Example 1: Delete a catalog
+
 ```powershell
-PS C:\> {{ Add example code here }}
+Remove-SearchCatalog -Catalog Sample01
 ```
 
-{{ Add example description here }}
+```output
+Confirm
+Are you sure you want to perform this action?
+Performing the operation "Remove-SearchCatalog" on target "Sample01".
+[Y] Yes  [A] Yes to All  [N] No  [L] No to All  [S] Suspend  [?] Help (default is "Y"):
+```
+
+This command deletes the search catalog named `Sample01` after prompting the user for confirmation.
+
+### Example 2: Delete a catalog without confirmation
+
+```powershell
+Remove-SearchCatalog -Catalog Sample01 -Confirm:$false
+```
+
+This command deletes the search catalog named `Sample01` without prompting for confirmation.
 
 ## PARAMETERS
 
 ### -Catalog
-{{ Fill Catalog Description }}
+
+Specifies the name of the catalog to delete.
 
 ```yaml
 Type: System.String

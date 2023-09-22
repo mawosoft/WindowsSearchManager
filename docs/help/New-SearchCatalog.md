@@ -18,21 +18,24 @@ New-SearchCatalog [-Catalog] <String> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+
+The `New-SearchCatalog` cmdlet creates a new search catalog with the specified name.
 
 ## EXAMPLES
 
-### Example 1
+### Example 1: Create a new catalog
+
 ```powershell
-PS C:\> {{ Add example code here }}
+New-SearchCatalog -Catalog Sample01
 ```
 
-{{ Add example description here }}
+This command creates a new search catalog named `Sample01`.
 
 ## PARAMETERS
 
 ### -Catalog
-{{ Fill Catalog Description }}
+
+Specifies the name of the catalog to create.
 
 ```yaml
 Type: System.String
@@ -93,6 +96,8 @@ You can't pipe objects to this cmdlet.
 This cmdlet returns no output.
 
 ## NOTES
+
+While it is possible to create, manage, and query multiple catalogs, Windows Search currently uses only one catalog, which is named **SystemIndex**.
 
 ## RELATED LINKS
 
