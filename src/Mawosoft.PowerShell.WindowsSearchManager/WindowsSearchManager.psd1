@@ -24,7 +24,11 @@ CompanyName = 'mawosoft'
 Copyright = 'Copyright (c) 2023 Matthias Wolf, Mawosoft. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'Powershell module for managing Windows Search.'
+Description = 'Powershell module for managing Windows Search. With WindowsSearchManager you can:
+- Manage global Windows Search settings across catalogs
+- Manage individual search catalogs (content indexes)
+- Manage search roots (content stores)
+- Manage search rules (what is and what isn''t indexed)'
 
 # Minimum version of the PowerShell engine required by this module
 PowerShellVersion = '5.1'
@@ -70,16 +74,16 @@ CmdletsToExport = @(
     'Get-SearchManager'
     'Set-SearchManager'
     'Get-SearchCatalog'
-    'Set-SearchCatalog'
     'New-SearchCatalog'
     'Remove-SearchCatalog'
     'Reset-SearchCatalog'
+    'Set-SearchCatalog'
     'Update-SearchCatalog'
-    'Get-SearchRoot'
     'Add-SearchRoot'
+    'Get-SearchRoot'
     'Remove-SearchRoot'
-    'Get-SearchRule'
     'Add-SearchRule'
+    'Get-SearchRule'
     'Remove-SearchRule'
     'Reset-SearchRule'
     'Test-SearchRule'

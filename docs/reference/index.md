@@ -1,27 +1,41 @@
 # Module WindowsSearchManager
 
-TODO Description and other content in this file
+The WindowsSearchManager module contains cmdlets for managing Windows Search.
 
-## Install
+## Installation
 
-some text
+You can install WindowsSearchManager from the PowerShell Gallery.
 
-## SearchManager
+```powershell
+Install-Module -Name WindowsSearchManager
+```
+
+## Cmdlet groups
+
+### SearchManager
+
+Cmdlets for managing global Windows Search settings across catalogs.
 
 [!include[](includes/index-SearchManager.md)]
 
-## SearchCatalog
+### SearchCatalog
+
+Cmdlets for managing *search catalogs*. Search catalogs are content indexes.
 
 [!include[](includes/index-SearchCatalog.md)]
 
-## SearchRoot
+### SearchRoot
+
+Cmdlets for managing *search roots*. Search roots are the content stores indexed in a catalog.
 
 [!include[](includes/index-SearchRoot.md)]
 
-## SearchRule
+### SearchRule
+
+Cmdlets for managing *search rules*. Search rules define which items in a content store are indexed.
 
 [!include[](includes/index-SearchRule.md)]
 
 ## See also
 
-SearchAPI link
+[Microsoft's Windows Search documentation](https://learn.microsoft.com/windows/win32/search/windows-search)
