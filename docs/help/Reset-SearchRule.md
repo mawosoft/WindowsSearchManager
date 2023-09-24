@@ -18,16 +18,33 @@ Reset-SearchRule [[-Catalog] <String>] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+
+The `Reset-SearchRule` cmdlet removes all `User` rules from a catalog and restores all `Default` rules to the working rule set.
 
 ## EXAMPLES
 
-### Example 1
+### Example 1: Reset search rules
+
 ```powershell
-PS C:\> {{ Add example code here }}
+Reset-SearchRule
 ```
 
-{{ Add example description here }}
+```output
+Confirm
+Are you sure you want to perform this action?
+Performing the operation "Reset-SearchRule" on target "SystemIndex".
+[Y] Yes  [A] Yes to All  [N] No  [L] No to All  [S] Suspend  [?] Help (default is "Y"):
+```
+
+This command resets the search rules of the default Windows Search catalog after prompting the user for confirmation.
+
+### Example 2: Reset search rules without confirmation
+
+```powershell
+Reset-SearchRule -Confirm:$false
+```
+
+This command resets the search rules of the default Windows Search catalog without prompting for confirmation.
 
 ## PARAMETERS
 
@@ -94,6 +111,8 @@ You can't pipe objects to this cmdlet.
 This cmdlet returns no output.
 
 ## NOTES
+
+To learn more about search rules, see [Managing Scope Rules](https://learn.microsoft.com/windows/win32/search/-search-3x-wds-extidx-csm-scoperules) in Microsoft's Windows Search documentation.
 
 ## RELATED LINKS
 

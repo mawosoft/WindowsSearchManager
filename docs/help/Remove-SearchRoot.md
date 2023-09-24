@@ -9,7 +9,7 @@ schema: 2.0.0
 
 ## SYNOPSIS
 
-Deletes the specified search roots from a search catalog.
+Removes the specified search roots from a search catalog.
 
 ## SYNTAX
 
@@ -18,16 +18,36 @@ Remove-SearchRoot [-Path] <String[]> [-Catalog <String>] [-WhatIf] [-Confirm] [<
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+
+The `Remove-SearchRoot` cmdlet removes the specified search roots from a search catalog.
+
+> [!CAUTION]
+> Removing a search root also removes all search rules associated with it.
 
 ## EXAMPLES
 
-### Example 1
+### Example 1: Remove a search root
+
 ```powershell
-PS C:\> {{ Add example code here }}
+Remove-SearchRoot -Path file:///D:\
 ```
 
-{{ Add example description here }}
+```output
+Confirm
+Are you sure you want to perform this action?
+Performing the operation "Remove-SearchRoot" on target "SystemIndex Path=file:///D:\".
+[Y] Yes  [A] Yes to All  [N] No  [L] No to All  [S] Suspend  [?] Help (default is "Y"):
+```
+
+This command removes the search root drive `D:` from the default Windows Search catalog after prompting the user for confirmation.
+
+### Example 2: Remove a search root without confirmation
+
+```powershell
+Remove-SearchRoot -Path file:///D:\ -Confirm:$false
+```
+
+This command removes the search root drive `D:` from the default Windows Search catalog without prompting for confirmation.
 
 ## PARAMETERS
 
@@ -48,7 +68,8 @@ Accept wildcard characters: False
 ```
 
 ### -Path
-{{ Fill Path Description }}
+
+Specifies the search root to be removed from a catalog. The specified path must match an existing search root exactly, including the protocol prefix.
 
 ```yaml
 Type: System.String[]
@@ -109,6 +130,8 @@ You can pipe paths to this cmdlet.
 This cmdlet returns no output.
 
 ## NOTES
+
+To learn more about search roots, see [Managing Search Roots](https://learn.microsoft.com/windows/win32/search/-search-3x-wds-extidx-csm-searchroots) in Microsoft's Windows Search documentation.
 
 ## RELATED LINKS
 

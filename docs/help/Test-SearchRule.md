@@ -34,16 +34,42 @@ Test-SearchRule [-Path] <String[]> -Detailed [-Catalog <String>] [<CommonParamet
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+
+The `Test-SearchRule` cmdlet tests specified paths against the search rules of a search catalog.
 
 ## EXAMPLES
 
-### Example 1
+### Example 1: Test if a path is included
+
 ```powershell
-PS C:\> {{ Add example code here }}
+Test-SearchRule -Path file:///C:\Users\Bob\Drafts\
 ```
 
-{{ Add example description here }}
+```output
+True
+```
+
+This command checks if the specified path is included in the default Windows Search catalog.
+
+For file system paths, you can omit the `file:///` protocol prefix.
+
+
+### Example 2: Test a path and get detailed results
+
+```powershell
+Test-SearchRule -Path C:\Users\Bob\Drafts\ -Detailed
+```
+
+```output
+Path                  : C:\Users\Bob\Drafts
+IsIncluded            : True
+Reason                : CLUSIONREASON_DEFAULT
+HasChildScope         : True
+HasParentScope        : False
+ParentScopeVersiondId : 1
+```
+
+This command gets details about the inclusion or exclusion of the specified path.
 
 ## PARAMETERS
 
@@ -64,7 +90,8 @@ Accept wildcard characters: False
 ```
 
 ### -Detailed
-{{ Fill Detailed Description }}
+
+Use this parameter to return detailed results.
 
 ```yaml
 Type: System.Management.Automation.SwitchParameter
@@ -79,7 +106,8 @@ Accept wildcard characters: False
 ```
 
 ### -HasChildScope
-{{ Fill HasChildScope Description }}
+
+Use this parameter to check if the specified path has child search rules.
 
 ```yaml
 Type: System.Management.Automation.SwitchParameter
@@ -94,7 +122,8 @@ Accept wildcard characters: False
 ```
 
 ### -HasParentScope
-{{ Fill HasParentScope Description }}
+
+Use this parameter to check if the specified path has parent search rules.
 
 ```yaml
 Type: System.Management.Automation.SwitchParameter
@@ -109,7 +138,8 @@ Accept wildcard characters: False
 ```
 
 ### -IsIncluded
-{{ Fill IsIncluded Description }}
+
+Use this parameter to check if the specified path is included in the search catalog.
 
 ```yaml
 Type: System.Management.Automation.SwitchParameter
@@ -124,7 +154,8 @@ Accept wildcard characters: False
 ```
 
 ### -Path
-{{ Fill Path Description }}
+
+Specifies the URL or path to be tested.
 
 ```yaml
 Type: System.String[]
@@ -158,6 +189,8 @@ When you use the **IsIncluded**, **HasChildScope**, or **HasParentScope** parame
 When you use the **Detailed** parameter, the cmdlet returns an **TestSearchRuleInfo** object for each tested path.
 
 ## NOTES
+
+To learn more about search rules, see [Managing Scope Rules](https://learn.microsoft.com/windows/win32/search/-search-3x-wds-extidx-csm-scoperules) in Microsoft's Windows Search documentation.
 
 ## RELATED LINKS
 

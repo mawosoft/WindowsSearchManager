@@ -9,7 +9,7 @@ schema: 2.0.0
 
 ## SYNOPSIS
 
-Deletes the specified search rules from a search catalog.
+Removes the specified search rules from a search catalog.
 
 ## SYNTAX
 
@@ -19,16 +19,18 @@ Remove-SearchRule [-Path] <String[]> [[-RuleSet] <SearchRuleSet>] [-Catalog <Str
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+
+The `Remove-SearchRule` cmdlet removes the specified search rules from a search catalog.
 
 ## EXAMPLES
 
-### Example 1
+### Example 1: Remove a search rule
+
 ```powershell
-PS C:\> {{ Add example code here }}
+Remove-SearchRule -Path file:///C:\Users\Bob\Documents\FooData\Common\ -RuleSet User
 ```
 
-{{ Add example description here }}
+This command removes the specified user rule from the working rule set of the default Windows Search catalog.
 
 ## PARAMETERS
 
@@ -49,7 +51,8 @@ Accept wildcard characters: False
 ```
 
 ### -Path
-{{ Fill Path Description }}
+
+Specifies the search rule to be removed from a catalog. The specified path must match an existing search rule exactly, including the protocol prefix.
 
 ```yaml
 Type: System.String[]
@@ -64,7 +67,11 @@ Accept wildcard characters: False
 ```
 
 ### -RuleSet
-{{ Fill RuleSet Description }}
+
+Specifies the rule set the rule belongs to. The acceptable values for this parameter are:
+
+- `User` - Removes a user rule from the working rule set. If the user rule is a duplicate of or overrides a default rule, the default rule remains in the working rule set.
+- `Default` - Removes a default rule from both the working rule set and the default rule set.
 
 ```yaml
 Type: Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo+SearchRuleSet
@@ -126,6 +133,8 @@ You can pipe paths to this cmdlet.
 This cmdlet returns no output.
 
 ## NOTES
+
+To learn more about search rules, see [Managing Scope Rules](https://learn.microsoft.com/windows/win32/search/-search-3x-wds-extidx-csm-scoperules) in Microsoft's Windows Search documentation.
 
 ## RELATED LINKS
 

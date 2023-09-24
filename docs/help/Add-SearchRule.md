@@ -26,16 +26,43 @@ Add-SearchRule -InputObject <SearchRuleInfo[]> [-OverrideChildren] [-Catalog <St
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+
+The `Add-SearchRule` cmdlet adds search rules to a search catalog.
 
 ## EXAMPLES
 
-### Example 1
+### Example 1: Add search rules
+
 ```powershell
-PS C:\> {{ Add example code here }}
+Add-SearchRule -Path file:///C:\Users\Bob\Documents\FooData\ -RuleType Exclude -RuleSet User
+Add-SearchRule -Path file:///C:\Users\Bob\Documents\FooData\Common\ -RuleType Include -RuleSet User
 ```
 
-{{ Add example description here }}
+The first command adds a user exclusion rule to the default Windows Search catalog. The `FooData` directory and all its subdirectories are excluded from the catalog.
+
+The second command amends the exclusion by making an exception for one subdirectory. The subdirectory `Common` is included in the catalog, all other subdirectories of `FooData` are still excluded.
+
+If the specified path is recognizable as a file system path, you can omit the `file:///` protocol prefix.
+
+
+### Example 2: Override child rules
+
+```powershell
+Add-SearchRule -Path file:///C:\Users\Bob\Documents\FooData\ -RuleType Exclude -RuleSet User -OverrideChildren
+```
+
+This command adds a user exclusion rule to the default Windows Search catalog. The `FooData` directory and all its subdirectories are excluded from the catalog, any existing child rules are removed.
+
+Without the **OverrideChildren** parameter, child rules, like the one for the subdirectory `Common` in Example 1, would remain active.
+
+### Example 3: Use wildcards in exclusion rules
+
+```powershell
+Add-SearchRule -Path file:///C:\Users\*\Documents\PowerShell\ -RuleType Exclude -RuleSet Default
+```
+
+This command adds a default exclusion rule to the default Windows Search catalog. The `PowerShell` subdirectory in the `Documents` directory of every user is excluded from the catalog.
+
 
 ## PARAMETERS
 
@@ -56,7 +83,8 @@ Accept wildcard characters: False
 ```
 
 ### -InputObject
-{{ Fill InputObject Description }}
+
+Specifies **SearchRuleInfo** objects containing search rules with their properties to be added to a search catalog.
 
 ```yaml
 Type: Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo[]
@@ -71,7 +99,8 @@ Accept wildcard characters: False
 ```
 
 ### -OverrideChildren
-{{ Fill OverrideChildren Description }}
+
+Use this parameter to remove any child rules when adding a user search rule.
 
 ```yaml
 Type: System.Management.Automation.SwitchParameter
@@ -86,7 +115,8 @@ Accept wildcard characters: False
 ```
 
 ### -Path
-{{ Fill Path Description }}
+
+Specifies the URL or path of the search rule to be added to a search catalog. For exclusion rules, the path can contain the wildcard character `*`.
 
 ```yaml
 Type: System.String[]
@@ -101,7 +131,11 @@ Accept wildcard characters: False
 ```
 
 ### -RuleSet
-{{ Fill RuleSet Description }}
+
+Specifies the rule set the rule belongs to. The acceptable values for this parameter are:
+
+- `User` - Adds a user rule to the working rule set.
+- `Default` - Adds a default rule to both the working rule set and the default rule set.
 
 ```yaml
 Type: Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo+SearchRuleSet
@@ -117,7 +151,11 @@ Accept wildcard characters: False
 ```
 
 ### -RuleType
-{{ Fill RuleType Description }}
+
+Specifies the type of the rule. The acceptable values for this parameter are:
+
+- `Exclude` - The rule specifies an exclusion.
+- `Include` - The rule specifies an inclusion.
 
 ```yaml
 Type: Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo+SearchRuleType
@@ -183,6 +221,8 @@ You can pipe **SearchRuleInfo** objects to this cmdlet.
 This cmdlet returns no output.
 
 ## NOTES
+
+To learn more about search rules, see [Managing Scope Rules](https://learn.microsoft.com/windows/win32/search/-search-3x-wds-extidx-csm-scoperules) in Microsoft's Windows Search documentation.
 
 ## RELATED LINKS
 

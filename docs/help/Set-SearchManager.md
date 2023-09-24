@@ -204,7 +204,7 @@ This cmdlet returns no output.
 
 ## NOTES
 
-The [Microsoft documentation for Windows Search](https://learn.microsoft.com/windows/win32/search/-search-3x-wds-mngidx-searchmanager) states that the settings described above are implemented, but reserved for future use.
+Microsoft's [Windows Search documentation](https://learn.microsoft.com/windows/win32/search/-search-3x-wds-mngidx-searchmanager) states that the settings described above are implemented, but reserved for future use.
 
 ## RELATED LINKS
 
