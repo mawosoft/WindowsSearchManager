@@ -1,0 +1,321 @@
+{
+  "homepages": [],
+  "source_base_path": "D:/a/WindowsSearchManager/WindowsSearchManager/docs",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      }
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchCatalogInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchCatalogInfo.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchManagerInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchManagerInfo.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRootInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRootInfo.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo.SearchRuleSet.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo.SearchRuleSet.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo.SearchRuleType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo.SearchRuleType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo._FOLLOW_FLAGS.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo._FOLLOW_FLAGS.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.SearchRuleInfo.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.TestSearchRuleInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.TestSearchRuleInfo.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Mawosoft.PowerShell.WindowsSearchManager.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Redirection",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Add-SearchRoot.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Add-SearchRoot.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Add-SearchRule.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Add-SearchRule.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Get-SearchCatalog.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Get-SearchCatalog.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Get-SearchManager.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Get-SearchManager.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Get-SearchRoot.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Get-SearchRoot.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Get-SearchRule.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Get-SearchRule.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/New-SearchCatalog.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/New-SearchCatalog.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Remove-SearchCatalog.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Remove-SearchCatalog.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Remove-SearchRoot.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Remove-SearchRoot.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Remove-SearchRule.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Remove-SearchRule.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Reset-SearchCatalog.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Reset-SearchCatalog.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Reset-SearchRule.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Reset-SearchRule.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Set-SearchCatalog.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Set-SearchCatalog.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Set-SearchManager.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Set-SearchManager.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Test-SearchRule.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Test-SearchRule.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/Update-SearchCatalog.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/Update-SearchCatalog.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "reference/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "reference/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "reference/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "reference/toc.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

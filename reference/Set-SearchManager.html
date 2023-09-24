@@ -1,0 +1,331 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Set-SearchManager | Windows Search Manager </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Set-SearchManager | Windows Search Manager ">
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <div class="container body-content">
+
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="set-searchmanager">Set-SearchManager</h1>
+
+<p>Changes global settings for Windows Search.</p>
+<h2 id="syntax">Syntax</h2>
+<pre><code class="lang-psmeta">Set-SearchManager
+   [-UserAgent &lt;String&gt;]
+   [-ProxyAccess &lt;_PROXY_ACCESS&gt;]
+   [-ProxyName &lt;String&gt;]
+   [-ProxyPortNumber &lt;UInt32&gt;]
+   [-ProxyBypassLocal]
+   [-ProxyBypassList &lt;String[]&gt;]
+   [-WhatIf]
+   [-Confirm]
+   [&lt;CommonParameters&gt;]
+</code></pre>
+<h2 id="description">Description</h2>
+<p>The <code>Set-SearchManager</code> cmdlet changes the global settings of Windows Search across all search catalogs.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>You must run this cmdlet from an elevated PowerShell session. Start PowerShell by using the <strong>Run as administrator</strong> option.</p>
+</div>
+<h2 id="examples">Examples</h2>
+<h3 id="example-1-configure-a-custom-proxy-server">Example 1: Configure a custom proxy server</h3>
+<pre><code class="lang-powershell">Set-SearchManager -ProxyAccess PROXY_ACCESS_PROXY -ProxyName proxy.foo.org -ProxyPortNumber 8080
+
+</code></pre>
+<p>This command tells Windows Search to use <code>proxy.foo.org:8080</code> as the proxy server.</p>
+<h3 id="example-2-configure-local-addresses-to-bypass-the-proxy">Example 2: Configure local addresses to bypass the proxy.</h3>
+<pre><code class="lang-powershell">Set-SearchManager -ProxyBypassLocal -ProxyBypassList localhost, 127.0.0.1, *.foo.org
+</code></pre>
+<p>This command tells Windows Search to bypass the proxy for local addresses and provides a list of those local addresses.</p>
+<h3 id="example-3-use-windows-settings">Example 3: Use Windows settings</h3>
+<pre><code class="lang-powershell">Set-SearchManager -ProxyAccess PROXY_ACCESS_PRECONFIG
+</code></pre>
+<p>This command tells Windows Search to use the settings as configured in Windows Network &amp; Internet Settings.</p>
+<h2 id="parameters">Parameters</h2>
+<h3 id="-proxyaccess">-ProxyAccess</h3>
+<p>Specifies if and how a proxy server is used. The acceptable values for this parameter are:</p>
+<ul>
+<li><code>PROXY_ACCESS_PRECONFIG</code> - Use the Windows Network &amp; Internet Settings.</li>
+<li><code>PROXY_ACCESS_DIRECT</code> - Don't use a proxy.</li>
+<li><code>PROXY_ACCESS_PROXY</code> - Use a proxy as specified by the other <strong>Proxy...</strong> parameters.</li>
+</ul>
+<table>
+<tr><td>
+<p>Type</p>
+</td><td>
+<p><a class="xref" href="https://learn.microsoft.com/en-us/windows/win32/api/searchapi/ne-searchapi-proxy_access">_PROXY_ACCESS</a></p>
+</td></tr>
+<tr><td>
+<p>Accepted values</p>
+</td><td>
+<p>PROXY_ACCESS_PRECONFIG, PROXY_ACCESS_DIRECT, PROXY_ACCESS_PROXY</p>
+</td></tr>
+<tr><td>
+<p>Position</p>
+</td><td>
+<p>Named</p>
+</td></tr>
+<tr><td>
+<p>Default value</p>
+</td><td>
+<p>None</p>
+</td></tr>
+<tr><td>
+<p>Accept pipeline input</p>
+</td><td>
+<p>False</p>
+</td></tr>
+<tr><td>
+<p>Accept wildcard characters</p>
+</td><td>
+<p>False</p>
+</td></tr>
+</table>
+<h3 id="-proxybypasslist">-ProxyBypassList</h3>
+<p>Specifies, as a string array, the local addresses for which the proxy server should not be used. Use this parameter in conjunction with the <strong>ProxyBypassLocal</strong> parameter.</p>
+<table>
+<tr><td>
+<p>Type</p>
+</td><td>
+<p><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</p>
+</td></tr>
+<tr><td>
+<p>Position</p>
+</td><td>
+<p>Named</p>
+</td></tr>
+<tr><td>
+<p>Default value</p>
+</td><td>
+<p>None</p>
+</td></tr>
+<tr><td>
+<p>Accept pipeline input</p>
+</td><td>
+<p>False</p>
+</td></tr>
+<tr><td>
+<p>Accept wildcard characters</p>
+</td><td>
+<p>False</p>
+</td></tr>
+</table>
+<h3 id="-proxybypasslocal">-ProxyBypassLocal</h3>
+<p>Use this parameter to bypass the proxy server for local addresses. Use the <strong>ProxyBypassList</strong> parameter to specifiy a list of local addresses.</p>
+<table>
+<tr><td>
+<p>Type</p>
+</td><td>
+<p><a class="xref" href="https://learn.microsoft.com/dotnet/api/System.Management.Automation.SwitchParameter">SwitchParameter</a></p>
+</td></tr>
+<tr><td>
+<p>Position</p>
+</td><td>
+<p>Named</p>
+</td></tr>
+<tr><td>
+<p>Default value</p>
+</td><td>
+<p>None</p>
+</td></tr>
+<tr><td>
+<p>Accept pipeline input</p>
+</td><td>
+<p>False</p>
+</td></tr>
+<tr><td>
+<p>Accept wildcard characters</p>
+</td><td>
+<p>False</p>
+</td></tr>
+</table>
+<h3 id="-proxyname">-ProxyName</h3>
+<p>Specifies the name of the proxy server.</p>
+<table>
+<tr><td>
+<p>Type</p>
+</td><td>
+<p><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></p>
+</td></tr>
+<tr><td>
+<p>Position</p>
+</td><td>
+<p>Named</p>
+</td></tr>
+<tr><td>
+<p>Default value</p>
+</td><td>
+<p>None</p>
+</td></tr>
+<tr><td>
+<p>Accept pipeline input</p>
+</td><td>
+<p>False</p>
+</td></tr>
+<tr><td>
+<p>Accept wildcard characters</p>
+</td><td>
+<p>False</p>
+</td></tr>
+</table>
+<h3 id="-proxyportnumber">-ProxyPortNumber</h3>
+<p>Specifies the port number of the proxy server.</p>
+<table>
+<tr><td>
+<p>Type</p>
+</td><td>
+<p><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></p>
+</td></tr>
+<tr><td>
+<p>Position</p>
+</td><td>
+<p>Named</p>
+</td></tr>
+<tr><td>
+<p>Default value</p>
+</td><td>
+<p>None</p>
+</td></tr>
+<tr><td>
+<p>Accept pipeline input</p>
+</td><td>
+<p>False</p>
+</td></tr>
+<tr><td>
+<p>Accept wildcard characters</p>
+</td><td>
+<p>False</p>
+</td></tr>
+</table>
+<h3 id="-useragent">-UserAgent</h3>
+<p>Specifies the user agent string.</p>
+<table>
+<tr><td>
+<p>Type</p>
+</td><td>
+<p><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></p>
+</td></tr>
+<tr><td>
+<p>Position</p>
+</td><td>
+<p>Named</p>
+</td></tr>
+<tr><td>
+<p>Default value</p>
+</td><td>
+<p>None</p>
+</td></tr>
+<tr><td>
+<p>Accept pipeline input</p>
+</td><td>
+<p>False</p>
+</td></tr>
+<tr><td>
+<p>Accept wildcard characters</p>
+</td><td>
+<p>False</p>
+</td></tr>
+</table>
+<h2 id="inputs">Inputs</h2>
+<p><strong>None</strong></p>
+<p>You can't pipe objects to this cmdlet.</p>
+<h2 id="outputs">Outputs</h2>
+<p><strong>None</strong></p>
+<p>This cmdlet returns no output.</p>
+<h2 id="notes">Notes</h2>
+<p>Microsoft's <a href="https://learn.microsoft.com/windows/win32/search/-search-3x-wds-mngidx-searchmanager">Windows Search documentation</a> states that the settings described above are implemented, but reserved for future use.</p>
+<h2 id="related-links">Related Links</h2>
+<ul>
+<li><a href="Get-SearchManager.html">Get-SearchManager</a></li>
+</ul>
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      Copyright &copy; 2023 Matthias Wolf, Mawosoft
+      
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

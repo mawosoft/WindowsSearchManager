@@ -1,0 +1,283 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Update-SearchCatalog | Windows Search Manager </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Update-SearchCatalog | Windows Search Manager ">
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <div class="container body-content">
+
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="update-searchcatalog">Update-SearchCatalog</h1>
+
+<p>Reindexes a search catalog either completely or partially.</p>
+<h2 id="syntax">Syntax</h2>
+<pre><code class="lang-psmeta">Update-SearchCatalog
+      [-All]
+      [-Catalog &lt;String&gt;]
+      [-WhatIf]
+      [-Confirm]
+      [&lt;CommonParameters&gt;]
+</code></pre>
+<pre><code class="lang-psmeta">Update-SearchCatalog
+      -RootPath &lt;String[]&gt;
+      [-Catalog &lt;String&gt;]
+      [-WhatIf]
+      [-Confirm]
+      [&lt;CommonParameters&gt;]
+</code></pre>
+<pre><code class="lang-psmeta">Update-SearchCatalog
+      [-Path] &lt;String[]&gt;
+      [-Catalog &lt;String&gt;]
+      [-WhatIf]
+      [-Confirm]
+      [&lt;CommonParameters&gt;]
+</code></pre>
+<h2 id="description">Description</h2>
+<p>The <code>Update-SearchCatalog</code> reindexes a search catalog either completely or partially.</p>
+<h2 id="examples">Examples</h2>
+<h3 id="example-1-reindex-an-entire-catalog">Example 1: Reindex an entire catalog</h3>
+<pre><code class="lang-powershell">Update-SearchCatalog -All
+</code></pre>
+<p>This command reindexes the entire default Windows Search catalog.</p>
+<h3 id="example-2-reindex-a-search-root">Example 2: Reindex a search root.</h3>
+<pre><code class="lang-powershell">Update-SearchCatalog -RootPath file:///C:\
+</code></pre>
+<p>This command reindexes the search root drive <code>C:</code> in the default Windows Search catalog.</p>
+<p>For file system search roots, you can omit the <code>file:///</code> protocol prefix.</p>
+<h3 id="example-3-reindex-matching-paths">Example 3: Reindex matching paths.</h3>
+<pre><code class="lang-powershell">Update-SearchCatalog -Path file:///C:\Users\*\Documents\*.docx
+</code></pre>
+<p>This command reindexes all Microsoft Word files in and below the <code>Documents</code> folder of all users in the default Windows Search catalog.</p>
+<p>If the specified path is recognizable as a file system path, you can omit the <code>file:///</code> protocol prefix.</p>
+<h2 id="parameters">Parameters</h2>
+<h3 id="-all">-All</h3>
+<p>Use this parameter to reindex an entire search catalog.</p>
+<div class="NOTE">
+<h5>Note</h5>
+<p>To use the <strong>All</strong> parameter, you must run this cmdlet from an elevated PowerShell session. Start PowerShell by using the <strong>Run as administrator</strong> option.</p>
+</div>
+<table>
+<tr><td>
+<p>Type</p>
+</td><td>
+<p><a class="xref" href="https://learn.microsoft.com/dotnet/api/System.Management.Automation.SwitchParameter">SwitchParameter</a></p>
+</td></tr>
+<tr><td>
+<p>Position</p>
+</td><td>
+<p>Named</p>
+</td></tr>
+<tr><td>
+<p>Default value</p>
+</td><td>
+<p>None</p>
+</td></tr>
+<tr><td>
+<p>Accept pipeline input</p>
+</td><td>
+<p>False</p>
+</td></tr>
+<tr><td>
+<p>Accept wildcard characters</p>
+</td><td>
+<p>False</p>
+</td></tr>
+</table>
+<h3 id="-catalog">-Catalog</h3>
+<p>Specifies the name of the catalog this cmdlet operates on. If omitted, this is the default Windows Search catalog, named <strong>SystemIndex</strong>.</p>
+<table>
+<tr><td>
+<p>Type</p>
+</td><td>
+<p><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></p>
+</td></tr>
+<tr><td>
+<p>Position</p>
+</td><td>
+<p>Named</p>
+</td></tr>
+<tr><td>
+<p>Default value</p>
+</td><td>
+<p>SystemIndex</p>
+</td></tr>
+<tr><td>
+<p>Accept pipeline input</p>
+</td><td>
+<p>False</p>
+</td></tr>
+<tr><td>
+<p>Accept wildcard characters</p>
+</td><td>
+<p>False</p>
+</td></tr>
+</table>
+<h3 id="-path">-Path</h3>
+<p>Use this parameter to specify an URL or path pattern to reindex all matching items.</p>
+<table>
+<tr><td>
+<p>Type</p>
+</td><td>
+<p><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</p>
+</td></tr>
+<tr><td>
+<p>Position</p>
+</td><td>
+<p>0</p>
+</td></tr>
+<tr><td>
+<p>Default value</p>
+</td><td>
+<p>None</p>
+</td></tr>
+<tr><td>
+<p>Accept pipeline input</p>
+</td><td>
+<p>True (ByPropertyName, ByValue)</p>
+</td></tr>
+<tr><td>
+<p>Accept wildcard characters</p>
+</td><td>
+<p>True</p>
+</td></tr>
+</table>
+<h3 id="-rootpath">-RootPath</h3>
+<p>Use this parameter to specify a search root to be reindexed.</p>
+<table>
+<tr><td>
+<p>Type</p>
+</td><td>
+<p><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</p>
+</td></tr>
+<tr><td>
+<p>Position</p>
+</td><td>
+<p>Named</p>
+</td></tr>
+<tr><td>
+<p>Default value</p>
+</td><td>
+<p>None</p>
+</td></tr>
+<tr><td>
+<p>Accept pipeline input</p>
+</td><td>
+<p>True (ByPropertyName)</p>
+</td></tr>
+<tr><td>
+<p>Accept wildcard characters</p>
+</td><td>
+<p>False</p>
+</td></tr>
+</table>
+<h2 id="inputs">Inputs</h2>
+<p><strong><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a>[]</strong></p>
+<p>You can pipe paths to this cmdlet.</p>
+<h2 id="outputs">Outputs</h2>
+<p><strong>None</strong></p>
+<p>This cmdlet returns no output.</p>
+<h2 id="notes">Notes</h2>
+<p>The difference between <code>Reset-SearchCatalog</code> and <code>Update-SearchCatalog -All</code> is that the former removes any old information from the index before reindexing while the latter doesn't.</p>
+<h2 id="related-links">Related Links</h2>
+<ul>
+<li><p><a href="Get-SearchCatalog.html">Get-SearchCatalog</a></p>
+</li>
+<li><p><a href="New-SearchCatalog.html">New-SearchCatalog</a></p>
+</li>
+<li><p><a href="Remove-SearchCatalog.html">Remove-SearchCatalog</a></p>
+</li>
+<li><p><a href="Reset-SearchCatalog.html">Reset-SearchCatalog</a></p>
+</li>
+<li><p><a href="Set-SearchCatalog.html">Set-SearchCatalog</a></p>
+</li>
+</ul>
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      Copyright &copy; 2023 Matthias Wolf, Mawosoft
+      
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

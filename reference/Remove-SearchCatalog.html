@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+
+  <head>
+    <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title>Remove-SearchCatalog | Windows Search Manager </title>
+      <meta name="viewport" content="width=device-width">
+      <meta name="title" content="Remove-SearchCatalog | Windows Search Manager ">
+    
+      <link rel="shortcut icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../styles/docfx.vendor.min.css">
+      <link rel="stylesheet" href="../styles/docfx.css">
+      <link rel="stylesheet" href="../styles/main.css">
+      <meta property="docfx:navrel" content="../toc.html">
+      <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    <meta property="docfx:newtab" content="true">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <div class="container body-content">
+
+        <div id="search-results">
+          <div class="search-list">Search Results for <span></span></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination" data-first="First" data-prev="Previous" data-next="Next" data-last="Last"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="remove-searchcatalog">Remove-SearchCatalog</h1>
+
+<p>Deletes the specified search catalog.</p>
+<h2 id="syntax">Syntax</h2>
+<pre><code class="lang-psmeta">Remove-SearchCatalog
+      [-Catalog] &lt;String&gt;
+      [-WhatIf]
+      [-Confirm]
+      [&lt;CommonParameters&gt;]
+</code></pre>
+<h2 id="description">Description</h2>
+<p>The <code>Remove-SearchCatalog</code> cmdlet deletes the catalog with the specified name.</p>
+<h2 id="examples">Examples</h2>
+<h3 id="example-1-delete-a-catalog">Example 1: Delete a catalog</h3>
+<pre><code class="lang-powershell">Remove-SearchCatalog -Catalog Sample01
+</code></pre>
+<pre><code class="lang-output">Confirm
+Are you sure you want to perform this action?
+Performing the operation &quot;Remove-SearchCatalog&quot; on target &quot;Sample01&quot;.
+[Y] Yes  [A] Yes to All  [N] No  [L] No to All  [S] Suspend  [?] Help (default is &quot;Y&quot;):
+</code></pre>
+<p>This command deletes the search catalog named <code>Sample01</code> after prompting the user for confirmation.</p>
+<h3 id="example-2-delete-a-catalog-without-confirmation">Example 2: Delete a catalog without confirmation</h3>
+<pre><code class="lang-powershell">Remove-SearchCatalog -Catalog Sample01 -Confirm:$false
+</code></pre>
+<p>This command deletes the search catalog named <code>Sample01</code> without prompting for confirmation.</p>
+<h2 id="parameters">Parameters</h2>
+<h3 id="-catalog">-Catalog</h3>
+<p>Specifies the name of the catalog to delete.</p>
+<table>
+<tr><td>
+<p>Type</p>
+</td><td>
+<p><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></p>
+</td></tr>
+<tr><td>
+<p>Position</p>
+</td><td>
+<p>0</p>
+</td></tr>
+<tr><td>
+<p>Default value</p>
+</td><td>
+<p>None</p>
+</td></tr>
+<tr><td>
+<p>Accept pipeline input</p>
+</td><td>
+<p>False</p>
+</td></tr>
+<tr><td>
+<p>Accept wildcard characters</p>
+</td><td>
+<p>False</p>
+</td></tr>
+</table>
+<h2 id="inputs">Inputs</h2>
+<p><strong>None</strong></p>
+<p>You can't pipe objects to this cmdlet.</p>
+<h2 id="outputs">Outputs</h2>
+<p><strong>None</strong></p>
+<p>This cmdlet returns no output.</p>
+<h2 id="related-links">Related Links</h2>
+<ul>
+<li><p><a href="Get-SearchCatalog.html">Get-SearchCatalog</a></p>
+</li>
+<li><p><a href="New-SearchCatalog.html">New-SearchCatalog</a></p>
+</li>
+<li><p><a href="Reset-SearchCatalog.html">Reset-SearchCatalog</a></p>
+</li>
+<li><p><a href="Set-SearchCatalog.html">Set-SearchCatalog</a></p>
+</li>
+<li><p><a href="Update-SearchCatalog.html">Update-SearchCatalog</a></p>
+</li>
+</ul>
+</article>
+          </div>
+
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+                <h5>In this article</h5>
+                <div></div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+      Copyright &copy; 2023 Matthias Wolf, Mawosoft
+      
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="text/javascript" src="../styles/docfx.vendor.min.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
