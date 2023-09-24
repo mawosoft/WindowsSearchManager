@@ -24,21 +24,26 @@ Add-SearchRoot -InputObject <SearchRootInfo[]> [-Catalog <String>] [-WhatIf] [-C
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+
+The `Add-SearchRoot` cmdlet adds search roots to a search catalog.
 
 ## EXAMPLES
 
-### Example 1
+### Example 1: Add a search root
+
 ```powershell
-PS C:\> {{ Add example code here }}
+Add-SearchRoot -Path file:///D:\
 ```
 
-{{ Add example description here }}
+This command adds the drive `D:` as a search root to the default Windows Search catalog.
+
+For file system search roots, you can omit the `file:///` protocol prefix.
 
 ## PARAMETERS
 
 ### -Catalog
-{{ Fill Catalog Description }}
+
+Specifies the name of the catalog this cmdlet operates on. If omitted, this is the default Windows Search catalog, named **SystemIndex**.
 
 ```yaml
 Type: System.String
@@ -53,7 +58,8 @@ Accept wildcard characters: False
 ```
 
 ### -InputObject
-{{ Fill InputObject Description }}
+
+Specifies **SearchRootInfo** objects containing search roots with advanced properties to be added to a search catalog.
 
 ```yaml
 Type: Mawosoft.PowerShell.WindowsSearchManager.SearchRootInfo[]
@@ -68,7 +74,8 @@ Accept wildcard characters: False
 ```
 
 ### -Path
-{{ Fill Path Description }}
+
+Specifies a search root to be added to a search catalog.
 
 ```yaml
 Type: System.String[]
@@ -133,6 +140,8 @@ You can pipe **SearchRootInfo** objects to this cmdlet.
 This cmdlet returns no output.
 
 ## NOTES
+
+To learn more about search roots, see [Managing Search Roots](https://learn.microsoft.com/windows/win32/search/-search-3x-wds-extidx-csm-searchroots) in Microsoft's Windows Search documentation.
 
 ## RELATED LINKS
 

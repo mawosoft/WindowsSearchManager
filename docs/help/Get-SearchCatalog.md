@@ -43,7 +43,7 @@ HighPriorityQueueCount : 0
 PathBeingIndexed       : file:C:/Users/Bob/Documents/foo.txt
 ```
 
-While it is possible to create, manage, and query multiple catalogs, Windows Search currently uses only one catalog, named **SystemIndex**.
+While it is possible to create, manage, and query multiple catalogs, Windows Search currently uses only one catalog, which is named **SystemIndex**.
 
 ### Example 2: Get settings for a specific catalog
 

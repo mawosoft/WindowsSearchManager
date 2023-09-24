@@ -18,21 +18,55 @@ Get-SearchRoot [[-Catalog] <String>] [-PathOnly] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+
+The `Get-SearchRoot` cmdlet gets all search roots defined for a search catalog.
 
 ## EXAMPLES
 
-### Example 1
+### Example 1: Get all search roots paths
+
 ```powershell
-PS C:\> {{ Add example code here }}
+Get-SearchRoot -PathOnly
 ```
 
-{{ Add example description here }}
+```output
+csc://{S-1-5-21-3419697060-3810377854-678604692-1001}/
+defaultroot://{S-1-5-21-3419697060-3810377854-678604692-1001}/
+file:///C:\
+iehistory://{S-1-5-21-3419697060-3810377854-678604692-1001}/
+winrt://{S-1-5-21-3419697060-3810377854-678604692-1001}/
+```
+
+This command gets the search root paths for the default Windows Search catalog.
+
+### Example 2: Get detailed infos for all search roots paths
+
+```powershell
+Get-SearchRoot
+```
+
+```output
+Path                  : csc://{S-1-5-21-3419697060-3810377854-678604692-1001}/
+IsHierarchical        : True
+ProvidesNotifications : True
+UseNotificationsOnly  : False
+EnumerationDepth      : 4294967295
+HostDepth             : 0
+FollowDirectories     : True
+AuthenticationType    : eAUTH_TYPE_ANONYMOUS
+
+Path                  : defaultroot://{S-1-5-21-3419697060-3810377854-678604692-1001}/
+IsHierarchical        : True
+... output truncated ...
+```
+
+This command gets the search root details for the default Windows Search catalog.
 
 ## PARAMETERS
 
 ### -Catalog
-{{ Fill Catalog Description }}
+
+Specifies the name of the catalog this cmdlet operates on. If omitted, this is the default Windows Search catalog, named **SystemIndex**.
 
 ```yaml
 Type: System.String
@@ -47,7 +81,8 @@ Accept wildcard characters: False
 ```
 
 ### -PathOnly
-{{ Fill PathOnly Description }}
+
+Use this parameter to return only the paths of the search roots, not the details.
 
 ```yaml
 Type: System.Management.Automation.SwitchParameter
@@ -81,6 +116,8 @@ By default, this cmdlet returns **SearchRootInfo** objects.
 When you use the **PathOnly** parameter, the cmdlet returns the root paths.
 
 ## NOTES
+
+To learn more about search roots, see [Managing Search Roots](https://learn.microsoft.com/windows/win32/search/-search-3x-wds-extidx-csm-searchroots) in Microsoft's Windows Search documentation.
 
 ## RELATED LINKS
 

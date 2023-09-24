@@ -18,21 +18,43 @@ Get-SearchRule [[-Catalog] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+
+The `Get-SearchRule` cmdlet gets the search rules in effect for a search catalog.
 
 ## EXAMPLES
 
-### Example 1
+### Example 1: Get search rules
+
 ```powershell
-PS C:\> {{ Add example code here }}
+Get-SearchRule
 ```
 
-{{ Add example description here }}
+```output
+Path                                                         RuleType RuleSet         FollowFlags
+----                                                         -------- -------         -----------
+csc://{S-1-5-21-3419697060-3810377854-678604692-1001}/        Include Default FF_INDEXCOMPLEXURLS
+file:///*\$RECYCLE.BIN\                                       Exclude Default FF_INDEXCOMPLEXURLS
+file:///*\DfsrPrivate\                                        Exclude Default FF_INDEXCOMPLEXURLS
+file:///*\System Volume Information\                          Exclude Default FF_INDEXCOMPLEXURLS
+file:///C:\ProgramData\Microsoft\Windows\Start Menu\          Include Default FF_INDEXCOMPLEXURLS
+file:///C:\Users\                                             Include Default FF_INDEXCOMPLEXURLS
+file:///C:\Users\*\AppData\                                   Exclude Default FF_INDEXCOMPLEXURLS
+file:///C:\Users\Bob\.*\                                      Exclude Default FF_INDEXCOMPLEXURLS
+file:///C:\Users\Bob\Documents\FooData\                       Exclude    User FF_INDEXCOMPLEXURLS
+file:///C:\Users\Bob\Documents\FooData\Common\                Include    User FF_INDEXCOMPLEXURLS
+file:///C:\Windows.*\                                         Exclude Default FF_INDEXCOMPLEXURLS
+file:///C:\Windows\*\temp\                                    Exclude Default FF_INDEXCOMPLEXURLS
+iehistory://{S-1-5-21-3419697060-3810377854-678604692-1001}/  Include Default FF_INDEXCOMPLEXURLS
+winrt://{S-1-5-21-3419697060-3810377854-678604692-1001}/      Include Default FF_INDEXCOMPLEXURLS
+```
+
+This command gets the search rules in effect for the default Windows Search catalog.
 
 ## PARAMETERS
 
 ### -Catalog
-{{ Fill Catalog Description }}
+
+Specifies the name of the catalog this cmdlet operates on. If omitted, this is the default Windows Search catalog, named **SystemIndex**.
 
 ```yaml
 Type: System.String
@@ -62,6 +84,8 @@ You can't pipe objects to this cmdlet.
 This cmdlet returns **SearchRuleInfo** objects.
 
 ## NOTES
+
+To learn more about search rules, see [Managing Scope Rules](https://learn.microsoft.com/windows/win32/search/-search-3x-wds-extidx-csm-scoperules) in Microsoft's Windows Search documentation.
 
 ## RELATED LINKS
 

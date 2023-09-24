@@ -18,21 +18,35 @@ Reset-SearchCatalog [[-Catalog] <String>] [-WhatIf] [-Confirm] [<CommonParameter
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+
+The `Reset-SearchCatalog` cmdlet resets a search catalog by completely rebuilding its index database.
+
+> [!NOTE]
+> You must run this cmdlet from an elevated PowerShell session. Start PowerShell by using the **Run as administrator** option.
 
 ## EXAMPLES
 
-### Example 1
+### Example 1: Reset the default catalog.
+
 ```powershell
-PS C:\> {{ Add example code here }}
+Reset-SearchCatalog
 ```
 
-{{ Add example description here }}
+This command resets the default Windows Search catalog, which is named **SystemIndex**.
+
+### Example 2: Reset a custom catalog.
+
+```powershell
+Reset-SearchCatalog -Catalog Sample01
+```
+
+This command resets the search catalog named `Sample01`.
 
 ## PARAMETERS
 
 ### -Catalog
-{{ Fill Catalog Description }}
+
+Specifies the name of the catalog this cmdlet operates on. If omitted, this is the default Windows Search catalog, named **SystemIndex**.
 
 ```yaml
 Type: System.String
@@ -93,6 +107,8 @@ You can't pipe objects to this cmdlet.
 This cmdlet returns no output.
 
 ## NOTES
+
+The difference between `Reset-SearchCatalog` and `Update-SearchCatalog -All` is that the former removes any old information from the index before reindexing while the latter doesn't.
 
 ## RELATED LINKS
 

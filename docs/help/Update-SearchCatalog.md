@@ -29,21 +29,47 @@ Update-SearchCatalog [-Path] <String[]> [-Catalog <String>] [-WhatIf] [-Confirm]
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+
+The `Update-SearchCatalog` reindexes a search catalog either completely or partially.
 
 ## EXAMPLES
 
-### Example 1
+### Example 1: Reindex an entire catalog
+
 ```powershell
-PS C:\> {{ Add example code here }}
+Update-SearchCatalog -All
 ```
 
-{{ Add example description here }}
+This command reindexes the entire default Windows Search catalog.
+
+### Example 2: Reindex a search root.
+
+```powershell
+Update-SearchCatalog -RootPath file:///C:\
+```
+
+This command reindexes the search root drive `C:` in the default Windows Search catalog.
+
+For file system search roots, you can omit the `file:///` protocol prefix.
+
+### Example 3: Reindex matching paths.
+
+```powershell
+Update-SearchCatalog -Path file:///C:\Users\*\Documents\*.docx
+```
+
+This command reindexes all Microsoft Word files in and below the `Documents` folder of all users in the default Windows Search catalog.
+
+If the specified path is recognizable as a file system path, you can omit the `file:///` protocol prefix.
 
 ## PARAMETERS
 
 ### -All
-{{ Fill All Description }}
+
+Use this parameter to reindex an entire search catalog.
+
+> [!NOTE]
+> To use the **All** parameter, you must run this cmdlet from an elevated PowerShell session. Start PowerShell by using the **Run as administrator** option.
 
 ```yaml
 Type: System.Management.Automation.SwitchParameter
@@ -58,7 +84,8 @@ Accept wildcard characters: False
 ```
 
 ### -Catalog
-{{ Fill Catalog Description }}
+
+Specifies the name of the catalog this cmdlet operates on. If omitted, this is the default Windows Search catalog, named **SystemIndex**.
 
 ```yaml
 Type: System.String
@@ -73,7 +100,8 @@ Accept wildcard characters: False
 ```
 
 ### -Path
-{{ Fill Path Description }}
+
+Use this parameter to specify an URL or path pattern to reindex all matching items.
 
 ```yaml
 Type: System.String[]
@@ -88,7 +116,8 @@ Accept wildcard characters: True
 ```
 
 ### -RootPath
-{{ Fill RootPath Description }}
+
+Use this parameter to specify a search root to be reindexed.
 
 ```yaml
 Type: System.String[]
@@ -149,6 +178,8 @@ You can pipe paths to this cmdlet.
 This cmdlet returns no output.
 
 ## NOTES
+
+The difference between `Reset-SearchCatalog` and `Update-SearchCatalog -All` is that the former removes any old information from the index before reindexing while the latter doesn't.
 
 ## RELATED LINKS
 
