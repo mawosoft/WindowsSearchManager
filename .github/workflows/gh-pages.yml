@@ -37,7 +37,7 @@ jobs:
         exec { dotnet build ./docs/docs.msbuildproj --no-restore -c Release }
     - name: Upload Binlogs
       if: ${{ always() }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: DocFX-Binlogs
         path: '**/MSBuild_Logs/*'
