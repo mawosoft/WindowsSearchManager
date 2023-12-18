@@ -159,7 +159,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Download Packages
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: Packages
         path: ./Packages/
@@ -176,7 +176,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Download Packages
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: Packages
         path: ./Packages/
@@ -189,7 +189,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Download Docs Website
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: DocsWebsite
         path: ./DocsWebsite/
