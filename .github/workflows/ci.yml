@@ -99,19 +99,19 @@ jobs:
         exec { dotnet pack ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Release --no-build -o ./Packages }
     - name: Upload Binlogs
       if: ${{ always() }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.os }}-Binlogs
         path: '**/MSBuild_Logs/*'
     - name: Upload Packages
       if: ${{ matrix.os == 'windows-latest' || strategy.job-total == 1 }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Packages
         path: ./Packages/
     - name: Upload Docs Website
       if: ${{ matrix.os == 'windows-latest' || strategy.job-total == 1 }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: DocsWebsite
         path: ./docs/_site/
@@ -148,7 +148,7 @@ jobs:
         ./build/test.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug, Release -f net7.0, net6.0, net48 -v detailed -r ./TestResults/WSearchNotDisabled -ff:$${{ strategy.fail-fast }} -a '--filter', 'WSearch!=IsDisabled'
     - name: Upload Test results
       if: ${{ always() && steps.test.outcome != 'skipped' }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.os }}-Testresults
         path: ./TestResults/
