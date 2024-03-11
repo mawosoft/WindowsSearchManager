@@ -212,7 +212,7 @@ jobs:
         fetch-depth: 1
     - name: Create GitHub release
       # TODO release notes
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ needs.Build.outputs.release }}
         generate_release_notes: false # false is default. Seems to draw from PRs only.
