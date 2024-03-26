@@ -30,12 +30,12 @@ steps:
     Invoke-Expression "& { $(Invoke-RestMethod https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.ps1) } -JsonFile ./global.json"
   displayName: Setup dotnet (pinned)
 - pwsh: |
-    . ./build/startNativeExecution.ps1
-    Set-Alias exec Start-NativeExecution
-    exec { dotnet restore }
-    exec { dotnet build ./docs/help/help.msbuildproj -c Debug --no-restore }
-    exec { dotnet build ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Debug --no-restore }
-    exec { dotnet build ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug --no-restore }
+    $ErrorActionPreference = 'Stop'
+    $PSNativeCommandUseErrorActionPreference = $true
+    dotnet restore
+    dotnet build ./docs/help/help.msbuildproj -c Debug --no-restore
+    dotnet build ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Debug --no-restore
+    dotnet build ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug --no-restore
   displayName: Build
   env:
     MSBuildDebugEngine: 1 # Auto-creates binlogs in ./MSBuild_Logs
@@ -48,10 +48,10 @@ steps:
   artifact: azp-Binlogs
   displayName: Upload Binlogs
 - pwsh: |
-    ./build/test.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug -f net7.0, net6.0, net48 -v detailed -r ./TestResults/WSearchDisabled -s ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/coverlet.runsettings -a '--filter', 'WSearch=IsDisabled'
+    ./build/invokeDotnetTest.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug -f net7.0, net6.0, net48 -v detailed -r ./TestResults/WSearchDisabled -s ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/coverlet.runsettings -a '--filter', 'WSearch=IsDisabled'
     Set-Service wsearch -StartupType Automatic
     Start-Service wsearch
-    ./build/test.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug -f net7.0, net6.0, net48 -v detailed -r ./TestResults/WSearchNotDisabled -s ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/coverlet.runsettings -a '--filter', 'WSearch!=IsDisabled'
+    ./build/invokeDotnetTest.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug -f net7.0, net6.0, net48 -v detailed -r ./TestResults/WSearchNotDisabled -s ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/coverlet.runsettings -a '--filter', 'WSearch!=IsDisabled'
   displayName: Test
 - task: reportgenerator@5
   condition: succeededOrFailed()
@@ -67,6 +67,7 @@ steps:
     searchFolder: ./TestResults
     publishRunAttachments: false
 - task: PublishCodeCoverageResults@1
+  # Cannot use v2 with ReportGenerator
   condition: succeededOrFailed()
   inputs:
     codeCoverageTool: Cobertura
