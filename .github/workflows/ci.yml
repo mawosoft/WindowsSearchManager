@@ -86,17 +86,17 @@ jobs:
         MSBUILDTARGETOUTPUTLOGGING: true
         MSBUILDLOGIMPORTS: 1
       run: |
-        . ./build/startNativeExecution.ps1
-        Set-Alias exec Start-NativeExecution
-        exec { dotnet restore }
+        $ErrorActionPreference = 'Stop'
+        $PSNativeCommandUseErrorActionPreference = $true
+        dotnet restore
         # Parallel builds causing trouble here
-        exec { dotnet build ./docs/help/help.msbuildproj --no-restore }
-        exec { dotnet build ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Release --no-restore --no-dependencies }
-        exec { dotnet build ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Debug --no-restore --no-dependencies }
-        exec { dotnet build ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Release --no-restore --no-dependencies }
-        exec { dotnet build ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug --no-restore --no-dependencies }
-        exec { dotnet build ./docs/docs.msbuildproj --no-restore -c Release }
-        exec { dotnet pack ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Release --no-build -o ./Packages }
+        dotnet build ./docs/help/help.msbuildproj --no-restore
+        dotnet build ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Release --no-restore --no-dependencies
+        dotnet build ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Debug --no-restore --no-dependencies
+        dotnet build ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Release --no-restore --no-dependencies
+        dotnet build ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug --no-restore --no-dependencies
+        dotnet build ./docs/docs.msbuildproj --no-restore -c Release
+        dotnet pack ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Release --no-build -o ./Packages
     - name: Upload Binlogs
       if: ${{ always() }}
       uses: actions/upload-artifact@v4
@@ -142,10 +142,10 @@ jobs:
       id: test
       if: ${{ github.event.inputs.skip-tests != 'true' }}
       run: |
-        ./build/test.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug, Release -f net7.0, net6.0, net48 -v detailed -r ./TestResults/WSearchDisabled -ff:$${{ strategy.fail-fast }} -a '--filter', 'WSearch=IsDisabled'
+        ./build/invokeDotnetTest.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug, Release -f net7.0, net6.0, net48 -v detailed -r ./TestResults/WSearchDisabled -ff:$${{ strategy.fail-fast }} -a '--filter', 'WSearch=IsDisabled'
         Set-Service wsearch -StartupType Automatic
         Start-Service wsearch
-        ./build/test.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug, Release -f net7.0, net6.0, net48 -v detailed -r ./TestResults/WSearchNotDisabled -ff:$${{ strategy.fail-fast }} -a '--filter', 'WSearch!=IsDisabled'
+        ./build/invokeDotnetTest.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug, Release -f net7.0, net6.0, net48 -v detailed -r ./TestResults/WSearchNotDisabled -ff:$${{ strategy.fail-fast }} -a '--filter', 'WSearch!=IsDisabled'
     - name: Upload Test results
       if: ${{ always() && steps.test.outcome != 'skipped' }}
       uses: actions/upload-artifact@v4

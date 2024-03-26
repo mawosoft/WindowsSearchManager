@@ -31,10 +31,10 @@ jobs:
         global-json-file: ./global.json
     - name: DocFX Build
       run: |
-        . ./build/startNativeExecution.ps1
-        Set-Alias exec Start-NativeExecution
-        exec { dotnet restore }
-        exec { dotnet build ./docs/docs.msbuildproj --no-restore -c Release }
+        $ErrorActionPreference = 'Stop'
+        $PSNativeCommandUseErrorActionPreference = $true
+        dotnet restore
+        dotnet build ./docs/docs.msbuildproj --no-restore -c Release
     - name: Upload Binlogs
       if: ${{ always() }}
       uses: actions/upload-artifact@v4
