@@ -116,7 +116,7 @@
           DependsOnTargets="Compile"
           Condition="Exists('@(IntermediateAssembly)')">
     <PropertyGroup>
-      <_command>pwsh -NonInteractive -ExecutionPolicy Bypass -Command &quot;&amp;
+      <_command>pwsh -NonInteractive -NoProfile -ExecutionPolicy Bypass -Command &quot;&amp;
         '../../build/updatePSModuleManifestVersion.ps1'
           -Path '%(PSModuleManifest.FullPath)'
           -Destination '$(IntermediateOutputPath)'
@@ -149,7 +149,7 @@
   <Target Name="Pack"
           DependsOnTargets="Publish">
     <PropertyGroup>
-      <_command>pwsh -NonInteractive -ExecutionPolicy Bypass -Command &quot;&amp;
+      <_command>pwsh -NonInteractive -NoProfile -ExecutionPolicy Bypass -Command &quot;&amp;
         '../../build/packPSModule.ps1'
           -Path '$(PublishDir)'
           -Destination '$(PackageOutputPath)'
