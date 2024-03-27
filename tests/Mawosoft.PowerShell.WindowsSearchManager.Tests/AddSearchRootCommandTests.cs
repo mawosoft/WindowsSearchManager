@@ -31,8 +31,8 @@ public class AddSearchRootCommandTests : CommandTestBase
         Assert.True(InterfaceChain.SingleHasWriteRecordings(InterfaceChain.ScopeManager));
     }
 
-    private static readonly List<SearchRootInfo> s_rootInfos = new()
-    {
+    private static readonly List<SearchRootInfo> s_rootInfos =
+    [
         new()
         {
             Path = @"fooprotocol://{bar-sid}/",
@@ -64,7 +64,7 @@ public class AddSearchRootCommandTests : CommandTestBase
         {
             Path = @"y:\",
         }
-    };
+    ];
 
     [Trait("WSearch", "IsEnabled")]
     [SkippableTheory(SkipCondition.WSearchDisabled)]
@@ -141,8 +141,8 @@ public class AddSearchRootCommandTests : CommandTestBase
     public static readonly object?[][] HandlesFailures_TestData =
         new string[][]
         {
-            new string[] { @"Add-SearchRoot -Path x:\foo ", "^AddRoot$" },
-            new string[] { @"Add-SearchRoot -Path x:\foo ", "^SaveAll$" }
+            [@"Add-SearchRoot -Path x:\foo ", "^AddRoot$"],
+            [@"Add-SearchRoot -Path x:\foo ", "^SaveAll$"]
         }
         .CrossJoin(new Exception_TheoryData())
         .ToArray();

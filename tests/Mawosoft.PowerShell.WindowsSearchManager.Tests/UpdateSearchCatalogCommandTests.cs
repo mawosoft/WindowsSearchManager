@@ -56,7 +56,7 @@ public class UpdateSearchCatalogCommandTests : CommandTestBase
         string exceptionRegex = parameterName == "Path" ? "^ReindexMatchingURLs$" : "^ReindexSearchRoot$";
 
         InterfaceChain.CatalogManager.AddException(exceptionRegex, new Exception(), 2, 4);
-        string[] parameterValues = { @"x:\foo1", @"x:\foo2", @"x:\foo3", @"x:\foo4", @"x:\foo5" };
+        string[] parameterValues = [@"x:\foo1", @"x:\foo2", @"x:\foo3", @"x:\foo4", @"x:\foo5"];
         string script = "Update-SearchCatalog";
         IEnumerable<PSObject>? input = null;
         if (usePipeline)

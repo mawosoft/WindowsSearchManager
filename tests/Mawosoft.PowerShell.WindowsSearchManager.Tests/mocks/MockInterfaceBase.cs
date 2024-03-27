@@ -6,17 +6,12 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 public abstract class MockInterfaceBase
 {
     // Info about a call to an interface method. Properties are methods starting with 'get_' or 'set_'.
-    internal class CallInfo
+    internal class CallInfo(string methodName, object?[] parameters, bool isReadOnly)
     {
-        public string MethodName { get; }
-        public IReadOnlyList<object?> Parameters { get; }
-        public bool IsReadOnly { get; }
-        public CallInfo(string methodName, object?[] parameters, bool isReadOnly)
-        {
-            MethodName = methodName;
-            Parameters = parameters;
-            IsReadOnly = isReadOnly;
-        }
+        public string MethodName { get; } = methodName;
+        public IReadOnlyList<object?> Parameters { get; } = parameters;
+        public bool IsReadOnly { get; } = isReadOnly;
+
         public override string ToString() => $"{MethodName}({string.Join(",", Parameters)})";
     }
 
@@ -27,17 +22,11 @@ public abstract class MockInterfaceBase
     //   However, the only easy way to do this is using BinaryFormatter, which is obsolete.
     // - CallNumbers (1..n) refer to any calls stored in RecordedCallInfos of this instance
     //   derived from MockInterfaceBase.
-    internal class ExceptionInfo
+    internal class ExceptionInfo(string methodRegex, Exception exception, int[] callNumbers)
     {
-        public string MethodRegex { get; }
-        public Exception Exception { get; }
-        public List<int> CallNumbers { get; }
-        public ExceptionInfo(string methodRegex, Exception exception, int[] callNumbers)
-        {
-            MethodRegex = methodRegex;
-            Exception = exception;
-            CallNumbers = new(callNumbers);
-        }
+        public string MethodRegex { get; } = methodRegex;
+        public Exception Exception { get; } = exception;
+        public List<int> CallNumbers { get; } = new(callNumbers);
     }
 
     // Indicates if the user is supposed to have admin rights or not.
@@ -54,10 +43,10 @@ public abstract class MockInterfaceBase
     internal object? ChildInterface { get; set; }
 
     // List of exceptions the mock should throw for corresponding methods.
-    internal List<ExceptionInfo> ExceptionsToThrow { get; } = new List<ExceptionInfo>();
+    internal List<ExceptionInfo> ExceptionsToThrow { get; } = [];
 
     // List of recorded calls to interface methods.
-    internal List<CallInfo> RecordedCallInfos { get; } = new List<CallInfo>();
+    internal List<CallInfo> RecordedCallInfos { get; } = [];
 
     // Strings should be sufficient for everything except AddRoot(CSearchRoot).
     internal List<string> RecordedCalls => RecordedCallInfos.ConvertAll(c => c.ToString());
@@ -102,7 +91,7 @@ public abstract class MockInterfaceBase
     private void Record(object?[] parameters, bool isReadOnly)
     {
         if (RecordingDisabled) return;
-        parameters ??= new object?[] { null };
+        parameters ??= [null];
         StackFrame frame = new(2); // 0 = Record, 1 = RecordRead/Write, 2 = caller
         string methodName = frame.GetMethod()?.Name ?? string.Empty;
         RecordedCallInfos.Add(new CallInfo(methodName, parameters, isReadOnly));

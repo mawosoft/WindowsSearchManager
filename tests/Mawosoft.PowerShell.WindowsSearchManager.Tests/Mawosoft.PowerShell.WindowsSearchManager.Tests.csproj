@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net7.0;net6.0;$(NetFxTfm)</TargetFrameworks>
+    <TargetFrameworks>net8.0;net7.0;net6.0;$(NetFxTfm)</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <Description>Tests for Mawosoft.PowerShell.WindowsSearchManager</Description>
     <!-- MSB3270 Processor architecture mismatch. Reason: interop.searchapi.dll only has processor-specific flavors,
@@ -32,11 +32,6 @@
          or System.Management.Automation is sufficient. This is the *only* change needed to toggle between them. -->
     <!-- <PackageReference Condition="'$(TargetFrameworkIdentifier)' != '.NETFramework'" Include="Microsoft.PowerShell.SDK" /> -->
     <PackageReference Condition="'$(TargetFrameworkIdentifier)' != '.NETFramework'" Include="System.Management.Automation" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
-    <PackageReference Update="Microsoft.PowerShell.SDK" VersionOverride="7.3.7" />
-    <PackageReference Update="System.Management.Automation" VersionOverride="7.3.7" />
   </ItemGroup>
 
   <ItemGroup>

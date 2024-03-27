@@ -6,6 +6,6 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 internal class MockSearchRegistryProvider : ISearchRegistryProvider
 {
     [SuppressMessage("Naming", "CA1721:Property names should not match get methods", Justification = "Internal properties used for mock setup")]
-    internal List<string> CatalogNames { get; set; } = new() { "SystemIndex" };
+    internal List<string> CatalogNames { get; set; } = ["SystemIndex"];
     public virtual IReadOnlyList<string> GetCatalogNames() => CatalogNames;
 }

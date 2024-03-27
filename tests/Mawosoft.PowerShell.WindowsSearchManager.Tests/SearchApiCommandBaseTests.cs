@@ -150,9 +150,9 @@ public class SearchApiCommandBaseTests : CommandTestBase
     [InlineData(null)]
     [InlineData("")]
     [InlineData("  ")]
-    public void GetCatalogManager_InvalidCatalogName_Throws(string catalogName)
+    public void GetCatalogManager_InvalidCatalogName_Throws(string? catalogName)
     {
-        Assert.Throws<ArgumentException>(nameof(catalogName), () => Command.TestGetSearchCatalogManager(catalogName));
+        Assert.Throws<ArgumentException>(nameof(catalogName), () => Command.TestGetSearchCatalogManager(catalogName!));
     }
 
     [Fact]
@@ -179,9 +179,9 @@ public class SearchApiCommandBaseTests : CommandTestBase
     [InlineData(null)]
     [InlineData("")]
     [InlineData("  ")]
-    public void GetCatalogManager_ISearchManager_InvalidCatalogName_Throws(string catalogName)
+    public void GetCatalogManager_ISearchManager_InvalidCatalogName_Throws(string? catalogName)
     {
-        Assert.Throws<ArgumentException>(nameof(catalogName), () => Command.TestGetSearchCatalogManager(InterfaceChain.SearchManager, catalogName));
+        Assert.Throws<ArgumentException>(nameof(catalogName), () => Command.TestGetSearchCatalogManager(InterfaceChain.SearchManager, catalogName!));
     }
 
     [Fact]
@@ -202,9 +202,9 @@ public class SearchApiCommandBaseTests : CommandTestBase
     [InlineData(null)]
     [InlineData("")]
     [InlineData("  ")]
-    public void GetCrawlScopeManager_InvalidCatalogName_Throws(string catalogName)
+    public void GetCrawlScopeManager_InvalidCatalogName_Throws(string? catalogName)
     {
-        Assert.Throws<ArgumentException>(nameof(catalogName), () => Command.TestGetCrawlScopeManager(catalogName));
+        Assert.Throws<ArgumentException>(nameof(catalogName), () => Command.TestGetCrawlScopeManager(catalogName!));
     }
 
     [Fact]

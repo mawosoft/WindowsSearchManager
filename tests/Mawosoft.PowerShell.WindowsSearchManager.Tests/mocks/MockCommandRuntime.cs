@@ -8,7 +8,7 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 [SuppressMessage("Design", "CA1065:Do not raise exceptions in unexpected locations", Justification = "Partial interface implementation.")]
 public class MockCommandRuntime : ICommandRuntime
 {
-    internal List<ErrorRecord> Errors { get; } = new();
+    internal List<ErrorRecord> Errors { get; } = [];
 
 #if !NETFRAMEWORK
     [DoesNotReturn]

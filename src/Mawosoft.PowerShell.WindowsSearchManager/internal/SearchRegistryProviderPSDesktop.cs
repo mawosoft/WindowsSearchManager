@@ -12,10 +12,11 @@ namespace Mawosoft.PowerShell.WindowsSearchManager;
 /// Using the type directly via the extension package (as in <see cref="SearchRegistryProviderPSCore"/>)
 /// would cause a TypeLoadException. Therefore we use reflection here.
 /// </remarks>
-internal class SearchRegistryProviderPSDesktop : SearchRegistryProviderBase, ISearchRegistryProvider
+internal sealed class SearchRegistryProviderPSDesktop : SearchRegistryProviderBase, ISearchRegistryProvider
 {
     // Reflection data for Registry encapsulated for lazy init.
-    private class Win32Registry
+    [SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "False positive.")]
+    private sealed class Win32Registry
     {
         public Type Registry;
         public Type RegistryKey;
@@ -23,9 +24,9 @@ internal class SearchRegistryProviderPSDesktop : SearchRegistryProviderBase, ISe
         public MethodInfo OpenSubKey;
         public MethodInfo GetSubKeyNames;
         // Parameter arrays for method invocation
-        public string[] CatalogListWindowsCatalogs = new[] {
+        public string[] CatalogListWindowsCatalogs = [
             SearchRegistryProviderBase.CatalogListWindowsCatalogs
-        };
+        ];
 
         public Win32Registry()
         {
@@ -35,7 +36,7 @@ internal class SearchRegistryProviderPSDesktop : SearchRegistryProviderBase, ISe
             LocalMachine = fi.GetValue(null)
                            ?? throw new ArgumentNullException(nameof(LocalMachine));
             RegistryKey = LocalMachine.GetType();
-            OpenSubKey = RegistryKey.GetMethod(nameof(OpenSubKey), new[] { typeof(string) })
+            OpenSubKey = RegistryKey.GetMethod(nameof(OpenSubKey), [typeof(string)])
                          ?? throw new MissingMethodException(nameof(OpenSubKey));
             GetSubKeyNames = RegistryKey.GetMethod(nameof(GetSubKeyNames))
                              ?? throw new MissingMethodException(nameof(GetSubKeyNames));
@@ -60,6 +61,6 @@ internal class SearchRegistryProviderPSDesktop : SearchRegistryProviderBase, ISe
         {
             (subkey as IDisposable)?.Dispose();
         }
-        return Array.Empty<string>();
+        return [];
     }
 }

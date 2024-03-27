@@ -261,7 +261,7 @@ public class CommonCommandTests : CommandTestBase
     }
 
     private static readonly string[] s_CatalogCommands =
-    {
+    [
         @"Reset-SearchCatalog {catalog} ",
         @"Set-SearchCatalog -ConnectTimeout 100 ",
         @"Update-SearchCatalog -All",
@@ -275,21 +275,21 @@ public class CommonCommandTests : CommandTestBase
         @"Remove-SearchRule x:\foo User ",
         @"Reset-SearchRule {catalog} ",
         @"Test-SearchRule x:\foo ",
-    };
+    ];
 
     private static readonly string[] s_CatalogValidationOnlyCommands =
-    {
+    [
         @"Get-SearchCatalog {catalog} ",
         @"New-SearchCatalog {catalog} ",
         @"Remove-SearchCatalog {catalog} ",
-    };
+    ];
 
     public static readonly object?[][] CatalogSelection_TestData = s_CatalogCommands
         .CrossJoin(new object?[][]
         {
-            new object?[] { null, false },
-            new object?[] { "SecondCatalog", false },
-            new object?[] { "SecondCatalog", true }
+            [null, false],
+            ["SecondCatalog", false],
+            ["SecondCatalog", true]
         })
         .ToArray();
 

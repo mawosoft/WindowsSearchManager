@@ -5,7 +5,7 @@ namespace Mawosoft.PowerShell.WindowsSearchManager;
 /// <summary>
 /// Default implementation of <see cref="ISearchManagerFactory"/>.
 /// </summary>
-internal class DefaultSearchManagerFactory : ISearchManagerFactory
+internal sealed class DefaultSearchManagerFactory : ISearchManagerFactory
 {
     public static ISearchManagerFactory Instance = new DefaultSearchManagerFactory();
 

@@ -66,8 +66,8 @@ public class AddSearchRuleCommandTests : CommandTestBase
         Assert.True(InterfaceChain.SingleHasWriteRecordings(InterfaceChain.ScopeManager));
     }
 
-    private static readonly List<SearchRuleInfo> s_ruleInfos = new()
-    {
+    private static readonly List<SearchRuleInfo> s_ruleInfos =
+    [
         new()
         {
             Path = @"x:\foo",
@@ -100,7 +100,7 @@ public class AddSearchRuleCommandTests : CommandTestBase
             RuleType = SearchRuleInfo.SearchRuleType.Include,
             RuleSet = SearchRuleInfo.SearchRuleSet.User,
         }
-    };
+    ];
 
     [Theory]
     [InlineData(@"Add-SearchRule -Path x:\foo -RuleType Include", @"AddUserScopeRule(x:\foo,1,0,1)")]
@@ -155,10 +155,10 @@ public class AddSearchRuleCommandTests : CommandTestBase
     public static readonly object?[][] HandlesFailures_TestData =
         new string[][]
         {
-            new string[] { @"Add-SearchRule -Path x:\foo -RuleType Include ", "^AddUserScopeRule$" },
-            new string[] { @"Add-SearchRule -Path x:\foo -RuleSet Default -RuleType Include ", "^AddDefaultScopeRule$" },
-            new string[] { @"Add-SearchRule -Path x:\foo -RuleType Include ", "^SaveAll$" },
-            new string[] { @"Add-SearchRule -Path x:\foo -RuleSet Default -RuleType Include ", "^SaveAll$" },
+            [@"Add-SearchRule -Path x:\foo -RuleType Include ", "^AddUserScopeRule$"],
+            [@"Add-SearchRule -Path x:\foo -RuleSet Default -RuleType Include ", "^AddDefaultScopeRule$"],
+            [@"Add-SearchRule -Path x:\foo -RuleType Include ", "^SaveAll$"],
+            [@"Add-SearchRule -Path x:\foo -RuleSet Default -RuleType Include ", "^SaveAll$"],
         }
         .CrossJoin(new Exception_TheoryData())
         .ToArray();

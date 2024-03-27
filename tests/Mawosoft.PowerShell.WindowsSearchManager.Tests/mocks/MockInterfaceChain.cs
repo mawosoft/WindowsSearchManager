@@ -4,13 +4,13 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 public class MockInterfaceChain
 {
-    internal static List<string> InterfaceNames { get; } = new()
-    {
+    internal static List<string> InterfaceNames { get; } =
+    [
         nameof(ISearchManagerFactory),
         nameof(ISearchManager),
         nameof(ISearchCatalogManager),
         nameof(ISearchCrawlScopeManager),
-    };
+    ];
 
     internal MockSearchManagerFactory Factory { get; private set; }
     public MockSearchManager SearchManager { get; private set; }

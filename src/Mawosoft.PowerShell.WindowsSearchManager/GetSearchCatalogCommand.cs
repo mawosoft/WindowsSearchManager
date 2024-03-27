@@ -20,7 +20,7 @@ public sealed class GetSearchCatalogCommand : SearchApiCommandBase
         IEnumerable<string> catalogs;
         if (Catalog is not null)
         {
-            catalogs = new[] { Catalog };
+            catalogs = [Catalog];
         }
         else
         {

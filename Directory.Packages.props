@@ -1,5 +1,4 @@
 <Project>
-
   <PropertyGroup Condition="'$(InteropSearchApiAssemblyPath)' == ''">
     <_WinSdkVersion Condition="'$(CI)' == 'true'">10.0.19041.0</_WinSdkVersion>
     <_WinSdkVersion Condition="'$(CI)' != 'true'">$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</_WinSdkVersion>
@@ -11,27 +10,37 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageVersion Include="coverlet.collector" Version="6.0.0" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.2" />
     <PackageVersion Include="docfx" Version="2.70.4" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageVersion Include="Microsoft.PowerShell.5.1.ReferenceAssemblies" Version="1.0.0" />
-    <PackageVersion Include="Microsoft.PowerShell.SDK" Version="7.2.14" />
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     <PackageVersion Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageVersion Include="platyPS" Version="0.14.2" />
     <PackageVersion Include="PowerShellStandard.Library" Version="5.1.1" />
-    <PackageVersion Include="System.Management.Automation" Version="7.2.14" />
-    <PackageVersion Include="System.ServiceProcess.ServiceController" Version="7.0.1" />
-    <PackageVersion Include="xunit" Version="2.5.1" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.1" />
+    <PackageVersion Include="System.ServiceProcess.ServiceController" Version="8.0.0" />
+    <PackageVersion Include="xunit" Version="2.7.0" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.7" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <PackageVersion Include="Microsoft.PowerShell.SDK" Version="7.2.18" />
+    <PackageVersion Include="System.Management.Automation" Version="7.2.18" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+    <PackageVersion Include="Microsoft.PowerShell.SDK" Version="7.3.11" />
+    <PackageVersion Include="System.Management.Automation" Version="7.3.11" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
+    <PackageVersion Include="Microsoft.PowerShell.SDK" Version="7.4.1" />
+    <PackageVersion Include="System.Management.Automation" Version="7.4.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Transitive pinning for vulnerable packages -->
-    <PackageVersion Include="System.Net.Http" Version="4.3.4" />
-    <PackageVersion Include="System.Text.RegularExpressions" Version="4.3.1" />
     <!-- Transitive pinning for deprecated packages -->
-    <PackageVersion Condition="'$(TargetFramework)' == 'net6.0'" Include="System.Diagnostics.DiagnosticSource" Version="7.0.2" />
+    <PackageVersion Condition="'$(TargetFramework)' == 'net6.0'" Include="System.Diagnostics.DiagnosticSource" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.ApplicationInsights" Version="2.22.0" />
     <PackageVersion Include="System.Security.AccessControl" Version="6.0.0" />
   </ItemGroup>
 

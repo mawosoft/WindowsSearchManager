@@ -6,8 +6,8 @@ public class MockSearchManager : MockInterfaceBase, ISearchManager
 {
     internal MockSearchManager() : this(new MockCatalogManager())
     {
-        CatalogManagers = new()
-            {
+        CatalogManagers =
+            [
                 new MockCatalogManager(),
                 new MockCatalogManager()
                 {
@@ -21,7 +21,7 @@ public class MockSearchManager : MockInterfaceBase, ISearchManager
                     NumberOfItemsInternal = 2222,
                     DiacriticSensitivityInternal = 1
                 }
-            };
+            ];
     }
 
     internal MockSearchManager(ISearchCatalogManager catalogManager) : base()
@@ -31,7 +31,7 @@ public class MockSearchManager : MockInterfaceBase, ISearchManager
     }
 
     // In case of multiple catalogs.
-    internal List<MockCatalogManager> CatalogManagers { get; set; } = new();
+    internal List<MockCatalogManager> CatalogManagers { get; set; } = [];
 
     // SearchAPI HRRESULT
     internal const int MSS_E_CATALOGNOTFOUND = unchecked((int)0x80042103);
