@@ -4,8 +4,8 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 public class GetSearchRootCommandTests : CommandTestBase
 {
-    private static readonly List<MockSearchRoot> s_roots = new()
-    {
+    private static readonly List<MockSearchRoot> s_roots =
+    [
         new()
         {
             RootURL = @"fooprotocol://{bar-sid}/",
@@ -37,7 +37,7 @@ public class GetSearchRootCommandTests : CommandTestBase
         {
             RootURL = @"y:\",
         }
-    };
+    ];
 
     [Theory]
     [InlineData(0, false)]

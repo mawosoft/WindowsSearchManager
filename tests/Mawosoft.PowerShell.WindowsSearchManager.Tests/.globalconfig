@@ -9,6 +9,18 @@ dotnet_diagnostic.CA1305.severity = none
 # CA1307: Specify StringComparison for clarity
 dotnet_diagnostic.CA1307.severity = none
 
+# CA1510: Use ArgumentNullException throw helper [net48 - not available]
+dotnet_diagnostic.CA1510.severity = none
+
+# CA1859: Use concrete types when possible for improved performance
+dotnet_diagnostic.CA1859.severity = none
+
+# CA1861: Avoid constant arrays as arguments
+dotnet_diagnostic.CA1861.severity = none
+
+# CA1865: Use char overload [net48 - not available]
+dotnet_diagnostic.CA1865.severity = none
+
 # IDE0056: Use index operator
 dotnet_diagnostic.IDE0056.severity = none
 
@@ -17,6 +29,9 @@ dotnet_diagnostic.IDE0057.severity = none
 
 # IDE0130: Namespace does not match folder structure
 dotnet_diagnostic.IDE0130.severity = none
+
+# xUnit1042: The member referenced by the MemberData attribute returns untyped data rows
+dotnet_diagnostic.xUnit1042.severity = none
 
 # Common settings for test projects
 

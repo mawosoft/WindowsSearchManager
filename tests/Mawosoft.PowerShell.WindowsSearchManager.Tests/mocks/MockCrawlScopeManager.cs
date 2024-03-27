@@ -114,7 +114,7 @@ public class MockCrawlScopeManager : MockInterfaceBase, ISearchCrawlScopeManager
         TailCall();
     }
 
-    private readonly List<string> _dontMoveNext = new();
+    private readonly List<string> _dontMoveNext = [];
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     private TestSearchRuleInfo? GetTestRuleInfo()

@@ -27,9 +27,9 @@ public class RemoveSearchRuleCommandTests : CommandTestBase
     public static readonly object?[][] HandlesFailures_TestData =
         new string[][]
         {
-            new string[] { @"Remove-SearchRule -Path x:\foo ", "^RemoveScopeRule$" },
-            new string[] { @"Remove-SearchRule x:\foo Default ", "^RemoveDefaultScopeRule$" },
-            new string[] { @"Remove-SearchRule -Path x:\foo ", "^SaveAll$" }
+            [@"Remove-SearchRule -Path x:\foo ", "^RemoveScopeRule$"],
+            [@"Remove-SearchRule x:\foo Default ", "^RemoveDefaultScopeRule$"],
+            [@"Remove-SearchRule -Path x:\foo ", "^SaveAll$"]
         }
         .CrossJoin(new Exception_TheoryData())
         .ToArray();

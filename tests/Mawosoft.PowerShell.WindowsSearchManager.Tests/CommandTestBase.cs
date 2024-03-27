@@ -19,8 +19,8 @@ public class CommandTestBase
     [SuppressMessage("Performance", "CA1810:Initialize reference type static fields inline", Justification = "Multiple fields from same source data.")]
     static CommandTestBase()
     {
-        AllCommands = new();
-        CommandsSupportingShouldProcess = new();
+        AllCommands = [];
+        CommandsSupportingShouldProcess = [];
         InitialSessionState iss = InitialSessionState.Create();
         iss.ThreadOptions = PSThreadOptions.UseCurrentThread;
         iss.LanguageMode = PSLanguageMode.FullLanguage;

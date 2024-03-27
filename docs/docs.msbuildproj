@@ -146,7 +146,7 @@
   -->
 
   <Target Name="RestoreForVStudio"
-          BeforeTargets="RunResolvePackageDependencies"
+          BeforeTargets="RunResolvePackageDependencies;ResolvePackageDependenciesForBuild"
           Condition="'$(BuildingInsideVisualStudio)' == 'true' And !Exists('$(ProjectAssetsFile)')">
     <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Restore" />
   </Target>

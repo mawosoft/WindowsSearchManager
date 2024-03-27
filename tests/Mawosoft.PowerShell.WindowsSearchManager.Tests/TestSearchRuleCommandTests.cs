@@ -4,8 +4,8 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 public class TestSearchRuleCommandTests : CommandTestBase
 {
-    private static readonly List<TestSearchRuleInfo> s_testInfos = new()
-    {
+    private static readonly List<TestSearchRuleInfo> s_testInfos =
+    [
         new()
         {
             Path = @"x:\foo",
@@ -42,7 +42,7 @@ public class TestSearchRuleCommandTests : CommandTestBase
             HasParentScope = true,
             ParentScopeVersiondId = 222
         },
-    };
+    ];
 
     public static readonly object?[][] Succeeds_TestData =
         new string[]
@@ -56,11 +56,11 @@ public class TestSearchRuleCommandTests : CommandTestBase
         }
         .CrossJoin(new string[][]
         {
-            new string[] { "", "IsIncluded" },
-            new string[] { "-IsIncluded", "IsIncluded" },
-            new string[] { "-HasChildScope", "HasChildScope" },
-            new string[] { "-HasParentScope", "HasParentScope" },
-            new string[] { "-Detailed", "" },
+            ["", "IsIncluded"],
+            ["-IsIncluded", "IsIncluded"],
+            ["-HasChildScope", "HasChildScope"],
+            ["-HasParentScope", "HasParentScope"],
+            ["-Detailed", ""],
         })
         .ToArray();
 
@@ -93,10 +93,10 @@ public class TestSearchRuleCommandTests : CommandTestBase
     public static readonly object?[][] HandlesFailures_TestData =
         new string[][]
         {
-            new string[] { "-IsIncluded", "IsIncluded" },
-            new string[] { "-HasChildScope", "HasChildScope" },
-            new string[] { "-HasParentScope", "HasParentScope" },
-            new string[] { "-Detailed", "" },
+            ["-IsIncluded", "IsIncluded"],
+            ["-HasChildScope", "HasChildScope"],
+            ["-HasParentScope", "HasParentScope"],
+            ["-Detailed", ""],
         }
         .CrossJoin(new Exception_TheoryData())
         .ToArray();

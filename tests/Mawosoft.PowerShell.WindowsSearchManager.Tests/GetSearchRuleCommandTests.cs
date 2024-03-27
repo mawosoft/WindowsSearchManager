@@ -4,8 +4,8 @@ namespace Mawosoft.PowerShell.WindowsSearchManager.Tests;
 
 public class GetSearchRuleCommandTests : CommandTestBase
 {
-    private static readonly List<MockSearchScopeRule> s_rules = new()
-    {
+    private static readonly List<MockSearchScopeRule> s_rules =
+    [
         new()
         {
             PatternOrURL = @"x:\foo",
@@ -30,7 +30,7 @@ public class GetSearchRuleCommandTests : CommandTestBase
         {
             PatternOrURL = @"x:\foo\bar\baz"
         }
-    };
+    ];
 
     [Theory]
     [InlineData(0)]

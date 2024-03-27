@@ -27,8 +27,8 @@ public class RemoveSearchRootCommandTests : CommandTestBase
     public static readonly object?[][] HandlesFailures_TestData =
         new string[][]
         {
-            new string[] { @"Remove-SearchRoot -Path x:\foo ", "^RemoveRoot$" },
-            new string[] { @"Remove-SearchRoot -Path x:\foo ", "^SaveAll$" }
+            [@"Remove-SearchRoot -Path x:\foo ", "^RemoveRoot$"],
+            [@"Remove-SearchRoot -Path x:\foo ", "^SaveAll$"]
         }
         .CrossJoin(new Exception_TheoryData())
         .ToArray();
