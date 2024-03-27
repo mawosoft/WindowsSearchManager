@@ -34,7 +34,7 @@
           Outputs="$(BaseIntermediateOutputPath)$(MamlHelpFileName)"
           AfterTargets="Compile">
     <PropertyGroup>
-      <_command>pwsh -NonInteractive -ExecutionPolicy Bypass -Command &quot;&amp;
+      <_command>pwsh -NonInteractive -NoProfile -ExecutionPolicy Bypass -Command &quot;&amp;
         '../../build/generateMamlHelp.ps1'
           -Path '$(MSBuildProjectDirectory)'
           -Destination '$(BaseIntermediateOutputPath)'

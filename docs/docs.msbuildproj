@@ -82,7 +82,7 @@
           Outputs="@(ConvertOutput)"
           DependsOnTargets="GenerateMetadata">
     <PropertyGroup>
-      <_command>pwsh -NonInteractive -ExecutionPolicy Bypass -Command &quot;&amp;
+      <_command>pwsh -NonInteractive -NoProfile -ExecutionPolicy Bypass -Command &quot;&amp;
         '../build/convertPlatyPStoDocFxMarkdown.ps1'
           -Path './help'
           -Destination './reference'
