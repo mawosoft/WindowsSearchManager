@@ -32,7 +32,7 @@
     "dest": "_site",
     "globalMetadata": {
       "_appTitle": "Windows Search Manager",
-      "_appFooter": "Copyright &copy; 2023 Matthias Wolf, Mawosoft",
+      "_appFooter": "Copyright &copy; 2023-2024 Matthias Wolf, Mawosoft",
       "_enableSearch": true,
       "_enableNewTab": true,
       "_disableBreadcrumb": true,

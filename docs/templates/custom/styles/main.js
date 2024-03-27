@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Matthias Wolf, Mawosoft.
+// Copyright (c) 2023-2024 Matthias Wolf, Mawosoft.
 
 // Very simple language definition to highlight the syntax block of a PowerShell cmdlet.
 

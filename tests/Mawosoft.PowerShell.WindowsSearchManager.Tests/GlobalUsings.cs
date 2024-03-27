@@ -1,4 +1,4 @@
-// Copyright (c) 2023 Matthias Wolf, Mawosoft.
+// Copyright (c) 2023-2024 Matthias Wolf, Mawosoft.
 
 global using System;
 global using System.Collections;
