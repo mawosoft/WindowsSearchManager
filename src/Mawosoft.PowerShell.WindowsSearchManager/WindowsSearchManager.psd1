@@ -21,7 +21,7 @@ Author = 'Matthias Wolf'
 CompanyName = 'mawosoft'
 
 # Copyright statement for this module
-Copyright = 'Copyright (c) 2023 Matthias Wolf, Mawosoft. All rights reserved.'
+Copyright = 'Copyright (c) 2023-2024 Matthias Wolf, Mawosoft. All rights reserved.'
 
 # Description of the functionality provided by this module
 Description = 'Powershell module for managing Windows Search. With WindowsSearchManager you can:
