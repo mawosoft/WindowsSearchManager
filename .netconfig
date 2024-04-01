@@ -4,5 +4,5 @@
 	weak
 [file ".github/workflows/file-update.yml"]
 	url = https://github.com/mawosoft/misc-scripts/blob/master/CI/file-update.yml
-	etag = 2e1c88ec2f232763e4ff6b2d49128daf1e914676382b9c43fa0101b150d94206
+	etag = 99a64fefb823d3817db1e21d625c62f059b50716e80e986d2cbfd839e9d34e43
 	weak
