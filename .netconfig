@@ -2,7 +2,9 @@
 	url = https://github.com/mawosoft/misc-scripts/blob/master/CI/invokeDotnetTest.ps1
 	etag = cc6031ebe5f1fa538e001649d00114bbd38b916f1aa30118326b8f22abcd6e20
 	weak
+	sha = f2deff268a4acfc624787c21496785bcfca600f9
 [file ".github/workflows/file-update.yml"]
 	url = https://github.com/mawosoft/misc-scripts/blob/master/CI/file-update.yml
 	etag = c90c99f6cf7600cab5f2c90f05c4728d4820e567c8772ef2b9f0dfa4d828115a
 	weak
+	sha = 3ce6ef370afeb551d2572638a0241a09cc942670
