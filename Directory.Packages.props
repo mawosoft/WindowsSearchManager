@@ -18,23 +18,23 @@
     <PackageVersion Include="platyPS" Version="0.14.2" />
     <PackageVersion Include="PowerShellStandard.Library" Version="5.1.1" />
     <PackageVersion Include="System.ServiceProcess.ServiceController" Version="8.0.0" />
-    <PackageVersion Include="xunit" Version="2.7.0" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.7" />
+    <PackageVersion Include="xunit" Version="2.8.0" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.0" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <PackageVersion Include="Microsoft.PowerShell.SDK" Version="7.2.18" />
-    <PackageVersion Include="System.Management.Automation" Version="7.2.18" />
+    <PackageVersion Include="Microsoft.PowerShell.SDK" Version="7.2.19" />
+    <PackageVersion Include="System.Management.Automation" Version="7.2.19" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
-    <PackageVersion Include="Microsoft.PowerShell.SDK" Version="7.3.11" />
-    <PackageVersion Include="System.Management.Automation" Version="7.3.11" />
+    <PackageVersion Include="Microsoft.PowerShell.SDK" Version="7.3.13" />
+    <PackageVersion Include="System.Management.Automation" Version="7.3.12" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-    <PackageVersion Include="Microsoft.PowerShell.SDK" Version="7.4.1" />
-    <PackageVersion Include="System.Management.Automation" Version="7.4.1" />
+    <PackageVersion Include="Microsoft.PowerShell.SDK" Version="7.4.2" />
+    <PackageVersion Include="System.Management.Automation" Version="7.4.2" />
   </ItemGroup>
 
   <ItemGroup>
