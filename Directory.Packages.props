@@ -39,9 +39,9 @@
 
   <ItemGroup>
     <!-- Transitive pinning for deprecated packages -->
-    <PackageVersion Condition="'$(TargetFramework)' == 'net6.0'" Include="System.Diagnostics.DiagnosticSource" Version="8.0.0" />
+    <PackageVersion Condition="'$(TargetFramework)' == 'net6.0'" Include="System.Diagnostics.DiagnosticSource" Version="8.0.1" />
     <PackageVersion Include="Microsoft.ApplicationInsights" Version="2.22.0" />
-    <PackageVersion Include="System.Security.AccessControl" Version="6.0.0" />
+    <PackageVersion Condition="'$(TargetFramework)' == 'netstandard2.0'" Include="System.Security.AccessControl" Version="6.0.1" />
   </ItemGroup>
 
 </Project>
