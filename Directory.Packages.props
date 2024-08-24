@@ -12,19 +12,19 @@
   <ItemGroup>
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
     <PackageVersion Include="docfx" Version="2.70.4" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.0" />
     <PackageVersion Include="Microsoft.PowerShell.5.1.ReferenceAssemblies" Version="1.0.0" />
     <PackageVersion Include="Microsoft.Win32.Registry" Version="5.0.0" />
     <PackageVersion Include="platyPS" Version="0.14.2" />
     <PackageVersion Include="PowerShellStandard.Library" Version="5.1.1" />
     <PackageVersion Include="System.ServiceProcess.ServiceController" Version="8.0.0" />
-    <PackageVersion Include="xunit" Version="2.8.1" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.1" />
+    <PackageVersion Include="xunit" Version="2.9.0" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <PackageVersion Include="Microsoft.PowerShell.SDK" Version="7.2.19" />
-    <PackageVersion Include="System.Management.Automation" Version="7.2.19" />
+    <PackageVersion Include="Microsoft.PowerShell.SDK" Version="7.2.23" />
+    <PackageVersion Include="System.Management.Automation" Version="7.2.23" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
@@ -33,15 +33,16 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-    <PackageVersion Include="Microsoft.PowerShell.SDK" Version="7.4.3" />
-    <PackageVersion Include="System.Management.Automation" Version="7.4.3" />
+    <PackageVersion Include="Microsoft.PowerShell.SDK" Version="7.4.5" />
+    <PackageVersion Include="System.Management.Automation" Version="7.4.5" />
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Transitive pinning for deprecated packages -->
+    <!-- Transitive pinning for deprecated/vulnerable packages -->
     <PackageVersion Condition="'$(TargetFramework)' == 'net6.0'" Include="System.Diagnostics.DiagnosticSource" Version="8.0.1" />
     <PackageVersion Include="Microsoft.ApplicationInsights" Version="2.22.0" />
     <PackageVersion Condition="'$(TargetFramework)' == 'netstandard2.0'" Include="System.Security.AccessControl" Version="6.0.1" />
+    <PackageVersion Condition="'$(TargetFramework)' == 'net7.0'" Include="System.Formats.Asn1" Version="8.0.1" />
   </ItemGroup>
 
 </Project>
