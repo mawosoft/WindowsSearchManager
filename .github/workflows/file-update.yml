@@ -54,7 +54,7 @@ jobs:
           $content
         }
     - name: Pull Request
-      uses: peter-evans/create-pull-request@v6
+      uses: peter-evans/create-pull-request@v7
       with:
         token: ${{ secrets.DOTNET_FILESYNC_PAT }}
         base: master
