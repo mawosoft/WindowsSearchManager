@@ -5,6 +5,6 @@
 	sha = f2deff268a4acfc624787c21496785bcfca600f9
 [file ".github/workflows/file-update.yml"]
 	url = https://github.com/mawosoft/misc-scripts/blob/master/CI/file-update.yml
-	etag = c90c99f6cf7600cab5f2c90f05c4728d4820e567c8772ef2b9f0dfa4d828115a
+	etag = 6684429677a0515f46a3839ec6de746712fe6bb57fd89f48dfe68476fa254f49
 	weak
-	sha = 3ce6ef370afeb551d2572638a0241a09cc942670
+	sha = 1926ca1b470d261aa451b9d79e001f7885a31641
