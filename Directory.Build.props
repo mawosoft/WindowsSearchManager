@@ -41,7 +41,7 @@
     <Authors>Matthias Wolf, Mawosoft</Authors>
     <Company>$(Authors)</Company>
     <Product>WindowsSearchManager</Product>
-    <Copyright>Copyright (c) 2023-2024 Matthias Wolf, Mawosoft</Copyright>
+    <Copyright>Copyright (c) 2023-2025 Matthias Wolf, Mawosoft</Copyright>
     <Version>1.0.1-dev</Version>
   </PropertyGroup>
 
