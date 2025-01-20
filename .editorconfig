@@ -35,7 +35,7 @@ generated_code = true
 
 [*.cs]
 # IDE0073 File header
-file_header_template = Copyright (c) 2023-2024 Matthias Wolf, Mawosoft.
+file_header_template = Copyright (c) Matthias Wolf, Mawosoft.
 
 # IDE0065 Using directive
 csharp_using_directive_placement = outside_namespace
