@@ -21,6 +21,9 @@ dotnet_diagnostic.CA1861.severity = none
 # CA1865: Use char overload [net48 - not available]
 dotnet_diagnostic.CA1865.severity = none
 
+# IDE0028: Simplify collection initialization
+dotnet_diagnostic.IDE0028.severity = silent
+
 # IDE0056: Use index operator
 dotnet_diagnostic.IDE0056.severity = none
 
@@ -33,6 +36,9 @@ dotnet_diagnostic.IDE0130.severity = none
 # xUnit1042: The member referenced by the MemberData attribute returns untyped data rows
 dotnet_diagnostic.xUnit1042.severity = none
 
+# xUnit1044: Avoid using TheoryData type arguments that are not serializable
+dotnet_diagnostic.xUnit1044.severity = none
+
 # Common settings for test projects
 
 # CA1034: Nested types should not be visible
@@ -43,6 +49,9 @@ dotnet_diagnostic.CA1051.severity = none
 
 # CA1062: Validate arguments of public methods
 dotnet_diagnostic.CA1062.severity = none
+
+# CA1515: Consider making public types internal
+dotnet_diagnostic.CA1515.severity = none
 
 # CA1707: Identifiers should not contain underscores
 dotnet_diagnostic.CA1707.severity = none

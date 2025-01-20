@@ -142,10 +142,10 @@ jobs:
       id: test
       if: ${{ github.event.inputs.skip-tests != 'true' }}
       run: |
-        ./build/invokeDotnetTest.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug, Release -f net7.0, net6.0, net48 -v detailed -r ./TestResults/WSearchDisabled -ff:$${{ strategy.fail-fast }} -a '--filter', 'WSearch=IsDisabled'
+        ./build/invokeDotnetTest.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug, Release -f net9.0, net8.0, net48 -v detailed -r ./TestResults/WSearchDisabled -ff:$${{ strategy.fail-fast }} -a '--filter', 'WSearch=IsDisabled'
         Set-Service wsearch -StartupType Automatic
         Start-Service wsearch
-        ./build/invokeDotnetTest.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug, Release -f net7.0, net6.0, net48 -v detailed -r ./TestResults/WSearchNotDisabled -ff:$${{ strategy.fail-fast }} -a '--filter', 'WSearch!=IsDisabled'
+        ./build/invokeDotnetTest.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug, Release -f net9.0, net8.0, net48 -v detailed -r ./TestResults/WSearchNotDisabled -ff:$${{ strategy.fail-fast }} -a '--filter', 'WSearch!=IsDisabled'
     - name: Upload Test results
       if: ${{ always() && steps.test.outcome != 'skipped' }}
       uses: actions/upload-artifact@v4

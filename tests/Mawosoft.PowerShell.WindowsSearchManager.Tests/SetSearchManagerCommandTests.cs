@@ -58,7 +58,7 @@ public class SetSearchManagerCommandTests : CommandTestBase
 
     public static readonly object?[][] HandlesFailures_TestData =
         new string[] { "^get_", "^set_|^SetProxy$" }
-        .CrossJoin(new Exception_TheoryData())
+        .CrossJoin<string, ExceptionParam>(new Exception_TheoryData())
         .ToArray();
 
     [Theory]
