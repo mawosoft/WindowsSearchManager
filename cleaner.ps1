@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2024 Matthias Wolf, Mawosoft.
+# Copyright (c) Matthias Wolf, Mawosoft.
 
 <#
 .SYNOPSIS
