@@ -54,14 +54,14 @@ public class TestSearchRuleCommandTests : CommandTestBase
             $@"@('{string.Join("', '", s_testInfos.Select(t => t.Path))}') | Test-SearchRule",
             $@"@([pscustomobject]@{{ Path = '{string.Join("'}, [pscustomobject]@{ Path = '", s_testInfos.Select(t => t.Path))}' }}) | Test-SearchRule",
         }
-        .CrossJoin(new string[][]
-        {
+        .CrossJoin(
+        [
             ["", "IsIncluded"],
             ["-IsIncluded", "IsIncluded"],
             ["-HasChildScope", "HasChildScope"],
             ["-HasParentScope", "HasParentScope"],
             ["-Detailed", ""],
-        })
+        ])
         .ToArray();
 
     [Theory]

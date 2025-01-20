@@ -97,7 +97,7 @@ public class CommandTestBase
         Assert.Empty(results);
         Assert.True(PowerShell.HadErrors);
         ErrorRecord errorRecord = Assert.Single(PowerShell.Streams.Error);
-        ParameterBindingException exception = Assert.IsAssignableFrom<ParameterBindingException>(errorRecord.Exception);
+        ParameterBindingException exception = Assert.IsType<ParameterBindingException>(errorRecord.Exception, exactMatch: false);
         if (parameterName is not null) Assert.Equal(parameterName, exception.ParameterName.Trim());
         return errorRecord;
     }

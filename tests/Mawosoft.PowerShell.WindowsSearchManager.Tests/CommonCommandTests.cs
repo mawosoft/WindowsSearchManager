@@ -107,7 +107,7 @@ public class CommonCommandTests : CommandTestBase
     private static string GetCommandAndFirstParameter(string script, out string? firstParameter)
     {
         firstParameter = null;
-        string[] split = script.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        string[] split = script.Split([' '], StringSplitOptions.RemoveEmptyEntries);
         if (split.Length > 1)
         {
             string first = split[1].Trim();
@@ -295,7 +295,7 @@ public class CommonCommandTests : CommandTestBase
 
     public static readonly object?[][] CatalogValidation_TestData = s_CatalogCommands
         .Concat(s_CatalogValidationOnlyCommands)
-        .CrossJoin(new string[] { "", "''", "$null" })
+        .CrossJoin(["", "''", "$null"])
         .ToArray();
 
     [Trait("WSearch", "IsEnabled")]
@@ -342,7 +342,7 @@ public class CommonCommandTests : CommandTestBase
         @"Add-SearchRule -RuleType Exclude ",
         @"Remove-SearchRule ",
         @"Test-SearchRule "
-    }.CrossJoin(new string[] { "", "''", "$null", "@()", @"@('x:\foo', '')", @"@('x:\foo', $null)" })
+    }.CrossJoin(["", "''", "$null", "@()", @"@('x:\foo', '')", @"@('x:\foo', $null)"])
      .ToArray();
 
     [Theory]
