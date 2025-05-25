@@ -1,8 +1,8 @@
 [file "build/invokeDotnetTest.ps1"]
 	url = https://github.com/mawosoft/misc-scripts/blob/master/CI/invokeDotnetTest.ps1
-	etag = cc6031ebe5f1fa538e001649d00114bbd38b916f1aa30118326b8f22abcd6e20
+	etag = d5541f6f9c997a6b1002da10b077ec273b7b8a0e2f2c514617dc6108d452a08c
 	weak
-	sha = f2deff268a4acfc624787c21496785bcfca600f9
+	sha = dc237e2e498899bf2c0e9df8039a87432b456e9f
 [file ".github/workflows/file-update.yml"]
 	url = https://github.com/mawosoft/misc-scripts/blob/master/CI/file-update.yml
 	etag = 6684429677a0515f46a3839ec6de746712fe6bb57fd89f48dfe68476fa254f49
