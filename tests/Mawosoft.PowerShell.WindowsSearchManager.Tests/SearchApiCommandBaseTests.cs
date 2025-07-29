@@ -51,7 +51,7 @@ public class SearchApiCommandBaseTests : CommandTestBase
         if (chainIndex < 0)
         {
             throw new ArgumentException(null, nameof(interfaceName));
-        };
+        }
 
         for (int i = noParents ? chainIndex : 0; i <= chainIndex; i++)
         {
