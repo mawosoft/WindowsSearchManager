@@ -20,3 +20,5 @@ jobs:
         global-json-file: ./global.json
     - name: Check dependencies
       uses: mawosoft/dotnet-dependency-alert@v1
+      with:
+        retention-days: 14
