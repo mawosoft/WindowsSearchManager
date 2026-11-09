@@ -17,7 +17,7 @@ param()
 Set-StrictMode -Version 3.0
 $ErrorActionPreference = 'Stop'
 
-[string]$propsFile = "$PSScriptRoot/../help/obj/help.msbuildproj.nuget.g.props"
+[string]$propsFile = "$PSScriptRoot/../../artifacts/obj/help/help.msbuildproj.nuget.g.props"
 
 if (-not (Test-Path $propsFile -PathType Leaf)) {
     dotnet restore "$PSScriptRoot/../help/help.msbuildproj"

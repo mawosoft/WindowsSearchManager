@@ -9,27 +9,23 @@
           "src": "../src/Mawosoft.PowerShell.WindowsSearchManager"
         }
       ],
-      "dest": "api",
+      "dest": "../artifacts/obj/docs/site/api",
       "filter": "filter.yml",
-      "noRestore": true
+      "noRestore": true,
+      "properties": {
+        "NoMamlHelp": "true"
+      }
     }
   ],
   "build": {
     "content": [
       {
-        "files": [
-          "reference/*.md",
-          "reference/toc.yml",
-          "api/*",
-          "toc.yml",
-          "index.md"
-        ],
-        "exclude": [
-          "api/toc.yml"
-        ]
+        "files": "**/*.*",
+        "exclude": "api/toc.yml",
+        "src": "../artifacts/obj/docs/site"
       }
     ],
-    "dest": "_site",
+    "dest": "../artifacts/bin/docs/site",
     "globalMetadata": {
       "_appTitle": "Windows Search Manager",
       "_appFooter": "Copyright &copy; 2023-2026 Matthias Wolf, Mawosoft",

@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="docs/help/help.msbuildproj" Type="13b669be-bb05-4ddf-9536-439f39a36129" />
+  <Project Path="docs/docs.msbuildproj" Type="13b669be-bb05-4ddf-9536-439f39a36129" />
+  <Project Path="src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj" />
+  <Project Path="tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj" />
+</Solution>

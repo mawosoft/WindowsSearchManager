@@ -27,7 +27,7 @@ if (Get-Module WindowsSearchManager) {
 }
 
 [string]$srcdir = "$PSScriptRoot/../../src/Mawosoft.PowerShell.WindowsSearchManager"
-[string]$publishdir = "$srcdir/bin/$Configuration/netstandard2.0/WindowsSearchManager"
+[string]$publishdir = "$PSScriptRoot/../../artifacts/publish/Mawosoft.PowerShell.WindowsSearchManager/" + $Configuration.ToLowerInvariant()
 dotnet publish "$srcdir/Mawosoft.PowerShell.WindowsSearchManager.csproj" -c $Configuration -p:NoMamlHelp=$NoMamlHelp
 if ($LASTEXITCODE -ne 0) {
     throw "dotnet publish exited with code=$LASTEXITCODE"
@@ -37,4 +37,4 @@ if ($NoMamlHelp) {
     # There could be left-overs from a previous build. Normally, they are removed, but in case something went wrong...
     Get-ChildItem "$publishdir/*-help.xml" | Remove-Item
 }
-Import-Module $publishdir
+Import-Module "$publishdir/WindowsSearchManager.psd1"

@@ -29,7 +29,7 @@ param(
     # Destination directory for creating the 'helpcmp<number>' directory and its subdirectories.
     [Parameter(Mandatory = $false, Position = 0)]
     [ValidateNotNullOrEmpty()]
-    [string]$Path = "$PSScriptRoot/../help/obj",
+    [string]$Path = "$PSScriptRoot/../../artifacts/obj/help",
 
     # Controls whether the script is run in a new PowerShell process.
     # 'Conditional' starts a new process only if WindowsSearchManager has already been imported.

@@ -6,49 +6,47 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RestoreProjectStyle>DotnetToolReference</RestoreProjectStyle>
     <EnableGitCommitCount>false</EnableGitCommitCount>
   </PropertyGroup>
 
+  <!-- docfx tool must have been restored via dotnet tool restore -->
   <PropertyGroup>
-    <DocFxToolPath>$([MSBuild]::NormalizePath($(Pkgdocfx), 'tools/net7.0/any/docfx.dll'))</DocFxToolPath>
-    <DocFxConfigFile Condition="'$(DocFxConfigFile)' == ''">$([MSBuild]::NormalizePath($(MSBuildProjectDirectory), 'docfx.json'))</DocFxConfigFile>
     <DocFxOptions Condition="'$(CI)' == 'true'">$(DocFxOptions) --warningsAsErrors</DocFxOptions>
   </PropertyGroup>
 
   <ItemGroup>
-    <MetaInput Include="$(DocFxConfigFile)" />
-    <MetaInput Include="filter.yml" />
     <!-- None is not auto-populated for *.msbuildproj -->
-    <None Include="@(MetaInput)" Exclude="@(None)" />
+    <None Include="*.json;*.yml" />
+    <None Include="site\**\*" />
+    <None Include="templates\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <MetaInput Include="docfx.json" />
+    <MetaInput Include="filter.yml" />
     <MetaInput Include="..\src\Mawosoft.PowerShell.WindowsSearchManager\*.cs" />
-    <MetaOutputMarker Include="api\.manifest" />
+    <MetaOutputMarker Include="$(BaseIntermediateOutputPath)site\api\.manifest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ConvertInput Include="help\*.md" />
-    <ConvertInput Include="api\toc.yml" />
-    <ConvertOutput Include="@(ConvertInput->'reference\%(Filename)%(Extension)')" />
-    <DocsInput Include="$(DocFxConfigFile)" />
+    <ConvertOutput Include="@(ConvertInput->'$(BaseIntermediateOutputPath)site\reference\%(Filename)%(Extension)')" />
+    <ConvertInput Include="$(BaseIntermediateOutputPath)site\api\toc.yml" />
+    <ConvertOutput Include="$(BaseIntermediateOutputPath)site\reference\toc.yml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DocsSiteInput Include="site\**\*" TargetPath="%(Identity)" />
+    <DocsInput Include="docfx.json" />
     <DocsInput Include="*.yml" />
-    <DocsInput Include="index.md" />
-    <DocsInput Include="api\index.md" />
-    <DocsInput Include="reference\index.md" />
+    <DocsInput Include="@(DocsSiteInput)" />
     <DocsInput Include="templates\**\*" />
-    <None Include="@(DocsInput)" Exclude="@(None)" />
+    <DocsInput Include="@(DocsSiteInput)" Exclude="@(DocsInput)" />
     <DocsInput Include="@(MetaOutputMarker)" Exclude="@(DocsInput)" />
     <DocsInput Include="@(ConvertOutput)" Exclude="@(DocsInput)" />
-    <DocsInput Include="api\**\*" Exclude="@(DocsInput)" />
-    <DocsInput Include="reference\**\*" Exclude="@(DocsInput)" />
-    <DocsOutputMarker Include="_site/manifest.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="docfx" PrivateAssets="all" GeneratePathProperty="true" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <!-- PackageVersion/CPM is ignored for DotnetToolReference style -->
-    <PackageReference Update="@(PackageVersion)" Version="%(PackageVersion.Version)" />
-    <!-- Apply possible VersionOverride as well to mimic CPM -->
-    <PackageReference Update="@(PackageReference->HasMetadata('VersionOverride'))" Version="%(PackageReference.VersionOverride)" />
+    <DocsInput Include="$(BaseIntermediateOutputPath)site\api\**\*" Exclude="@(DocsInput)" />
+    <DocsInput Include="$(BaseIntermediateOutputPath)site\reference\**\*" Exclude="@(DocsInput)" />
+    <DocsOutputMarker Include="$(BaseOutputPath)site\manifest.json" />
   </ItemGroup>
 
   <!--
@@ -69,7 +67,7 @@
   <Target Name="GenerateMetadata"
           Inputs="@(MetaInput)"
           Outputs="@(MetaOutputMarker)">
-    <Exec Command="dotnet &quot;$(DocFxToolPath)&quot; metadata &quot;$(DocFxConfigFile)&quot; $(DocFxOptions) "
+    <Exec Command="dotnet docfx metadata $(DocFxOptions) "
           WorkingDirectory = "$(MSBuildProjectDirectory)"
           CustomWarningRegularExpression = "\s+[1-9]\d* warning\(s\)"
           CustomErrorRegularExpression = "\s+[1-9]\d* error\(s\)"
@@ -85,8 +83,8 @@
       <_command>pwsh -NonInteractive -NoProfile -ExecutionPolicy Bypass -Command &quot;&amp;
         '../build/convertPlatyPStoDocFxMarkdown.ps1'
           -Path './help'
-          -Destination './reference'
-          -AdditionalTocPath './api/toc.yml'
+          -Destination '$(BaseIntermediateOutputPath)site/reference'
+          -AdditionalTocPath '$(BaseIntermediateOutputPath)site/api/toc.yml'
           -ExcludeParameterMetadata @('Parameter Sets', 'Aliases', 'Required')
           -ExludeCommonParameters
           -ExcludeWhatifConfirm
@@ -95,6 +93,7 @@
         &quot;
       </_command>
     </PropertyGroup>
+    <MakeDir Directories="$(BaseIntermediateOutputPath)site/reference" />
     <Exec Command="$(_command.Replace('%0D%0A', ' ').Replace('%0A', ' '))"
           WorkingDirectory = "$(MSBuildProjectDirectory)"
           StandardErrorImportance="high"
@@ -106,7 +105,10 @@
           Outputs="@(DocsOutputMarker)"
           AfterTargets="Compile"
           DependsOnTargets="GenerateMetadata;ConvertPlatyPStoDocFxMarkdown">
-    <Exec Command="dotnet &quot;$(DocFxToolPath)&quot; build &quot;$(DocFxConfigFile)&quot; $(DocFxOptions) "
+    <Copy SourceFiles="@(DocsSiteInput->'%(FullPath)')"
+          DestinationFiles="@(DocsSiteInput->'$(BaseIntermediateOutputPath)%(TargetPath)')"
+          SkipUnchangedFiles="true" />
+    <Exec Command="dotnet docfx build $(DocFxOptions) "
           WorkingDirectory = "$(MSBuildProjectDirectory)"
           CustomWarningRegularExpression = "\s+[1-9]\d* warning\(s\)"
           CustomErrorRegularExpression = "\s+[1-9]\d* error\(s\)"
@@ -119,36 +121,11 @@
 
     CleanDocs
 
-    Cleaning via recorded @(FileWrites)/@(FileWritesShareable) only works for files under
-    $(IntermediateOutputPath) and $(OutDir). It's also not suitable for cleaning entire directories.
     ============================================================
   -->
 
   <Target Name="CleanDocs" BeforeTargets="CoreClean">
-      <ItemGroup>
-        <Clean Include="api/*" Exclude="api/index.md" />
-        <Clean Include="@(ConvertOutput)" />
-        <Clean Include="reference/includes/index-*.md" />
-        <_CleanDir Include="_site" />
-      </ItemGroup>
-      <RemoveDir Directories="@(_CleanDir)" />
-  </Target>
-
-  <!--
-    ============================================================
-
-    RestoreForVStudio
-
-    For some reason, VStudio is unable to restore projects with RestoreProjectStyle == DotnetToolReference.
-    This runs an explicit restore when building inside VStudio and project.assets.json doesn't exist.
-    TODO Changes to assets file are not recognized.
-    ============================================================
-  -->
-
-  <Target Name="RestoreForVStudio"
-          BeforeTargets="RunResolvePackageDependencies;ResolvePackageDependenciesForBuild"
-          Condition="'$(BuildingInsideVisualStudio)' == 'true' And !Exists('$(ProjectAssetsFile)')">
-    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Restore" />
+      <RemoveDir Directories="$(BaseIntermediateOutputPath)site;$(BaseOutputPath)site" />
   </Target>
 
 </Project>
