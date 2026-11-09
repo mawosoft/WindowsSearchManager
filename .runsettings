@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  These settings are only intended for automatic, solution-wide use inside Visual Studio.
+  The exact name ".runsettings" is required for automatic detection to work.
+-->
 <RunSettings>
   <RunConfiguration>
     <SkipDefaultAdapters>true</SkipDefaultAdapters>

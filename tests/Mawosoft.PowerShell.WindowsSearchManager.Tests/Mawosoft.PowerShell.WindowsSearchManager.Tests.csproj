@@ -18,10 +18,6 @@
     <CopyDocumentationFileToOutputDirectory>false</CopyDocumentationFileToOutputDirectory>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <RunSettingsFilePath>$(MSBuildThisFileDirectory).runsettings</RunSettingsFilePath>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="../../src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj" />
   </ItemGroup>
@@ -36,7 +32,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="Microsoft.CodeCoverage" />
     <PackageReference Include="System.ServiceProcess.ServiceController" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio">

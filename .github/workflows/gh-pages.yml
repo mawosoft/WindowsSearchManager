@@ -11,39 +11,50 @@ env:
   DOTNET_NOLOGO: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
-  MSBuildDebugEngine: 1
-  MSBUILDLOGTASKINPUTS: 1
-  MSBUILDTARGETOUTPUTLOGGING: true
-  MSBUILDLOGIMPORTS: 1
 
 jobs:
   gh-pages:
     runs-on: windows-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         show-progress: false
         fetch-depth: 1
-    - name: Setup dotnet (pinned)
-      uses: actions/setup-dotnet@v4
+    - name: Query dotnet version
+      id: dotnet_version
+      run: |
+        $ErrorActionPreference = 'Stop'
+        $PSNativeCommandUseErrorActionPreference = $false
+        dotnet --version
+        if ($LASTEXITCODE -ne 0) {
+          echo "setup_dotnet=true" >>$env:GITHUB_OUTPUT
+          $LASTEXITCODE = 0
+        }
+    - name: Setup dotnet
+      if: ${{ steps.dotnet_version.outputs.setup_dotnet }}
+      uses: actions/setup-dotnet@v6
       with:
         global-json-file: ./global.json
     - name: DocFX Build
       run: |
         $ErrorActionPreference = 'Stop'
         $PSNativeCommandUseErrorActionPreference = $true
+        $env:MSBuildDebugEngine = 1
+        $env:MSBUILDLOGTASKINPUTS = 1
+        $env:MSBUILDDEBUGPATH = Join-Path $env:GITHUB_WORKSPACE 'artifacts/binlog'
         dotnet restore
         dotnet build ./docs/docs.msbuildproj --no-restore -c Release
     - name: Upload Binlogs
       if: ${{ always() }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
-        name: DocFX-Binlogs
-        path: '**/MSBuild_Logs/*'
+        name: Binlogs
+        path: ./artifacts/binlog
+        include-hidden-files: true
     - name: Publish to gh-pages
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: docs/_site
+        publish_dir: ./artifacts/bin/docs/site
         force_orphan: true

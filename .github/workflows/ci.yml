@@ -1,28 +1,6 @@
 name: CI/CD
 
 on:
-  workflow_dispatch:
-    inputs:
-      os:
-        description: 'Matrix or single OS'
-        type: choice
-        default: 'matrix'
-        options:
-        - matrix
-        - windows-latest
-        - windows-2019
-      fail-fast:
-        description: 'Fail fast'
-        type: boolean
-      skip-tests:
-        description: 'Skip tests'
-        type: boolean
-      deploy:
-        description: 'Deploy packages'
-        type: boolean
-      release:
-        description: 'Create GitHub release'
-        type: boolean
   push:
     branches: master
   pull_request:
@@ -42,82 +20,69 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
 
 jobs:
-  Prepare:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Prepare Build matrix
-      id: prep
-      run: |
-        $os = "[""windows-latest"", ""windows-2019""]"
-        # TODO windows-2019 temp disabled.
-        $os = "[""windows-latest""]"
-        if ($${{ github.event.inputs.os != 'matrix' && github.event.inputs.os != '' }}) {
-          $os = "[""${{ github.event.inputs.os }}""]"
-        }
-        echo "os=$os" >>$env:GITHUB_OUTPUT
-    outputs:
-      matrix_os: ${{ steps.prep.outputs.os }}
-
   Build:
-    needs: Prepare
+    runs-on: windows-latest
     outputs:
       deploy: ${{ steps.set_output.outputs.deploy }}
       release: ${{ steps.set_output.outputs.release }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: ${{ fromJSON(needs.Prepare.outputs.matrix_os) }}
-      fail-fast: ${{ github.event.inputs.fail-fast == 'true' }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         show-progress: false
         fetch-depth: 0
-    - name: Setup dotnet (pinned)
-      uses: actions/setup-dotnet@v4
+    - name: Query dotnet version
+      id: dotnet_version
+      run: |
+        $ErrorActionPreference = 'Stop'
+        $PSNativeCommandUseErrorActionPreference = $false
+        dotnet --version
+        if ($LASTEXITCODE -ne 0) {
+          echo "setup_dotnet=true" >>$env:GITHUB_OUTPUT
+          $LASTEXITCODE = 0
+        }
+    - name: Setup dotnet
+      if: ${{ steps.dotnet_version.outputs.setup_dotnet }}
+      uses: actions/setup-dotnet@v6
       with:
         global-json-file: ./global.json
     - name: Build
-      env:
-        MSBuildDebugEngine: 1 # Auto-creates binlogs in ./MSBuild_Logs
-        # Fix incomplete binlogs in MSBuild <=17.3.x. See https://github.com/mawosoft/Mawosoft.Extensions.BenchmarkDotNet/issues/146
-        MSBUILDLOGTASKINPUTS: 1
-        MSBUILDTARGETOUTPUTLOGGING: true
-        MSBUILDLOGIMPORTS: 1
+      id: build
       run: |
         $ErrorActionPreference = 'Stop'
         $PSNativeCommandUseErrorActionPreference = $true
+        $env:MSBuildDebugEngine = 1
+        $env:MSBUILDLOGTASKINPUTS = 1
+        $env:MSBUILDDEBUGPATH = Join-Path $env:GITHUB_WORKSPACE 'artifacts/binlog'
         dotnet restore
-        # Parallel builds causing trouble here
         dotnet build ./docs/help/help.msbuildproj --no-restore
         dotnet build ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Release --no-restore --no-dependencies
         dotnet build ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Debug --no-restore --no-dependencies
         dotnet build ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Release --no-restore --no-dependencies
         dotnet build ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug --no-restore --no-dependencies
         dotnet build ./docs/docs.msbuildproj --no-restore -c Release
-        dotnet pack ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Release --no-build -o ./Packages
+        dotnet pack ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Release --no-build
     - name: Upload Binlogs
-      if: ${{ always() }}
-      uses: actions/upload-artifact@v4
+      if: ${{ failure() && steps.build.conclusion == 'failure' }}
+      uses: actions/upload-artifact@v7
       with:
-        name: ${{ matrix.os }}-Binlogs
-        path: '**/MSBuild_Logs/*'
+        name: Binlogs
+        path: ./artifacts/binlog
+        include-hidden-files: true
     - name: Upload Packages
-      if: ${{ matrix.os == 'windows-latest' || strategy.job-total == 1 }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: Packages
-        path: ./Packages/
+        path: ./artifacts/package/release
     - name: Upload Docs Website
-      if: ${{ matrix.os == 'windows-latest' || strategy.job-total == 1 }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: DocsWebsite
-        path: ./docs/_site/
+        path: ./artifacts/bin/docs/site
+        include-hidden-files: true
     - name: Set Deployment and Release Outputs
       id: set_output
-      if: ${{ (matrix.os == 'windows-latest' || strategy.job-total == 1) && (github.event_name == 'push' || github.event_name == 'workflow_dispatch') }}
+      if: ${{ github.event_name == 'push' }}
       run: |
         [string] $semver = '^(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)(?:-(?<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
         $docElement = (select-xml -Path ./Directory.Build.props -XPath "/*").Node
@@ -126,7 +91,6 @@ jobs:
         {
             throw "Invalid Version property."
         }
-        # TODO We might allow tags starting with 'rc' or 'pre' to be published to Nuget.
         if ($Matches.prerelease) {
           $deploy = "Azure"
           $release = ""
@@ -140,26 +104,86 @@ jobs:
         echo "release=$release" >>$env:GITHUB_OUTPUT
     - name: Test
       id: test
-      if: ${{ github.event.inputs.skip-tests != 'true' }}
       run: |
-        ./build/invokeDotnetTest.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug, Release -f net9.0, net8.0, net48 -v detailed -r ./TestResults/WSearchDisabled -ff:$${{ strategy.fail-fast }} -a '--filter', 'WSearch=IsDisabled'
+        $ErrorActionPreference = 'Stop'
+        $PSNativeCommandUseErrorActionPreference = $true
+        # Both dotnet-coverage and Microsoft.CodeCoverage crash with .NET Framework versions.
+        $msccConsole = Join-Path $env:ProgramFiles 'Microsoft Visual Studio/18/Enterprise/Common7/IDE/Extensions/Microsoft/CodeCoverage.Console/Microsoft.CodeCoverage.Console.exe'
+        if (-not (Test-Path -LiteralPath $msccConsole)) {
+          $msccConsole = $null
+        }
+        $argsCommon = @(
+          'test', './tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj'
+          '--nologo', '--no-build', '--logger', 'trx'
+          '--results-directory', './artifacts/TestResults'
+          '--diag', './artifacts/TestResults/diag.log'
+        )
+        $argsCoverage = @(
+          '--settings', './tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/dotnet-coverage-settings.xml'
+          '--output-format', 'cobertura'
+          '--output'
+        )
+        $argsFilter = @(
+          '--filter', 'WSearch=IsDisabled'
+        )
+        $coverageFiles = @()
+        if ($msccConsole) {
+          $coverageFiles += './artifacts/TestResults/coverage/debug_net10.0_WSearchDisabled.cobertura.xml'
+          & $msccConsole collect dotnet $argsCommon $argsFilter --configuration Debug --framework net10.0 $argsCoverage $coverageFiles[-1]
+          $coverageFiles += './artifacts/TestResults/coverage/debug_net48_WSearchDisabled.cobertura.xml'
+          & $msccConsole collect dotnet $argsCommon $argsFilter --configuration Debug --framework net48 $argsCoverage $coverageFiles[-1]
+        }
+        else {
+          dotnet $argsCommon $argsFilter --configuration Debug --framework net10.0
+          dotnet $argsCommon $argsFilter --configuration Debug --framework net48
+        }
+        dotnet $argsCommon $argsFilter --configuration Release --framework net10.0
+        dotnet $argsCommon $argsFilter --configuration Release --framework net48
+        $argsFilter = @(
+          '--filter', 'WSearch!=IsDisabled'
+        )
         Set-Service wsearch -StartupType Automatic
         Start-Service wsearch
-        ./build/invokeDotnetTest.ps1 -p ./tests/Mawosoft.PowerShell.WindowsSearchManager.Tests/Mawosoft.PowerShell.WindowsSearchManager.Tests.csproj -c Debug, Release -f net9.0, net8.0, net48 -v detailed -r ./TestResults/WSearchNotDisabled -ff:$${{ strategy.fail-fast }} -a '--filter', 'WSearch!=IsDisabled'
-    - name: Upload Test results
-      if: ${{ always() && steps.test.outcome != 'skipped' }}
-      uses: actions/upload-artifact@v4
+        if ($msccConsole) {
+          $coverageFiles += './artifacts/TestResults/coverage/debug_net10.0_WSearchNotDisabled.cobertura.xml'
+          & $msccConsole collect dotnet $argsCommon $argsFilter --configuration Debug --framework net10.0 $argsCoverage $coverageFiles[-1]
+          $coverageFiles += './artifacts/TestResults/coverage/debug_net48_WSearchNotDisabled.cobertura.xml'
+          & $msccConsole collect dotnet $argsCommon $argsFilter --configuration Debug --framework net48 $argsCoverage $coverageFiles[-1]
+        }
+        else {
+          dotnet $argsCommon $argsFilter --configuration Debug --framework net10.0
+          dotnet $argsCommon $argsFilter --configuration Debug --framework net48
+        }
+        dotnet $argsCommon $argsFilter --configuration Release --framework net10.0
+        dotnet $argsCommon $argsFilter --configuration Release --framework net48
+        if ($coverageFiles) {
+          echo "files=$($coverageFiles -join ',')" >>$env:GITHUB_OUTPUT
+        }
+    - name: Upload Test Results
+      if: ${{ failure() && steps.test.conclusion == 'failure' }}
+      uses: actions/upload-artifact@v7
       with:
-        name: ${{ matrix.os }}-Testresults
-        path: ./TestResults/
+        name: TestResults
+        path: ./artifacts/TestResults
+        include-hidden-files: true
+    - name: Upload to codecov
+      if: ${{ github.secret_source == 'Actions' && steps.test.outputs.files != '' }}
+      uses: codecov/codecov-action@v7
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ${{ steps.test.outputs.files }}
+        disable_search: true
+        disable_telem: true
+        verbose: false
+        fail_ci_if_error: true
 
   Deploy:
     needs: Build
-    if: ${{ needs.Build.outputs.deploy != '' && github.event.inputs.deploy != 'false' }}
+    if: ${{ needs.Build.outputs.deploy != '' }}
     runs-on: ubuntu-latest
     steps:
     - name: Download Packages
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: Packages
         path: ./Packages/
@@ -172,47 +196,29 @@ jobs:
 
   Publish:
     needs: Build
-    if: ${{ needs.Build.outputs.deploy == 'Nuget' && github.event.inputs.deploy != 'false' }}
+    if: ${{ needs.Build.outputs.deploy == 'Nuget' }}
     runs-on: ubuntu-latest
     steps:
     - name: Download Packages
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: Packages
         path: ./Packages/
     - name: Publish to Nuget
       run: dotnet nuget push ./Packages/*.nupkg --skip-duplicate --source https://www.powershellgallery.com/api/v2/package/ --api-key ${{ secrets.PSGALLERY_API_KEY }}
 
-  gh-pages:
-    needs: Build
-    if: ${{ needs.Build.outputs.release != '' && github.event_name == 'push' }}
-    runs-on: ubuntu-latest
-    steps:
-    - name: Download Docs Website
-      uses: actions/download-artifact@v4
-      with:
-        name: DocsWebsite
-        path: ./DocsWebsite/
-    - name: Publish to gh-pages
-      uses: peaceiris/actions-gh-pages@v4
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./DocsWebsite/
-        force_orphan: true
-
   Release:
     needs: Build
-    if: ${{ needs.Build.outputs.release != '' && github.event.inputs.release != 'false' }}
+    if: ${{ needs.Build.outputs.release != '' }}
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         show-progress: false
         fetch-depth: 1
     - name: Create GitHub release
-      # TODO release notes
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v3
       with:
         tag_name: ${{ needs.Build.outputs.release }}
         generate_release_notes: false # false is default. Seems to draw from PRs only.
