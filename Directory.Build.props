@@ -12,14 +12,21 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <LangVersion>latest</LangVersion>
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <!-- Pinning still has some kinks. See https://github.com/NuGet/Home/issues/11952 -->
-    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <ContinuousIntegrationBuild>$(CI)</ContinuousIntegrationBuild>
     <Deterministic>$(CI)</Deterministic>
     <TreatWarningsAsErrors>$(CI)</TreatWarningsAsErrors>
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+    <ArtifactsPath>$(MSBuildThisFileDirectory)artifacts</ArtifactsPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
+    <MSBuildEnableWorkloadResolver>false</MSBuildEnableWorkloadResolver>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
@@ -41,7 +48,7 @@
     <Authors>Matthias Wolf, Mawosoft</Authors>
     <Company>$(Authors)</Company>
     <Product>WindowsSearchManager</Product>
-    <Copyright>Copyright (c) 2023-2025 Matthias Wolf, Mawosoft</Copyright>
+    <Copyright>Copyright (c) 2023-2026 Matthias Wolf, Mawosoft</Copyright>
     <Version>1.0.1-dev</Version>
   </PropertyGroup>
 

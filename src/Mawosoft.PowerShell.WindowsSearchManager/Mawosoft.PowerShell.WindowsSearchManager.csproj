@@ -8,7 +8,6 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <NeutralLanguage>en-US</NeutralLanguage>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GenerateDependencyFile>false</GenerateDependencyFile>
     <!-- CS1591  Missing XML comment... Reason: Command help is generated via other means.
@@ -41,7 +40,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Exclude the help project when building for a help update via platyPS because of code changes. -->
+    <!-- Exclude the help project when building for a help update via platyPS because of code changes
+         or when the build is triggered by docfx metadata. -->
     <ProjectReference Condition="'$(NoMamlHelp)' != 'true'"
                       Include="../../docs/help/help.msbuildproj"
                       ReferenceOutputAssembly="false"
@@ -72,14 +72,6 @@
     that should be part of the PS module.
     ============================================================
   -->
-
-  <PropertyGroup>
-    <!-- This is used as the source for Pack via Publish-Module and therefore must match the module name. -->
-    <PublishDirName>$(PSModuleName)</PublishDirName>
-    <!-- Forwarded as switch parameter -->
-    <SkipAutomaticTags Condition="'$(SkipAutomaticTags)' == ''">true</SkipAutomaticTags>
-    <SkipAutomaticTags Condition="'$(SkipAutomaticTags)' != 'true'">false</SkipAutomaticTags>
-  </PropertyGroup>
 
   <ItemGroup>
     <PSModuleManifest Include="$(PSModuleName).psd1" />
@@ -149,14 +141,15 @@
   <Target Name="Pack"
           DependsOnTargets="Publish">
     <PropertyGroup>
-      <_command>pwsh -NonInteractive -NoProfile -ExecutionPolicy Bypass -Command &quot;&amp;
-        '../../build/packPSModule.ps1'
+      <_command>pwsh -NonInteractive -NoProfile -ExecutionPolicy Bypass -Command &quot;
+        Compress-PSResource
           -Path '$(PublishDir)'
-          -Destination '$(PackageOutputPath)'
-          -SkipAutomaticTags:$$(SkipAutomaticTags)
+          -DestinationPath '$(PackageOutputPath)'
+          -ErrorAction Stop
         &quot;
       </_command>
     </PropertyGroup>
+    <MakeDir Directories="$(PackageOutputPath)" />
     <Exec Command="$(_command.Replace('%0D%0A', ' ').Replace('%0A', ' '))"
           WorkingDirectory = "$(MSBuildProjectDirectory)"
           StandardErrorImportance="high"

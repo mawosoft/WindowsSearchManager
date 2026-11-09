@@ -1,0 +1,3 @@
+- interop.searchapi.dll
+  - Copied from Windows SDK 10.0.19041.0
+  - Contains type library imports from SearchAPILib.

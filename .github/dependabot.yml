@@ -6,3 +6,16 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      action-dependencies:
+        patterns: 
+          - '*'
+  - package-ecosystem: "nuget"
+    directories:
+      - "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      nuget-dependencies:
+        patterns:
+          - '*'
