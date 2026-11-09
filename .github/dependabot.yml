@@ -1,6 +1,10 @@
 # https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
 
 version: 2
+registries:
+  psgallery:
+    type: nuget-feed
+    url: https://www.powershellgallery.com/api/v2/
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -13,6 +17,8 @@ updates:
   - package-ecosystem: "nuget"
     directories:
       - "/"
+    registries:
+      - psgallery
     schedule:
       interval: "weekly"
     groups:
