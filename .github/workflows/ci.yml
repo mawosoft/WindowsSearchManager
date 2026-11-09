@@ -54,6 +54,7 @@ jobs:
         $env:MSBuildDebugEngine = 1
         $env:MSBUILDLOGTASKINPUTS = 1
         $env:MSBUILDDEBUGPATH = Join-Path $env:GITHUB_WORKSPACE 'artifacts/binlog'
+        dotnet tool restore
         dotnet restore
         dotnet build ./docs/help/help.msbuildproj --no-restore
         dotnet build ./src/Mawosoft.PowerShell.WindowsSearchManager/Mawosoft.PowerShell.WindowsSearchManager.csproj -c Release --no-restore --no-dependencies
