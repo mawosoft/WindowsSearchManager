@@ -1,10 +1,17 @@
 # https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
 
 version: 2
+
 registries:
   psgallery:
     type: nuget-feed
     url: https://www.powershellgallery.com/api/v2/
+
+multi-ecosystem-groups:
+  dotnet-nuget:
+    schedule:
+      interval: "weekly"
+
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -12,16 +19,22 @@ updates:
       interval: "weekly"
     groups:
       action-dependencies:
-        patterns: 
-          - '*'
+        patterns: ["*"]
   - package-ecosystem: "nuget"
-    directories:
-      - "/"
+    directory: "/"
     registries:
       - psgallery
-    schedule:
-      interval: "weekly"
-    groups:
-      nuget-dependencies:
-        patterns:
-          - '*'
+    multi-ecosystem-group: dotnet-nuget
+    patterns: ["*"]
+    ignore:
+      - dependency-name: "System.ServiceProcess.ServiceController"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "System.Management.Automation"
+        update-types: ["version-update:semver-minor"]
+  - package-ecosystem: "dotnet-sdk"
+    directory: "/"
+    multi-ecosystem-group: dotnet-nuget
+    patterns: ["*"]
+    ignore:
+      - dependency-name: "dotnet-sdk"
+        update-types: ["version-update:semver-major"]
